@@ -108,15 +108,16 @@ EWR_STATE = {
 
 ```
 root/
-  index.html              → THE ENTIRE GAME (24,146 lines)
-  combat/                 → Deterministic fight engine (22 modules)
-    ├─ api/               → Combat engine API
-    ├─ core/              → World, fighter, input, moves, sim
-    ├─ presentation/      → Render stack, animation, FX
-    ├─ data/              → Fighter & stage visual data
-    └─ tools/             → Determinism verification
-  docs/                   → AI briefings, handoffs, architecture
-  scripts/                → Validation utilities
+  index.html                        → Canonical World 1 runtime entry
+  TRANSFER/                         → Migration/source-of-truth pack (read first)
+  docs/                             → Active docs + migration logs
+  scripts/                          → Validation utilities
+  src/world1/, content/, ui/, ...   → Active modularization scaffold (no build step)
+  legacy/quarantine/                → Experimental/legacy material
+    ├─ combat/                      → Secondary combat system (quarantined)
+    ├─ racing/                      → Racing prototypes (quarantined)
+    ├─ runtime-variants/            → Non-canonical HTML variants
+    └─ ai-artifacts/, scratch/, docs-archive/
 ```
 
 ---
