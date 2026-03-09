@@ -1,0 +1,487 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 Helvetica;
+\f3\froman\fcharset0 Times-Bold;\f4\fmodern\fcharset0 Courier;\f5\fnil\fcharset0 HelveticaNeue-Medium;
+}
+{\colortbl;\red255\green255\blue255;\red220\green220\blue220;\red30\green31\blue33;\red16\green16\blue16;
+\red183\green187\blue184;\red23\green24\blue24;\red183\green111\blue247;\red246\green124\blue48;\red113\green192\blue131;
+\red252\green207\blue81;\red109\green115\blue120;}
+{\*\expandedcolortbl;;\cssrgb\c89020\c89020\c89020;\cssrgb\c15686\c16471\c17255;\cssrgb\c7451\c7451\c7843;
+\cssrgb\c76863\c78039\c77255;\cssrgb\c11765\c12157\c12549;\cssrgb\c77255\c54118\c97647;\cssrgb\c98039\c56471\c24314;\cssrgb\c50588\c78824\c58431;
+\cssrgb\c99216\c83922\c38824;\cssrgb\c50196\c52549\c54510;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 You said\cb1 \
+\cb3 Please read and help our friend Claude Code with what we can, to help develop the GREATEST GAME OF ALL-TIME! LFG!!!!!\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf2 \
+\
+\
+\
+\
+\
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs28 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f3\b\fs36 \cf2 \cb4 Gemini said\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b0\fs32 \cf2 \cb4 === TASK A: AUDIT REPORT ===\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs21 \cf5 \cb6 \strokec5 [SEVERITY: HIGH] System: DarkEpilogueScene \'97 Issue: Missing cleanup `SMOKE_POOL.length=0; EX_POOL.length=0;` inside the scene before transitioning out. \'97 Fix: Add cleanup arrays to the Z-key exit logic before starting WorldMap or Title.\
+[SEVERITY: MED] System: DarkEpilogueScene \'97 Issue: `_mandelaFlash(self)` delayed call at t=12000ms can trigger after a premature scene transition if the player skips early. \'97 Fix: Wrap the internal logic in an `if(!self._done)` flag guard.\
+[SEVERITY: LOW] System: DarkEpilogueScene \'97 Issue: Tween-animated text objects (`mainTxt`, `bigTxt`, `subTxt`) could potentially leak if not explicitly destroyed, though Phaser cleans up on scene exit. \'97 Fix: Destroy the text objects in the `onComplete` tween callbacks. Ensure `setScrollFactor(0)` and `setDepth()` are applied.\
+[SEVERITY: HIGH] System: DarkEpilogueScene \'97 Issue: `this.keys.z` is missing proper initialization in `create`, and the `this._done` guard isn't checked before accepting Z input in `update`. \'97 Fix: Add `this.keys = \{z: this.input.keyboard.addKey('Z')\}` and use `if (!this._done && Phaser.Input.Keyboard.JustDown(this.keys.z))`.\
+[SEVERITY: MED] System: _drawAnomalyOverlay \'97 Issue: `scene._anomalyTimer = (scene._anomalyTimer||0) - 16` incorrectly assumes a locked 60fps delta, leading to timer drift on varying framerates. \'97 Fix: Modify the function to accept `delta` as a parameter and subtract it dynamically.\
+[SEVERITY: HIGH] System: _drawAnomalyOverlay \'97 Issue: `scene.anomalyG.clear()` is only called if `mandela >= 10`. If mandela drops or the condition toggles, the old graphical rectangles will persist on the overlay forever. \'97 Fix: Move `if(scene.anomalyG) scene.anomalyG.clear();` above the conditional blocks.\
+[SEVERITY: LOW] System: _drawAnomalyOverlay \'97 Issue: Self-destroying tweens lack `try/catch` wrappers. If the scene changes mid-tween, `txt.destroy()` will crash. \'97 Fix: Wrap `txt.destroy()` inside `try \{ txt.destroy(); \} catch(e) \{\}`.\
+[SEVERITY: HIGH] System: _drawAnomalyOverlay \'97 Issue: References `scene.mapOffX` and `scene.tW`, but `mapOffX` is undefined in `WorldMapScene` and `WorldMap2Scene` (they use `scene.offX`). \'97 Fix: Add fallback variables `var ox = scene.mapOffX || scene.offX || 0;` and `var oy = scene.mapOffY || scene.offY || 0;`.\
+[SEVERITY: HIGH] System: Level63/64 onUpdate hooks \'97 Issue: Physics object referenced as `scene.edPx.x`, but the level factory uses `scene.ep.x`. Will throw undefined error. \'97 Fix: Change the reference to `scene.ep ? scene.ep.x : 0`.\
+[SEVERITY: LOW] System: Level63/64 onUpdate hooks \'97 Issue: `if(!scene._rbFlags)scene._rbFlags=\{\}` is an unnecessary initialization check running every frame. \'97 Fix: Initialize `scene._rbFlags=\{\}` once in the `onCreate` factory hook instead.\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs32 \cf2 \cb4 \strokec2 === TASK B: PUPPET THEATER BOSS INTRO SYSTEM ===\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f5\fs28 \cf5 \cb6 \strokec5 JavaScript\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs21 \cf7 \cb6 \strokec7 var\cf5 \strokec5  PUPPET_DIALOGUE = \{\
+  \cf8 \strokec8 daikon\cf5 \strokec5 : \{\
+    \cf8 \strokec8 edLine\cf5 \strokec5 : \cf9 \strokec9 'so.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 bossLine\cf5 \strokec5 : \cf9 \strokec9 'I HAVE BEEN WAITING FOR YOU, CACTUS.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 lines\cf5 \strokec5 : [\cf9 \strokec9 '...'\cf5 \strokec5 ,\cf9 \strokec9 'he was waiting.'\cf5 \strokec5 ,\cf9 \strokec9 '...alright.'\cf5 \strokec5 ]\
+  \},\
+  \cf8 \strokec8 handtowel\cf5 \strokec5 : \{\
+    \cf8 \strokec8 edLine\cf5 \strokec5 : \cf9 \strokec9 'huh.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 bossLine\cf5 \strokec5 : \cf9 \strokec9 'I AM THE HANDTOWEL. I KNOW THINGS.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 lines\cf5 \strokec5 : [\cf9 \strokec9 '...'\cf5 \strokec5 ,\cf9 \strokec9 'ok.'\cf5 \strokec5 ,\cf9 \strokec9 '...sure.'\cf5 \strokec5 ]\
+  \},\
+  \cf8 \strokec8 mochiQueen\cf5 \strokec5 : \{\
+    \cf8 \strokec8 edLine\cf5 \strokec5 : \cf9 \strokec9 '...'\cf5 \strokec5 ,\
+    \cf8 \strokec8 bossLine\cf5 \strokec5 : \cf9 \strokec9 'DO YOU KNOW WHAT IT IS TO RULE IN PINK?'\cf5 \strokec5 ,\
+    \cf8 \strokec8 lines\cf5 \strokec5 : [\cf9 \strokec9 '...'\cf5 \strokec5 ,\cf9 \strokec9 'she seems sad.'\cf5 \strokec5 ,\cf9 \strokec9 '...well.'\cf5 \strokec5 ]\
+  \},\
+  \cf8 \strokec8 insulinAdmiral\cf5 \strokec5 : \{\
+    \cf8 \strokec8 edLine\cf5 \strokec5 : \cf9 \strokec9 'thats a big syringe.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 bossLine\cf5 \strokec5 : \cf9 \strokec9 'HALT. CACTUS. THE GLUCOSE IS UNBALANCED.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 lines\cf5 \strokec5 : [\cf9 \strokec9 'he has a ship.'\cf5 \strokec5 ,\cf9 \strokec9 '...a syringe ship.'\cf5 \strokec5 ,\cf9 \strokec9 'ok.'\cf5 \strokec5 ]\
+  \},\
+  \cf8 \strokec8 rastaCorpCeo\cf5 \strokec5 : \{\
+    \cf8 \strokec8 edLine\cf5 \strokec5 : \cf9 \strokec9 '...'\cf5 \strokec5 ,\
+    \cf8 \strokec8 bossLine\cf5 \strokec5 : \cf9 \strokec9 'I JUST WANTED SOMEONE TO SIT WITH ME.'\cf5 \strokec5 ,\
+    \cf8 \strokec8 lines\cf5 \strokec5 : [\cf9 \strokec9 '...'\cf5 \strokec5 ,\cf9 \strokec9 '...'\cf5 \strokec5 ,\cf9 \strokec9 'oh.'\cf5 \strokec5 ]\
+  \}\
+\};\
+\
+\cf7 \strokec7 function\cf5 \strokec5  \cf10 \strokec10 _startPuppetIntro\cf5 \strokec5 (scene, bossKey, onComplete) \{\
+  \cf7 \strokec7 var\cf5 \strokec5  pd = PUPPET_DIALOGUE[bossKey];\
+  \cf7 \strokec7 if\cf5 \strokec5  (!pd) \{\
+    \cf7 \strokec7 if\cf5 \strokec5  (onComplete) onComplete();\
+    \cf7 \strokec7 return\cf5 \strokec5 ;\
+  \}\
+  \
+  \cf7 \strokec7 var\cf5 \strokec5  W = \cf8 \strokec8 960\cf5 \strokec5 , H = \cf8 \strokec8 540\cf5 \strokec5 ;\
+  \cf7 \strokec7 var\cf5 \strokec5  g = scene.add.graphics().setDepth(\cf8 \strokec8 90\cf5 \strokec5 ).setScrollFactor(\cf8 \strokec8 0\cf5 \strokec5 );\
+  \
+  \cf11 \strokec11 // Background\cf5 \strokec5 \
+  g.fillStyle(\cf8 \strokec8 0x1a0800\cf5 \strokec5 , \cf8 \strokec8 1\cf5 \strokec5 );\
+  g.fillRect(\cf8 \strokec8 0\cf5 \strokec5 , \cf8 \strokec8 0\cf5 \strokec5 , W, H);\
+  \
+  \cf11 \strokec11 // Spotlight\cf5 \strokec5 \
+  g.fillStyle(\cf8 \strokec8 0xffaa55\cf5 \strokec5 , \cf8 \strokec8 0.15\cf5 \strokec5 );\
+  g.fillCircle(W/\cf8 \strokec8 2\cf5 \strokec5 , H/\cf8 \strokec8 2\cf5 \strokec5 , \cf8 \strokec8 240\cf5 \strokec5 );\
+  g.fillStyle(\cf8 \strokec8 0xffaa55\cf5 \strokec5 , \cf8 \strokec8 0.1\cf5 \strokec5 );\
+  g.fillCircle(W/\cf8 \strokec8 2\cf5 \strokec5 , H/\cf8 \strokec8 2\cf5 \strokec5 , \cf8 \strokec8 180\cf5 \strokec5 );\
+\
+  \cf11 \strokec11 // Ed Silhouette\cf5 \strokec5 \
+  g.save();\
+  g.translateCanvas(\cf8 \strokec8 220\cf5 \strokec5 , \cf8 \strokec8 280\cf5 \strokec5 );\
+  g.fillStyle(\cf8 \strokec8 0x000000\cf5 \strokec5 , \cf8 \strokec8 1\cf5 \strokec5 );\
+  g.fillRoundedRect(-\cf8 \strokec8 10\cf5 \strokec5 , -\cf8 \strokec8 30\cf5 \strokec5 , \cf8 \strokec8 20\cf5 \strokec5 , \cf8 \strokec8 40\cf5 \strokec5 , \cf8 \strokec8 4\cf5 \strokec5 ); \cf11 \strokec11 // body\cf5 \strokec5 \
+  g.fillCircle(\cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 44\cf5 \strokec5 , \cf8 \strokec8 14\cf5 \strokec5 ); \cf11 \strokec11 // head\cf5 \strokec5 \
+  g.fillTriangle(-\cf8 \strokec8 8\cf5 \strokec5 , -\cf8 \strokec8 54\cf5 \strokec5 , -\cf8 \strokec8 4\cf5 \strokec5 , -\cf8 \strokec8 62\cf5 \strokec5 , \cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 54\cf5 \strokec5 ); \cf11 \strokec11 // spine 1\cf5 \strokec5 \
+  g.fillTriangle(-\cf8 \strokec8 2\cf5 \strokec5 , -\cf8 \strokec8 56\cf5 \strokec5 , \cf8 \strokec8 2\cf5 \strokec5 , -\cf8 \strokec8 66\cf5 \strokec5 , \cf8 \strokec8 6\cf5 \strokec5 , -\cf8 \strokec8 56\cf5 \strokec5 ); \cf11 \strokec11 // spine 2\cf5 \strokec5 \
+  g.fillTriangle(\cf8 \strokec8 4\cf5 \strokec5 , -\cf8 \strokec8 54\cf5 \strokec5 , \cf8 \strokec8 8\cf5 \strokec5 , -\cf8 \strokec8 62\cf5 \strokec5 , \cf8 \strokec8 12\cf5 \strokec5 , -\cf8 \strokec8 54\cf5 \strokec5 ); \cf11 \strokec11 // spine 3\cf5 \strokec5 \
+  g.fillRect(\cf8 \strokec8 10\cf5 \strokec5 , -\cf8 \strokec8 42\cf5 \strokec5 , \cf8 \strokec8 12\cf5 \strokec5 , \cf8 \strokec8 2\cf5 \strokec5 ); \cf11 \strokec11 // cig\cf5 \strokec5 \
+  g.restore();\
+  \
+  \cf11 \strokec11 // Boss Silhouette\cf5 \strokec5 \
+  g.save();\
+  g.translateCanvas(\cf8 \strokec8 740\cf5 \strokec5 , \cf8 \strokec8 280\cf5 \strokec5 );\
+  g.fillStyle(\cf8 \strokec8 0x000000\cf5 \strokec5 , \cf8 \strokec8 1\cf5 \strokec5 );\
+  \cf7 \strokec7 if\cf5 \strokec5  (bossKey === \cf9 \strokec9 'daikon'\cf5 \strokec5 ) \{\
+    g.fillRect(-\cf8 \strokec8 20\cf5 \strokec5 , -\cf8 \strokec8 80\cf5 \strokec5 , \cf8 \strokec8 40\cf5 \strokec5 , \cf8 \strokec8 90\cf5 \strokec5 );\
+    g.fillTriangle(-\cf8 \strokec8 20\cf5 \strokec5 , -\cf8 \strokec8 80\cf5 \strokec5 , \cf8 \strokec8 20\cf5 \strokec5 , -\cf8 \strokec8 80\cf5 \strokec5 , \cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 110\cf5 \strokec5 );\
+  \} \cf7 \strokec7 else\cf5 \strokec5  \cf7 \strokec7 if\cf5 \strokec5  (bossKey === \cf9 \strokec9 'handtowel'\cf5 \strokec5 ) \{\
+    g.fillRect(-\cf8 \strokec8 30\cf5 \strokec5 , -\cf8 \strokec8 60\cf5 \strokec5 , \cf8 \strokec8 60\cf5 \strokec5 , \cf8 \strokec8 70\cf5 \strokec5 );\
+    g.lineStyle(\cf8 \strokec8 6\cf5 \strokec5 , \cf8 \strokec8 0x000000\cf5 \strokec5 , \cf8 \strokec8 1\cf5 \strokec5 );\
+    g.strokeCircle(\cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 , \cf8 \strokec8 15\cf5 \strokec5 );\
+  \} \cf7 \strokec7 else\cf5 \strokec5  \cf7 \strokec7 if\cf5 \strokec5  (bossKey === \cf9 \strokec9 'mochiQueen'\cf5 \strokec5 ) \{\
+    g.fillCircle(\cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 40\cf5 \strokec5 , \cf8 \strokec8 40\cf5 \strokec5 );\
+    g.fillTriangle(-\cf8 \strokec8 15\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 , -\cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 90\cf5 \strokec5 , \cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 );\
+    g.fillTriangle(-\cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 , \cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 95\cf5 \strokec5 , \cf8 \strokec8 15\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 );\
+    g.fillTriangle(\cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 , \cf8 \strokec8 15\cf5 \strokec5 , -\cf8 \strokec8 90\cf5 \strokec5 , \cf8 \strokec8 25\cf5 \strokec5 , -\cf8 \strokec8 75\cf5 \strokec5 );\
+  \} \cf7 \strokec7 else\cf5 \strokec5  \cf7 \strokec7 if\cf5 \strokec5  (bossKey === \cf9 \strokec9 'insulinAdmiral'\cf5 \strokec5 ) \{\
+    g.fillRect(-\cf8 \strokec8 40\cf5 \strokec5 , -\cf8 \strokec8 20\cf5 \strokec5 , \cf8 \strokec8 80\cf5 \strokec5 , \cf8 \strokec8 30\cf5 \strokec5 );\
+    g.fillTriangle(-\cf8 \strokec8 40\cf5 \strokec5 , -\cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 70\cf5 \strokec5 , -\cf8 \strokec8 5\cf5 \strokec5 , -\cf8 \strokec8 40\cf5 \strokec5 , \cf8 \strokec8 10\cf5 \strokec5 );\
+    g.fillRect(\cf8 \strokec8 40\cf5 \strokec5 , -\cf8 \strokec8 10\cf5 \strokec5 , \cf8 \strokec8 10\cf5 \strokec5 , \cf8 \strokec8 10\cf5 \strokec5 );\
+  \} \cf7 \strokec7 else\cf5 \strokec5  \cf7 \strokec7 if\cf5 \strokec5  (bossKey === \cf9 \strokec9 'rastaCorpCeo'\cf5 \strokec5 ) \{\
+    g.fillCircle(\cf8 \strokec8 0\cf5 \strokec5 , -\cf8 \strokec8 70\cf5 \strokec5 , \cf8 \strokec8 18\cf5 \strokec5 );\
+    g.fillRect(-\cf8 \strokec8 15\cf5 \strokec5 , -\cf8 \strokec8 50\cf5 \strokec5 , \cf8 \strokec8 30\cf5 \strokec5 , \cf8 \strokec8 60\cf5 \strokec5 );\
+    g.fillRect(\cf8 \strokec8 20\cf5 \strokec5 , -\cf8 \strokec8 20\cf5 \strokec5 , \cf8 \strokec8 20\cf5 \strokec5 , \cf8 \strokec8 15\cf5 \strokec5 ); \cf11 \strokec11 // briefcase\cf5 \strokec5 \
+  \}\
+  g.restore();\
+\
+  \cf7 \strokec7 var\cf5 \strokec5  textObj = scene.add.text(W/\cf8 \strokec8 2\cf5 \strokec5 , \cf8 \strokec8 420\cf5 \strokec5 , \cf9 \strokec9 ''\cf5 \strokec5 , \{\
+    \cf8 \strokec8 fontFamily\cf5 \strokec5 : \cf9 \strokec9 'Inconsolata,monospace'\cf5 \strokec5 ,\
+    \cf8 \strokec8 fontSize\cf5 \strokec5 : \cf9 \strokec9 '22px'\cf5 \strokec5 ,\
+    \cf8 \strokec8 color\cf5 \strokec5 : \cf9 \strokec9 '#ffddaa'\cf5 \strokec5 ,\
+    \cf8 \strokec8 align\cf5 \strokec5 : \cf9 \strokec9 'center'\cf5 \strokec5 \
+  \}).setOrigin(\cf8 \strokec8 0.5\cf5 \strokec5 ).setDepth(\cf8 \strokec8 91\cf5 \strokec5 ).setScrollFactor(\cf8 \strokec8 0\cf5 \strokec5 );\
+\
+  \cf7 \strokec7 var\cf5 \strokec5  seq = [pd.edLine, pd.bossLine];\
+  \cf7 \strokec7 for\cf5 \strokec5  (\cf7 \strokec7 var\cf5 \strokec5  i = \cf8 \strokec8 0\cf5 \strokec5 ; i < pd.lines.length; i++) \{\
+    seq.push(pd.lines[i]);\
+  \}\
+\
+  \cf7 \strokec7 var\cf5 \strokec5  delay = \cf8 \strokec8 500\cf5 \strokec5 ;\
+  \cf7 \strokec7 for\cf5 \strokec5  (\cf7 \strokec7 var\cf5 \strokec5  j = \cf8 \strokec8 0\cf5 \strokec5 ; j < seq.length; j++) \{\
+    (\cf7 \strokec7 function\cf5 \strokec5 (idx, txt) \{\
+      scene.time.delayedCall(delay, \cf7 \strokec7 function\cf5 \strokec5 () \{\
+        textObj.setText(txt);\
+      \});\
+    \})(j, seq[j]);\
+    delay += \cf8 \strokec8 1200\cf5 \strokec5 ;\
+  \}\
+  \
+  scene.time.delayedCall(delay + \cf8 \strokec8 800\cf5 \strokec5 , \cf7 \strokec7 function\cf5 \strokec5 () \{\
+    scene.tweens.add(\{\
+      \cf8 \strokec8 targets\cf5 \strokec5 : [g, textObj],\
+      \cf8 \strokec8 alpha\cf5 \strokec5 : \cf8 \strokec8 0\cf5 \strokec5 ,\
+      \cf8 \strokec8 duration\cf5 \strokec5 : \cf8 \strokec8 600\cf5 \strokec5 ,\
+      \cf8 \strokec8 onComplete\cf5 \strokec5 : \cf7 \strokec7 function\cf5 \strokec5 () \{\
+        g.destroy();\
+        textObj.destroy();\
+        \cf7 \strokec7 if\cf5 \strokec5  (onComplete) onComplete();\
+      \}\
+    \});\
+  \});\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs32 \cf2 \cb4 \strokec2 === TASK C: EXTEND ANOMALY OVERLAY TO WORLDMAP1-5 ===\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs21 \cf5 \cb6 \strokec5 SCENE: WorldMapScene\
+CREATE \'97 find: "catNewsHl.destroy();\});\\n  \}"\
+CREATE \'97 insert after: "\\n  this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\n  this._anomalyTimer=0;"\
+UPDATE \'97 find: "this._tickX=960;\\n  \}"\
+UPDATE \'97 replace with: "this._tickX=960;\\n  \}\\n  _drawAnomalyOverlay(this);"\
+\
+SCENE: WorldMap2Scene\
+CREATE \'97 find: "padding:\{x:4,y:2\}\}).setDepth(10);"\
+CREATE \'97 insert after: "\\nthis.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCatsW2();"\
+UPDATE \'97 replace with: "this._drawCatsW2(); _drawAnomalyOverlay(this);"\
+\
+SCENE: WorldMap3Scene\
+CREATE \'97 find: "padding:\{x:4,y:2\}\}).setDepth(10);"\
+CREATE \'97 insert after: "\\nthis.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats3();"\
+UPDATE \'97 replace with: "this._drawCats3(); _drawAnomalyOverlay(this);"\
+\
+SCENE: WorldMap4Scene\
+CREATE \'97 find: "this._showMsg4('WORLD 4 UNLOCKED! THE CROSSROADS AWAIT.',3800);\}"\
+CREATE \'97 insert after: "\\nthis.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats4();"\
+UPDATE \'97 replace with: "this._drawCats4(); _drawAnomalyOverlay(this);"\
+\
+SCENE: WorldMap5Scene\
+CREATE \'97 find: "this._showMsg5('WORLD 5 UNLOCKED! RIVER MARKET AWAITS.',3800);"\
+CREATE \'97 insert after: "\\nthis.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats5();"\
+UPDATE \'97 replace with: "this._drawCats5(); _drawAnomalyOverlay(this);"\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf2 \cb1 \strokec2 \
+\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \cb6 Your uploads may be too large for the best results.\'a0{\field{\*\fldinst{HYPERLINK "https://support.google.com/gemini?p=context_window"}}{\fldrslt 
+\f1 \ul Learn more
+\f0 \cb1 \ulnone \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb6 \ul \ulc2 Opens in a new window\cb1 \ulnone \
+}}\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf2 \cb1 \
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs32 \cf2 \cb3 You said\cb1 \
+\cb3 PLEASE CONTINUE - LOOKS LIKE YOU GOT CUT OFF:\cb1 \
+\
+\cb3 Here's your most recent thoughts/action:\cb1 \
+\cb3 Analyzing the Tasks\cb1 \
+\cb3 I've begun to analyze the tasks, initially focusing on the audit of version 1.3 additions specified in the briefing.\cb1 \
+\
+\cb3 Auditing Project Additions\cb1 \
+\cb3 I've begun reviewing the v1.3 additions, focusing on the specified hooks and alias within the code.\cb1 \
+\
+\cb3 Analyzing Code Updates\cb1 \
+\cb3 I've begun auditing the code additions to find the listed issues, focusing on the DarkEpilogueScene check.\cb1 \
+\cb3 Confirming Scene Transitions\cb1 \
+\cb3 I've verified DarkEpilogue is called in LHCEpilogue, examining scene transitions and considering scene.add null.\cb1 \
+\cb3 Refining Timing & Graphics\cb1 \
+\cb3 I have corrected the delta parameter and included clear() call, improving frame-rate consistency and preventing glitch persistence.\cb1 \
+\cb3 Compiling Audit Findings\cb1 \
+\cb3 I have synthesized the audit report, detailing fixes for scene transitions and particle pool cleanup.\cb1 \
+\cb3 Optimizing Runtime Flags\cb1 \
+\cb3 I have successfully moved the _rbFlags initialization to onCreate, preventing unnecessary frame-by-frame allocation.\cb1 \
+\cb3 Constructing Epilogue Scene\cb1 \
+\cb3 I've implemented the Epilogue scene's initial graphics, including silhouettes and text, with boss key variations.\cb1 \
+\cb3 Implementing Typewriter Effect\cb1 \
+\cb3 The typewriter effect is now implemented, using line-by-line display to match timing goals.\cb1 \
+\cb3 Analyzing News Ticker Code\cb1 \
+\cb3 I've examined WorldMap2/3 for similar news tickers, finding initialization and update calls.\cb1 \
+\cb3 Refining Scene Updates\cb1 \
+\cb3 I've crafted find-and-replace strings for WorldMap[2-5]Scene updates, including the anomaly overlay call.\cb1 \
+\cb3 Crafting WorldMap Updates\cb1 \
+\cb3 I've specified find-and-replace strings for anomaly overlays and optimized search queries for different WorldMap scenes.\cb1 \
+\cb3 Implementing Anomaly Updates\cb1 \
+\cb3 I've crafted anomaly overlay fixes, including delta-based timers and clear() fixes for all scenes.\cb1 \
+\cb3 Refactoring Flags Initialization\cb1 \
+\cb3 I have now moved the problematic _rbFlags allocation to the onCreate hook.\cb1 \
+\cb3 Clarifying Boss Scene Insertion\cb1 \
+\cb3 I've clarified instructions, identifying insertion points within boss scene create() functions to add the scene updates.\cb1 \
+\cb3 Defining WorldMap Updates\cb1 \
+\cb3 I've specified the precise find/replace strings for WorldMap scene anomalies, improving anomaly visuals.\cb1 \
+\cb3 Refining Worldmap Scene Updates\cb1 \
+\cb3 I've specified the precise insertion points and refined the find strings for anomaly updates in WorldMap scenes.\cb1 \
+\cb3 Analyzing WorldMap Anomalies\cb1 \
+\cb3 I've specified anomaly insertion points and find strings for WorldMap2, WorldMap3, and WorldMap5 news tickers.\cb1 \
+\cb3 Finalizing WorldMap Updates\cb1 \
+\cb3 I've specified and verified find/replace strings for anomaly overlays in all scenes, addressing WorldMap4.\cb1 \
+\cb3 Implementing Anomaly Updates\cb1 \
+\cb3 I've finished addressing all scene anomaly overlay issues, including the timer delta and persistent glitch problems.\cb1 \
+\cb3 Implementing Puppet Intro\cb1 \
+\cb3 I've crafted a function to display silhouette introductions based on boss keys.\cb1 \
+\cb3 I've established the PuppetIntro scene, handling dialogue and silhouette graphics for new bosses.\cb1 \
+\cb3 Gemini said\cb1 \
+\
+\cb3 === TASK A: AUDIT REPORT ===\cb1 \
+\cb3 === TASK B: PUPPET THEATER BOSS INTRO SYSTEM ===\cb1 \
+\cb3 === TASK C: EXTEND ANOMALY OVERLAY TO WORLDMAP1-5 ===\cb1 \
+\
+\
+\cb3 Your uploads may be too large for the best results.\'a0Learn more\cb1 \
+\cb3 Opens in a new window\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf2 \
+\
+\
+\
+\
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs28 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f3\b\fs36 \cf2 \cb4 Gemini said\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f5\b0\fs28 \cf5 \cb6 \strokec5 Plaintext\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs21 \cf5 \cb6 === TASK A: AUDIT REPORT ===\
+[SEVERITY: HIGH] System: DarkEpilogueScene \'97 Issue: SMOKE_POOL.length=0 and EX_POOL.length=0 are not called before transitioning back to the WorldMap, leading to potential memory leaks. \'97 Fix: Add SMOKE_POOL.length=0; EX_POOL.length=0; to both the LHCEpilogue exit logic and the DarkEpilogue exit logic.\
+[SEVERITY: MED] System: DarkEpilogueScene \'97 Issue: The _mandelaFlash(self) call at t=12000ms can trigger after the scene has been destroyed if the player skips early, causing a crash. \'97 Fix: Wrap the internal flash logic in an if(!self._done) guard.\
+[SEVERITY: LOW] System: DarkEpilogueScene \'97 Issue: Tween-animated text objects might not be garbage collected immediately if tweens overlap with scene exits. \'97 Fix: Call .destroy() on text objects in the onComplete handlers of their tweens. Ensure setScrollFactor(0) and setDepth() are explicitly applied.\
+[SEVERITY: HIGH] System: DarkEpilogueScene \'97 Issue: this.keys.z is not initialized and the update loop lacks a this._done check, allowing double-triggering or errors on Z press. \'97 Fix: Initialize this.keys = \{z: this.input.keyboard.addKey('Z')\} in create() and check if (!this._done && Phaser.Input.Keyboard.JustDown(this.keys.z)) in update().\
+[SEVERITY: MED] System: _drawAnomalyOverlay \'97 Issue: Using scene._anomalyTimer = (scene._anomalyTimer||0) - 16 assumes a fixed 60fps, causing inconsistent timer behavior on varying refresh rates. \'97 Fix: Pass the delta time as a parameter _drawAnomalyOverlay(scene, delta) and subtract delta instead of 16.\
+[SEVERITY: MED] System: _drawAnomalyOverlay \'97 Issue: scene.anomalyG.clear() only runs when mandela >= 10, meaning old graphics persist if the condition evaluates to false later. \'97 Fix: Move scene.anomalyG.clear() to the top of the function so it clears every frame unconditionally.\
+[SEVERITY: LOW] System: _drawAnomalyOverlay \'97 Issue: text.destroy() in the tween onComplete handler will throw an error if the scene transitions mid-tween. \'97 Fix: Wrap the destroy call in a try/catch block: try \{ txt.destroy(); \} catch(e) \{\}.\
+[SEVERITY: HIGH] System: _drawAnomalyOverlay \'97 Issue: Variables scene.mapOffX and scene.tW might not exist on all WorldMap scenes, causing undefined errors. \'97 Fix: Use fallback values like var offX = scene.mapOffX || scene.offX || 0; and var tW = scene.tW || 32;.\
+[SEVERITY: HIGH] System: Level63/64 onUpdate hooks \'97 Issue: scene.edPx is referenced, but the factory creates the player physics object as scene.ep, leading to undefined reference errors. \'97 Fix: Change the reference from scene.edPx.x to scene.ep ? scene.ep.x : 0.\
+[SEVERITY: LOW] System: Level63/64 onUpdate hooks \'97 Issue: if(!scene._rbFlags)scene._rbFlags=\{\} runs every frame, which is safe but wasteful. \'97 Fix: Move the initialization of scene._rbFlags = \{\} to the onCreate hook instead of onUpdate.\
+\
+\
+=== TASK B: PUPPET THEATER BOSS INTRO SYSTEM ===\
+```javascript\
+var PUPPET_DIALOGUE = \{\
+  daikon: \{\
+    edLine: 'so.',\
+    bossLine: 'I HAVE BEEN WAITING FOR YOU, CACTUS.',\
+    lines: ['...','he was waiting.','...alright.']\
+  \},\
+  handtowel: \{\
+    edLine: 'huh.',\
+    bossLine: 'I AM THE HANDTOWEL. I KNOW THINGS.',\
+    lines: ['...','ok.','...sure.']\
+  \},\
+  mochiQueen: \{\
+    edLine: '...',\
+    bossLine: 'DO YOU KNOW WHAT IT IS TO RULE IN PINK?',\
+    lines: ['...','she seems sad.','...well.']\
+  \},\
+  insulinAdmiral: \{\
+    edLine: 'thats a big syringe.',\
+    bossLine: 'HALT. CACTUS. THE GLUCOSE IS UNBALANCED.',\
+    lines: ['he has a ship.','...a syringe ship.','ok.']\
+  \},\
+  rastaCorpCeo: \{\
+    edLine: '...',\
+    bossLine: 'I JUST WANTED SOMEONE TO SIT WITH ME.',\
+    lines: ['...','...','oh.']\
+  \}\
+\};\
+\
+function _startPuppetIntro(scene, bossKey, onComplete) \{\
+  var pd = PUPPET_DIALOGUE[bossKey];\
+  if (!pd) \{\
+    if (onComplete) onComplete();\
+    return;\
+  \}\
+  \
+  var W = 960, H = 540;\
+  var g = scene.add.graphics().setDepth(90).setScrollFactor(0);\
+  \
+  g.fillStyle(0x1a0800, 1);\
+  g.fillRect(0, 0, W, H);\
+  \
+  g.fillStyle(0xffaa55, 0.15);\
+  g.fillCircle(W/2, H/2, 240);\
+  g.fillStyle(0xffaa55, 0.1);\
+  g.fillCircle(W/2, H/2, 180);\
+\
+  g.save();\
+  g.translateCanvas(220, 280);\
+  g.fillStyle(0x000000, 1);\
+  g.fillRoundedRect(-10, -30, 20, 40, 4);\
+  g.fillCircle(0, -44, 14);\
+  g.fillTriangle(-8, -54, -4, -62, 0, -54);\
+  g.fillTriangle(-2, -56, 2, -66, 6, -56);\
+  g.fillTriangle(4, -54, 8, -62, 12, -54);\
+  g.fillRect(10, -42, 12, 2);\
+  g.restore();\
+  \
+  g.save();\
+  g.translateCanvas(740, 280);\
+  g.fillStyle(0x000000, 1);\
+  if (bossKey === 'daikon') \{\
+    g.fillRect(-20, -80, 40, 90);\
+    g.fillTriangle(-20, -80, 20, -80, 0, -110);\
+  \} else if (bossKey === 'handtowel') \{\
+    g.fillRect(-30, -60, 60, 70);\
+    g.lineStyle(6, 0x000000, 1);\
+    g.strokeCircle(0, -75, 15);\
+  \} else if (bossKey === 'mochiQueen') \{\
+    g.fillCircle(0, -40, 40);\
+    g.fillTriangle(-15, -75, -5, -90, 5, -75);\
+    g.fillTriangle(-5, -75, 5, -95, 15, -75);\
+    g.fillTriangle(5, -75, 15, -90, 25, -75);\
+  \} else if (bossKey === 'insulinAdmiral') \{\
+    g.fillRect(-40, -20, 80, 30);\
+    g.fillTriangle(-40, -5, -70, -5, -40, 10);\
+    g.fillRect(40, -10, 10, 10);\
+  \} else if (bossKey === 'rastaCorpCeo') \{\
+    g.fillCircle(0, -70, 18);\
+    g.fillRect(-15, -50, 30, 60);\
+    g.fillRect(20, -20, 20, 15);\
+  \}\
+  g.restore();\
+\
+  var textObj = scene.add.text(W/2, 420, '', \{\
+    fontFamily: 'Inconsolata,monospace',\
+    fontSize: '22px',\
+    color: '#ffddaa',\
+    align: 'center'\
+  \}).setOrigin(0.5).setDepth(91).setScrollFactor(0);\
+\
+  var seq = [pd.edLine, pd.bossLine];\
+  for (var i = 0; i < pd.lines.length; i++) \{\
+    seq.push(pd.lines[i]);\
+  \}\
+\
+  var delay = 500;\
+  for (var j = 0; j < seq.length; j++) \{\
+    (function(idx, txt) \{\
+      scene.time.delayedCall(delay, function() \{\
+        textObj.setText(txt);\
+      \});\
+    \})(j, seq[j]);\
+    delay += 1200;\
+  \}\
+  \
+  scene.time.delayedCall(delay + 800, function() \{\
+    scene.tweens.add(\{\
+      targets: [g, textObj],\
+      alpha: 0,\
+      duration: 600,\
+      onComplete: function() \{\
+        g.destroy();\
+        try \{ textObj.destroy(); \} catch(e) \{\}\
+        if (onComplete) onComplete();\
+      \}\
+    \});\
+  \});\
+\}\
+\pard\pardeftab720\partightenfactor0
+
+\f5\fs28 \cf5 Plaintext\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs21 \cf5 \cb6 === TASK C: EXTEND ANOMALY OVERLAY TO WORLDMAP1-5 ===\
+\
+SCENE: WorldMapScene\
+CREATE \'97 find: "this.cameras.main.fadeIn(500);"\
+CREATE \'97 insert after: "this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._tickX=960;\\n  \}"\
+UPDATE \'97 replace with: "this._tickX=960;\\n  \}\\n  _drawAnomalyOverlay(this, time, delta);"\
+\
+SCENE: WorldMap2Scene\
+CREATE \'97 find: "this.cameras.main.fadeIn(500);"\
+CREATE \'97 insert after: "this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCatsW2();"\
+UPDATE \'97 replace with: "this._drawCatsW2();\\n  _drawAnomalyOverlay(this, time, delta);"\
+\
+SCENE: WorldMap3Scene\
+CREATE \'97 find: "this.cameras.main.fadeIn(500);"\
+CREATE \'97 insert after: "this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats3();"\
+UPDATE \'97 replace with: "this._drawCats3();\\n  _drawAnomalyOverlay(this, time, delta);"\
+\
+SCENE: WorldMap4Scene\
+CREATE \'97 find: "this.cameras.main.fadeIn(500);"\
+CREATE \'97 insert after: "this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats4();"\
+UPDATE \'97 replace with: "this._drawCats4();\\n  _drawAnomalyOverlay(this, time, delta);"\
+\
+SCENE: WorldMap5Scene\
+CREATE \'97 find: "this.cameras.main.fadeIn(500);"\
+CREATE \'97 insert after: "this.anomalyG=this.add.graphics().setDepth(25).setScrollFactor(0);\\nthis._anomalyTimer=0;"\
+UPDATE \'97 find: "this._drawCats5();"\
+UPDATE \'97 replace with: "this._drawCats5();\\n  _drawAnomalyOverlay(this, time, delta);"\cb1 \
+}

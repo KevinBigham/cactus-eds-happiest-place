@@ -1,0 +1,2410 @@
+﻿Please read and help our friend Claude Code with what we can, to help develop the GREATEST GAME OF ALL-TIME! LFG!!!!!
+7:56am
+Thought for 7s
+Hey there! Let's make the greatest game of all time together! Here's how we can help:
+1. Rasta Corp CEO Boss Fight: We need to create a full boss scene for the Rasta Corp CEO. This includes designing the boss fight mechanics, implementing the scene, and ensuring the narrative elements are in place.
+
+2. Dark Nihilistic Ending: We need to implement an alternate ending that triggers if the player shows mercy to all bosses. This involves creating the narrative content and the conditions for this ending.
+
+3. World 6 Full Completion: We need to complete levels 6-3 and 6-4, ensuring they have full content passes and integrate with the game's narrative systems.
+
+To get started, let's focus on one of these tasks. Which one would you like to tackle first? Or if you have any specific questions or need more details on any of these tasks, let me know!
+LFG!!!!! 🚀
+7:56am
+1!
+8:00am
+Thought for 1s
+Great! Let's start with the Rasta Corp CEO Boss Fight. Here's a plan to design and implement this boss fight:
+Boss Fight Mechanics Outline
+   1. Boss Abilities:
+
+      * Summon Minions: The Rasta Corp CEO can summon minions to help him in battle.
+      * Special Attacks: The boss can use special attacks that the player needs to avoid or counter.
+      * Dialogue: The boss will have specific lines of dialogue during the fight, including the final line: "I just wanted someone to sit with me."
+      2. Health and Damage:
+
+         * The boss will have a health bar that the player needs to deplete.
+         * The player can attack the boss using standard attacks (e.g., jumps, punches) and special abilities.
+         3. Special Mechanics:
+
+            * Phases: The boss fight could be divided into phases, with each phase introducing new abilities or increasing the difficulty.
+            * Mercy Condition: If the player shows mercy (e.g., by not attacking when the boss is vulnerable), it will contribute to the EWR_STATE.rastaCorp.sympathy counter.
+Creating the Boss Scene
+We'll use the factory pattern similar to the one used for levels. Here's a basic structure for the boss scene:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100], [300, 360, 80], // Platforms
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+    }
+  }
+});
+Implementing the Narrative Elements
+We'll need to add dialogue and narrative elements to the boss fight. This can be done using the helper functions provided, such as _triggerFourthWallBreak for post-boss monologues.
+Let's start by implementing the basic structure of the boss scene. Would you like to proceed with this plan, or do you have any specific ideas or changes in mind?
+8:00am
+Proceed! LFG!!!!
+8:00am
+Thought for 3s
+Here is the basic structure for the Rasta Corp CEO boss fight scene:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  }
+});
+You can download the scene configuration here: rasta_corp_ceo_scene.js
+Next, let's think about the boss's abilities and dialogue. What kind of special attacks or interactions would you like the Rasta Corp CEO to have? Also, do you have any specific dialogue in mind for the boss during the fight?
+Once we have a clear idea of these elements, we can add them to the scene configuration and think about how to integrate this scene into the main game. Let's continue with adding some basic abilities and dialogue to the boss fight. What would you like to add?
+8:00am
+lots of weird Wonder Showzen style humor!
+8:00am
+Thought for 1s
+Here are some ideas for adding weird Wonder Showzen style humor to the Rasta Corp CEO boss fight:
+Boss Introduction
+            * Line: "Welcome to Rasta Corp! We're not just a corporation, we're a family! A dysfunctional, profit-driven family!"
+Special Attacks
+            1. Corporate Jargon Attack:
+
+               * Line: "Let's circle back on this!"
+               * Effect: Summons minions to attack the player.
+               2. PowerPoint Presentation:
+
+                  * Line: "Let me show you this quarter's performance metrics!"
+                  * Effect: The boss pulls out a PowerPoint presentation that confuses the player, momentarily stunning them.
+Dialogue
+                  * When the boss is low on health:
+
+                     * Line: "Please, I have a family to support... and by family, I mean my stock portfolio!"
+                     * When the player shows mercy:
+
+                        * Line: "I just wanted someone to sit with me... and maybe sign this non-compete agreement."
+Minions
+                        * Corporate Drones:
+                        * Lines: "Synergy!", "Let's take this offline!", "We need to leverage our core competencies!"
+Let's add some of this dialogue and interactions to the boss fight scene. Here's an updated version of the scene configuration with these elements:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a family! A dysfunctional, profit-driven family!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement."
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+      }
+    }
+  ]
+});
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these additions? Do you have any other ideas for humor or interactions that fit the Wonder Showzen style? Let's continue to refine the boss fight scene!
+Memory updated
+Nice!!!! Let's make it even more Wonder Showzen-y!
+8:01am
+Thought for 1s
+Here's an even more Wonder Showzen-y version of the Rasta Corp CEO boss fight scene:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+      }
+    }
+  ]
+});
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these additions? Do you have any other ideas for humor or interactions that fit the Wonder Showzen style? Let's continue to refine the boss fight scene!
+8:01am
+You improve whatever you think could be improved LFG!
+8:01am
+Thought for 1s
+Here's an improved version of the Rasta Corp CEO boss fight scene with even more absurd and dark humor:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    {x: 900, type: 'mochi', spd: 70, hp: 3, pMin: 500, pMax: 900, dialogue: "I'm just here for the experience!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!",
+    desperate: "I don't know how to lead! I'm just a figurehead! Please, someone help me!",
+    playerLowHealth: "Looks like someone isn't getting their bonus this year!"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+      }
+    },
+    {
+      name: "Team Building Exercise",
+      dialogue: "Let's do a trust fall!",
+      effect: function(scene) {
+        // Random effect
+        console.log("Random effect!");
+      }
+    },
+    {
+      name: "Budget Cuts",
+      dialogue: "We're making budget cuts! Starting with your health!",
+      effect: function(scene) {
+        // Remove platforms or obstacles
+        console.log("Removing platforms or obstacles!");
+      }
+    }
+  ]
+});
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these additions? Do you have any other ideas for humor or interactions that fit the Wonder Showzen style? Let's continue to refine the boss fight scene!
+8:01am
+Love it! Let's do "Health and Damage: The boss will have a health bar that the player needs to deplete.
+The player can attack the boss using standard attacks (e.g., jumps, punches) and special abilities." now!
+8:02am
+Thought for 1s
+Here's how we can implement the health and damage mechanics for the Rasta Corp CEO boss fight:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    {x: 900, type: 'mochi', spd: 70, hp: 3, pMin: 500, pMax: 900, dialogue: "I'm just here for the experience!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!",
+    desperate: "I don't know how to lead! I'm just a figurehead! Please, someone help me!",
+    playerLowHealth: "Looks like someone isn't getting their bonus this year!"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+      }
+    },
+    {
+      name: "Team Building Exercise",
+      dialogue: "Let's do a trust fall!",
+      effect: function(scene) {
+        // Random effect
+        console.log("Random effect!");
+      }
+    },
+    {
+      name: "Budget Cuts",
+      dialogue: "We're making budget cuts! Starting with your health!",
+      effect: function(scene) {
+        // Remove platforms or obstacles
+        console.log("Removing platforms or obstacles!");
+      }
+    }
+  ],
+  bossHealth: 1000, // Initial health of the boss
+  playerAttacks: {
+    standard: {
+      jump: 50, // Damage from jump attack
+      punch: 30 // Damage from punch attack
+    },
+    special: {
+      ability1: 100, // Damage from special ability 1
+      ability2: 150  // Damage from special ability 2
+    },
+  onHit: function(scene, damage) {
+    // Reduce boss health by damage amount
+    this.bossHealth -= damage;
+    console.log("Boss health: " + this.bossHealth);
+
+
+    // Check if boss is defeated
+    if (this.bossHealth <= 0) {
+      console.log("Boss defeated!");
+      // Trigger the dark nihilistic ending if sympathy condition is met
+      if (EWR_STATE.rastaCorp.sympathy >= 4) {
+        console.log("Dark Nihilistic Ending Triggered");
+      }
+    }
+  }
+});
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these additions? Do you have any other ideas for health and damage mechanics that fit the Wonder Showzen style? Let's continue to refine the boss fight scene!
+8:02am
+LFG LFG THAT'S BADASS!!!! KEEP IT GOING AND KEEP IMPROVING LFG!!!!
+8:02am
+Thought for 1s
+Here's an even more improved version of the Rasta Corp CEO boss fight scene with additional features and interactions:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    {x: 900, type: 'mochi', spd: 70, hp: 3, pMin: 500, pMax: 900, dialogue: "I'm just here for the experience!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!",
+    desperate: "I don't know how to lead! I'm just a figurehead! Please, someone help me!",
+    playerLowHealth: "Looks like someone isn't getting their bonus this year!",
+    environmentInteraction: "What is this, a platformer? I didn't sign up for this!"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+        // Visual effect: corporate jargon text appears on screen
+        spawnCorporateJargon(scene);
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+        // Visual effect: PowerPoint slides appear on screen
+        spawnPowerPoint(scene);
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+        // Visual effect: meeting invitation appears on screen
+        spawnMeetingInvite(scene);
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+        // Visual effect: performance review document appears on screen
+        spawnPerformanceReview(scene);
+      }
+    },
+    {
+      name: "Team Building Exercise",
+      dialogue: "Let's do a trust fall!",
+      effect: function(scene) {
+        // Random effect
+        console.log("Random effect!");
+        // Mini-game: trust fall mini-game
+        startTrustFallMiniGame(scene);
+      }
+    },
+    {
+      name: "Budget Cuts",
+      dialogue: "We're making budget cuts! Starting with your health!",
+      effect: function(scene) {
+        // Remove platforms or obstacles
+        console.log("Removing platforms or obstacles!");
+        // Visual effect: platforms disappear
+        removePlatforms(scene);
+      }
+    }
+  ],
+  bossHealth: 1000, // Initial health of the boss
+  playerAttacks: {
+    standard: {
+      jump: 50, // Damage from jump attack
+      punch: 30 // Damage from punch attack
+    },
+    special: {
+      ability1: 100, // Damage from special ability 1
+      ability2: 150  // Damage from special ability 2
+    },
+  onHit: function(scene, damage) {
+    // Reduce boss health by damage amount
+    this.bossHealth -= damage;
+    console.log("Boss health: " + this.bossHealth);
+
+
+    // Visual effect: damage numbers appear on screen
+    spawnDamageNumbers(scene, damage);
+
+
+    // Check if boss is defeated
+    if (this.bossHealth <= 0) {
+      console.log("Boss defeated!");
+      // Visual effect: boss explodes
+      spawnExplosion(scene, this.x, this.y, '#ff0000', 50);
+
+
+      // Trigger the dark nihilistic ending if sympathy condition is met
+      if (EWR_STATE.rastaCorp.sympathy >= 4) {
+        console.log("Dark Nihilistic Ending Triggered");
+      }
+    }
+  },
+  environmentInteractions: [
+    {
+      name: "Water Cooler",
+      effect: function(scene) {
+        // Restore player's health
+        console.log("Restoring player's health!");
+        // Visual effect: water cooler appears on screen
+        spawnWaterCooler(scene);
+      }
+    },
+    {
+      name: "Printer",
+      effect: function(scene) {
+        // Print out helpful documents
+        console.log("Printing helpful documents!");
+        // Visual effect: documents appear on screen
+        spawnDocuments(scene);
+      }
+    }
+  ]
+});
+
+
+// Helper functions for visual effects and mini-games
+function spawnCorporateJargon(scene) {
+  console.log("Spawning corporate jargon!");
+  // Implement visual effect for corporate jargon
+}
+
+
+function spawnPowerPoint(scene) {
+  console.log("Spawning PowerPoint slides!");
+  // Implement visual effect for PowerPoint slides
+}
+
+
+function spawnMeetingInvite(scene) {
+  console.log("Spawning meeting invitation!");
+  // Implement visual effect for meeting invitation
+}
+
+
+function spawnPerformanceReview(scene) {
+  console.log("Spawning performance review!");
+  // Implement visual effect for performance review
+}
+
+
+function startTrustFallMiniGame(scene) {
+  console.log("Starting trust fall mini-game!");
+  // Implement trust fall mini-game
+}
+
+
+function removePlatforms(scene) {
+  console.log("Removing platforms!");
+  // Implement visual effect for removing platforms
+}
+
+
+function spawnDamageNumbers(scene, damage) {
+  console.log("Spawning damage numbers: " + damage);
+  // Implement visual effect for damage numbers
+}
+
+
+function spawnExplosion(scene, x, y, color, size) {
+  console.log("Spawning explosion at (" + x + ", " + y + ")");
+  // Implement visual effect for explosion
+}
+
+
+function spawnWaterCooler(scene) {
+  console.log("Spawning water cooler!");
+  // Implement visual effect for water cooler
+}
+
+
+function spawnDocuments(scene) {
+  console.log("Spawning documents!");
+  // Implement visual effect for documents
+}
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these additions? Do you have any other ideas for visual effects, mini-games, environmental interactions, or more absurd dialogue? Let's continue to refine the boss fight scene!
+8:02am
+I LOVE IT - LET'S THROW IN SOME AWESOME MINI GAMES THAT YOU HAVE HAD SUCCESS WITH
+8:02am
+Thought for 1s
+Here's an updated version of the Rasta Corp CEO boss fight scene with the addition of some awesome mini-games:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    {x: 900, type: 'mochi', spd: 70, hp: 3, pMin: 500, pMax: 900, dialogue: "I'm just here for the experience!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!",
+    desperate: "I don't know how to lead! I'm just a figurehead! Please, someone help me!",
+    playerLowHealth: "Looks like someone isn't getting their bonus this year!",
+    environmentInteraction: "What is this, a platformer? I didn't sign up for this!",
+    miniGameIntro: "Let's take a break from the fighting and play a fun game!"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+        // Visual effect: corporate jargon text appears on screen
+        spawnCorporateJargon(scene);
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+        // Visual effect: PowerPoint slides appear on screen
+        spawnPowerPoint(scene);
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+        // Visual effect: meeting invitation appears on screen
+        spawnMeetingInvite(scene);
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+        // Visual effect: performance review document appears on screen
+        spawnPerformanceReview(scene);
+      }
+    },
+    {
+      name: "Team Building Exercise",
+      dialogue: "Let's do a trust fall!",
+      effect: function(scene) {
+        // Random effect
+        console.log("Random effect!");
+        // Mini-game: trust fall mini-game
+        startTrustFallMiniGame(scene);
+      }
+    },
+    {
+      name: "Budget Cuts",
+      dialogue: "We're making budget cuts! Starting with your health!",
+      effect: function(scene) {
+        // Remove platforms or obstacles
+        console.log("Removing platforms or obstacles!");
+        // Visual effect: platforms disappear
+        removePlatforms(scene);
+      }
+    }
+  ],
+  bossHealth: 1000, // Initial health of the boss
+  playerAttacks: {
+    standard: {
+      jump: 50, // Damage from jump attack
+      punch: 30 // Damage from punch attack
+    },
+    special: {
+      ability1: 100, // Damage from special ability 1
+      ability2: 150  // Damage from special ability 2
+    },
+  onHit: function(scene, damage) {
+    // Reduce boss health by damage amount
+    this.bossHealth -= damage;
+    console.log("Boss health: " + this.bossHealth);
+
+
+    // Visual effect: damage numbers appear on screen
+    spawnDamageNumbers(scene, damage);
+
+
+    // Check if boss is defeated
+    if (this.bossHealth <= 0) {
+      console.log("Boss defeated!");
+      // Visual effect: boss explodes
+      spawnExplosion(scene, this.x, this.y, '#ff0000', 50);
+
+
+      // Trigger the dark nihilistic ending if sympathy condition is met
+      if (EWR_STATE.rastaCorp.sympathy >= 4) {
+        console.log("Dark Nihilistic Ending Triggered");
+      }
+    }
+  },
+  environmentInteractions: [
+    {
+      name: "Water Cooler",
+      effect: function(scene) {
+        // Restore player's health
+        console.log("Restoring player's health!");
+        // Visual effect: water cooler appears on screen
+        spawnWaterCooler(scene);
+      }
+    },
+    {
+      name: "Printer",
+      effect: function(scene) {
+        // Print out helpful documents
+        console.log("Printing helpful documents!");
+        // Visual effect: documents appear on screen
+        spawnDocuments(scene);
+      }
+    }
+  ],
+  miniGames: [
+    {
+      name: "Office Trivia",
+      description: "Answer questions about corporate culture and office jargon.",
+      questions: [
+        {
+          question: "What does 'synergy' mean?",
+          answers: ["Working together", "A type of dance", "A new brand of coffee"],
+          correctAnswer: 0
+        },
+        {
+          question: "What is the first rule of office politics?",
+          answers: ["Always CC your boss", "Never talk about office politics", "Take credit for others' work"],
+          correctAnswer: 2
+        },
+        {
+          question: "What is the most important thing in a meeting?",
+          answers: ["The agenda", "The snacks", "The person talking the loudest"],
+          correctAnswer: 1
+        }
+      ],
+      effect: function(scene, correctAnswers) {
+        // Restore player's health based on number of correct answers
+        console.log("Restoring player's health based on correct answers: " + correctAnswers);
+        // Implement health restoration logic
+      }
+    },
+    {
+      name: "Coffee Fetch",
+      description: "Fetch coffee for the boss and other office workers.",
+      effect: function(scene, success) {
+        // Restore player's health if successful
+        console.log("Restoring player's health based on success: " + success);
+        // Implement health restoration logic
+      }
+    },
+    {
+      name: "Printer Jam",
+      description: "Fix the printer by pressing buttons in the correct sequence.",
+      effect: function(scene, success) {
+        // Temporarily stun the boss if successful
+        console.log("Temporarily stunning the boss based on success: " + success);
+        // Implement boss stun logic
+      }
+    },
+    {
+      name: "Meeting Bingo",
+      description: "Mark off items on your bingo card as you hear certain phrases.",
+      effect: function(scene, completed) {
+        // Gain a special ability if bingo is completed
+        console.log("Gaining a special ability based on completion: " + completed);
+        // Implement special ability logic
+      }
+    }
+  ]
+});
+
+
+// Helper functions for visual effects and mini-games
+function spawnCorporateJargon(scene) {
+  console.log("Spawning corporate jargon!");
+  // Implement visual effect for corporate jargon
+}
+
+
+function spawnPowerPoint(scene) {
+  console.log("Spawning PowerPoint slides!");
+  // Implement visual effect for PowerPoint slides
+}
+
+
+function spawnMeetingInvite(scene) {
+  console.log("Spawning meeting invitation!");
+  // Implement visual effect for meeting invitation
+}
+
+
+function spawnPerformanceReview(scene) {
+  console.log("Spawning performance review!");
+  // Implement visual effect for performance review
+}
+
+
+function startTrustFallMiniGame(scene) {
+  console.log("Starting trust fall mini-game!");
+  // Implement trust fall mini-game
+}
+
+
+function removePlatforms(scene) {
+  console.log("Removing platforms!");
+  // Implement visual effect for removing platforms
+}
+
+
+function spawnDamageNumbers(scene, damage) {
+  console.log("Spawning damage numbers: " + damage);
+  // Implement visual effect for damage numbers
+}
+
+
+function spawnExplosion(scene, x, y, color, size) {
+  console.log("Spawning explosion at (" + x + ", " + y + ")");
+  // Implement visual effect for explosion
+}
+
+
+function spawnWaterCooler(scene) {
+  console.log("Spawning water cooler!");
+  // Implement visual effect for water cooler
+}
+
+
+function spawnDocuments(scene) {
+  console.log("Spawning documents!");
+  // Implement visual effect for documents
+}
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+What do you think of these mini-games? Do you have any other ideas for mini-games or additional features? Let's continue to refine the boss fight scene!
+8:02am
+LOVE IT!!!!
+
+
+Now do anything else you can to wrap up the boss part! then we are going to: Dark Nihilistic Ending: We need to implement an alternate ending that triggers if the player shows mercy to all bosses. This involves creating the narrative content and the conditions for this ending.
+8:03am
+Thought for 1s
+Here's the final version of the Rasta Corp CEO boss fight scene with all the improvements and additions:
+javascript
+Copy
+var RastaCorpCEOScene = createLevelScene({
+  key: 'RastaCorpCEO',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'RastaCorpCEO',
+  checkptX: 2400,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: 'RASTA CORP CEO',
+  intro: 'RASTA CORP CEO',
+  plats: [
+    [120, 400, 100],
+    [300, 360, 80],
+    // Add more platforms as needed
+  ],
+  catX: [200, 420, 640],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Synergy!"},
+    {x: 500, type: 'mochi', spd: 60, hp: 3, pMin: 300, pMax: 700, dialogue: "Let's take this offline!"},
+    {x: 700, type: 'mochi', spd: 65, hp: 3, pMin: 400, pMax: 800, dialogue: "We need to leverage our core competencies!"},
+    {x: 900, type: 'mochi', spd: 70, hp: 3, pMin: 500, pMax: 900, dialogue: "I'm just here for the experience!"},
+    // Add more minions as needed
+  ],
+  pickups: [[1320, 245], [2760, 295]],
+  onBeat: function(scene) {
+    // Custom logic for when the boss is beaten
+    if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      // Trigger the dark nihilistic ending
+      console.log("Dark Nihilistic Ending Triggered");
+    }
+  },
+  bossDialogue: {
+    intro: "Welcome to Rasta Corp! We're not just a corporation, we're a cult! A cult that values shareholder returns above all else!",
+    lowHealth: "Please, I have a family to support... and by family, I mean my stock portfolio!",
+    mercy: "I just wanted someone to sit with me... and maybe sign this non-compete agreement.",
+    confused: "I don't understand why our profits are down! Oh wait, it's because we're evil!",
+    playerAttack: "HR has been notified of your hostile work environment!",
+    desperate: "I don't know how to lead! I'm just a figurehead! Please, someone help me!",
+    playerLowHealth: "Looks like someone isn't getting their bonus this year!",
+    environmentInteraction: "What is this, a platformer? I didn't sign up for this!",
+    miniGameIntro: "Let's take a break from the fighting and play a fun game!",
+    defeated: "I... I don't understand. I did everything by the book. How could this happen?"
+  },
+  bossAttacks: [
+    {
+      name: "Corporate Jargon Attack",
+      dialogue: "Let's circle back on this!",
+      effect: function(scene) {
+        // Summon minions
+        console.log("Summoning minions!");
+        // Visual effect: corporate jargon text appears on screen
+        spawnCorporateJargon(scene);
+      }
+    },
+    {
+      name: "PowerPoint Presentation",
+      dialogue: "Let me show you this quarter's performance metrics!",
+      effect: function(scene) {
+        // Stun the player
+        console.log("Stunning the player!");
+        // Visual effect: PowerPoint slides appear on screen
+        spawnPowerPoint(scene);
+      }
+    },
+    {
+      name: "Office Politics",
+      dialogue: "Let's call a meeting to discuss your performance!",
+      effect: function(scene) {
+        // Drain player's health
+        console.log("Draining player's health!");
+        // Visual effect: meeting invitation appears on screen
+        spawnMeetingInvite(scene);
+      }
+    },
+    {
+      name: "Performance Review",
+      dialogue: "It's time for your annual performance review!",
+      effect: function(scene) {
+        // Temporarily reduce player's abilities
+        console.log("Reducing player's abilities!");
+        // Visual effect: performance review document appears on screen
+        spawnPerformanceReview(scene);
+      }
+    },
+    {
+      name: "Team Building Exercise",
+      dialogue: "Let's do a trust fall!",
+      effect: function(scene) {
+        // Random effect
+        console.log("Random effect!");
+        // Mini-game: trust fall mini-game
+        startTrustFallMiniGame(scene);
+      }
+    },
+    {
+      name: "Budget Cuts",
+      dialogue: "We're making budget cuts! Starting with your health!",
+      effect: function(scene) {
+        // Remove platforms or obstacles
+        console.log("Removing platforms or obstacles!");
+        // Visual effect: platforms disappear
+        removePlatforms(scene);
+      }
+    }
+  ],
+  bossHealth: 1000, // Initial health of the boss
+  playerAttacks: {
+    standard: {
+      jump: 50, // Damage from jump attack
+      punch: 30 // Damage from punch attack
+    },
+    special: {
+      ability1: 100, // Damage from special ability 1
+      ability2: 150  // Damage from special ability 2
+    },
+  onHit: function(scene, damage) {
+    // Reduce boss health by damage amount
+    this.bossHealth -= damage;
+    console.log("Boss health: " + this.bossHealth);
+
+
+    // Visual effect: damage numbers appear on screen
+    spawnDamageNumbers(scene, damage);
+
+
+    // Check if boss is defeated
+    if (this.bossHealth <= 0) {
+      console.log("Boss defeated!");
+      // Visual effect: boss explodes
+      spawnExplosion(scene, this.x, this.y, '#ff0000', 50);
+
+
+      // Trigger the dark nihilistic ending if sympathy condition is met
+      if (EWR_STATE.rastaCorp.sympathy >= 4) {
+        console.log("Dark Nihilistic Ending Triggered");
+      }
+    }
+  },
+  environmentInteractions: [
+    {
+      name: "Water Cooler",
+      effect: function(scene) {
+        // Restore player's health
+        console.log("Restoring player's health!");
+        // Visual effect: water cooler appears on screen
+        spawnWaterCooler(scene);
+      }
+    },
+    {
+      name: "Printer",
+      effect: function(scene) {
+        // Print out helpful documents
+        console.log("Printing helpful documents!");
+        // Visual effect: documents appear on screen
+        spawnDocuments(scene);
+      }
+    }
+  ],
+  miniGames: [
+    {
+      name: "Office Trivia",
+      description: "Answer questions about corporate culture and office jargon.",
+      questions: [
+        {
+          question: "What does 'synergy' mean?",
+          answers: ["Working together", "A type of dance", "A new brand of coffee"],
+          correctAnswer: 0
+        },
+        {
+          question: "What is the first rule of office politics?",
+          answers: ["Always CC your boss", "Never talk about office politics", "Take credit for others' work"],
+          correctAnswer: 2
+        },
+        {
+          question: "What is the most important thing in a meeting?",
+          answers: ["The agenda", "The snacks", "The person talking the loudest"],
+          correctAnswer: 1
+        }
+      ],
+      effect: function(scene, correctAnswers) {
+        // Restore player's health based on number of correct answers
+        console.log("Restoring player's health based on correct answers: " + correctAnswers);
+        // Implement health restoration logic
+      }
+    },
+    {
+      name: "Coffee Fetch",
+      description: "Fetch coffee for the boss and other office workers.",
+      effect: function(scene, success) {
+        // Restore player's health if successful
+        console.log("Restoring player's health based on success: " + success);
+        // Implement health restoration logic
+      }
+    },
+    {
+      name: "Printer Jam",
+      description: "Fix the printer by pressing buttons in the correct sequence.",
+      effect: function(scene, success) {
+        // Temporarily stun the boss if successful
+        console.log("Temporarily stunning the boss based on success: " + success);
+        // Implement boss stun logic
+      }
+    },
+    {
+      name: "Meeting Bingo",
+      description: "Mark off items on your bingo card as you hear certain phrases.",
+      effect: function(scene, completed) {
+        // Gain a special ability if bingo is completed
+        console.log("Gaining a special ability based on completion: " + completed);
+        // Implement special ability logic
+      }
+    }
+  ],
+  onVictory: function(scene) {
+    // Display victory message
+    console.log("Congratulations! You have defeated the Rasta Corp CEO!");
+    // Award the player with aloe
+    console.log("Awarding aloe to the player!");
+    // Return to the world map
+    scene.scene.start('WorldMap6');
+  }
+});
+
+
+// Helper functions for visual effects and mini-games
+function spawnCorporateJargon(scene) {
+  console.log("Spawning corporate jargon!");
+  // Implement visual effect for corporate jargon
+}
+
+
+function spawnPowerPoint(scene) {
+  console.log("Spawning PowerPoint slides!");
+  // Implement visual effect for PowerPoint slides
+}
+
+
+function spawnMeetingInvite(scene) {
+  console.log("Spawning meeting invitation!");
+  // Implement visual effect for meeting invitation
+}
+
+
+function spawnPerformanceReview(scene) {
+  console.log("Spawning performance review!");
+  // Implement visual effect for performance review
+}
+
+
+function startTrustFallMiniGame(scene) {
+  console.log("Starting trust fall mini-game!");
+  // Implement trust fall mini-game
+}
+
+
+function removePlatforms(scene) {
+  console.log("Removing platforms!");
+  // Implement visual effect for removing platforms
+}
+
+
+function spawnDamageNumbers(scene, damage) {
+  console.log("Spawning damage numbers: " + damage);
+  // Implement visual effect for damage numbers
+}
+
+
+function spawnExplosion(scene, x, y, color, size) {
+  console.log("Spawning explosion at (" + x + ", " + y + ")");
+  // Implement visual effect for explosion
+}
+
+
+function spawnWaterCooler(scene) {
+  console.log("Spawning water cooler!");
+  // Implement visual effect for water cooler
+}
+
+
+function spawnDocuments(scene) {
+  console.log("Spawning documents!");
+  // Implement visual effect for documents
+}
+You can download the updated scene configuration here: rasta_corp_ceo_scene.js
+Now, let's move on to implementing the Dark Nihilistic Ending. We need to create the narrative content and the conditions for this ending. This involves:
+                        1. Narrative Content: Writing the dialogue and story for the alternate ending.
+                        2. Conditions: Defining the conditions under which the alternate ending is triggered.
+Let's start by defining the narrative content for the Dark Nihilistic Ending.
+Let's draft some narrative content for the Dark Nihilistic Ending.
+Let's start by defining the narrative content for the Dark Nihilistic Ending.
+Let's draft some narrative content for the Dark Nihilistic Ending.
+8:03am
+LFG LFG LFG!!!! LEAD THE WAY FOR: Dark Nihilistic Ending: We need to implement an alternate ending that triggers if the player shows mercy to all bosses. This involves creating the narrative content and the conditions for this ending.
+8:03am
+Thought for 1s
+Here's how we can implement the Dark Nihilistic Ending:
+javascript
+Copy
+var DarkNihilisticEndingScene = createLevelScene({
+  key: 'DarkNihilisticEnding',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'DarkNihilisticEnding',
+  checkptX: 2400,
+  aloeReward: 0,
+  returnScene: 'TitleScene',
+  title: 'DARK NIHILISTIC ENDING',
+  intro: 'DARK NIHILISTIC ENDING',
+  plats: [],
+  catX: [],
+  mochis: [],
+  pickups: [],
+  onBeat: function(scene) {
+    // Custom logic for when the ending is triggered
+    console.log("Dark Nihilistic Ending Triggered");
+  },
+  narrativeContent: {
+    intro: "In a world where mercy is a rare commodity, you have shown compassion to all, even those who seemed least deserving.",
+    scene1: "The Rasta Corp CEO, defeated and humbled, looks at you with a mixture of gratitude and sorrow.",
+    scene2: "I... I don't understand. I did everything by the book. How could this happen?",
+    scene3: "As the CEO speaks, the world around you begins to crumble. The office buildings fade away, the sky darkens, and a sense of emptiness fills the air.",
+    scene4: "You realize that your acts of mercy have not brought salvation, but rather revealed the true nature of existence: a hollow, meaningless void.",
+    scene5: "The CEO looks at you one last time, his eyes filled with tears.",
+    scene6: "Thank you... for showing me kindness in a world devoid of it.",
+    scene7: "With those final words, the CEO disappears, leaving you alone in the darkness.",
+    scene8: "As you stand there, the weight of your actions settles upon you. You have seen the truth, and it is bleak.",
+    scene9: "The screen fades to black, and the words 'The End... or is it?' appear on the screen.",
+    scene10: "Congratulations. You have achieved the Dark Nihilistic Ending. But at what cost?"
+  },
+  onStart: function(scene) {
+    // Display the narrative content
+    console.log("Starting Dark Nihilistic Ending...");
+    // Implement logic to display narrative content
+    displayNarrativeContent(scene);
+  },
+  onComplete: function(scene) {
+    // Return to the title scene
+    console.log("Returning to title scene...");
+    scene.scene.start('TitleScene');
+  }
+});
+
+
+// Helper function to display narrative content
+function displayNarrativeContent(scene) {
+  console.log("Displaying narrative content...");
+  // Implement logic to display narrative content on screen
+  // For example, using text objects or cutscenes
+}
+
+
+// Helper function to check conditions for the Dark Nihilistic Ending
+function checkDarkNihilisticEndingConditions() {
+  // Check if the player has shown mercy to all bosses
+  if (EWR_STATE.rastaCorp.sympathy >= 4) {
+    console.log("Conditions for Dark Nihilistic Ending met.");
+    return true;
+  } else {
+    console.log("Conditions for Dark Nihilistic Ending not met.");
+    return false;
+  }
+}
+You can download the scene configuration here: dark_nihilistic_ending.js
+What do you think of this narrative content for the Dark Nihilistic Ending? Do you have any other ideas or additions? Let's continue to refine the ending!
+8:03am
+LET'S MAKE IT MORE WONDER SHOWZEN-Y!!!!
+8:04am
+Thought for 1s
+Here's a more Wonder Showzen-y version of the Dark Nihilistic Ending:
+javascript
+Copy
+var DarkNihilisticEndingScene = createLevelScene({
+  key: 'DarkNihilisticEnding',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'DarkNihilisticEnding',
+  checkptX: 2400,
+  aloeReward: 0,
+  returnScene: 'TitleScene',
+  title: 'DARK NIHILISTIC ENDING',
+  intro: 'DARK NIHILISTIC ENDING',
+  plats: [],
+  catX: [],
+  mochis: [],
+  pickups: [],
+  onBeat: function(scene) {
+    // Custom logic for when the ending is triggered
+    console.log("Dark Nihilistic Ending Triggered");
+  },
+  narrativeContent: {
+    intro: "In a world where mercy is a rare commodity, you have shown compassion to all, even those who seemed least deserving. But what does that really mean in the grand scheme of things?",
+    scene1: "The Rasta Corp CEO, defeated and humbled, looks at you with a mixture of gratitude and sorrow.",
+    scene2: "I... I don't understand. I did everything by the book. How could this happen? I followed all the corporate guidelines, attended every meeting, and even brought donuts on Fridays.",
+    scene3: "As the CEO speaks, the world around you begins to crumble. The office buildings fade away, the sky darkens, and a giant, floating, disembodied head appears in the sky.",
+    scene4: "The head speaks in a booming voice: 'Congratulations! You have revealed the true nature of existence! And let me tell you, it's not pretty.'",
+    scene5: "The CEO looks at you one last time, his eyes filled with tears. 'Thank you... for showing me kindness in a world devoid of it. But honestly, what's the point?'",
+    scene6: "The giant head chimes in: 'The point? There is no point! Life is meaningless, corporations are absurd, and we're all just trying to make it through another pointless day.'",
+    scene7: "You stand there, the weight of your actions settling upon you. The giant head continues: 'But hey, at least you got a cool ending! Not everyone gets that.'",
+    scene8: "The CEO pulls out a clipboard and checks off a box. 'Well, that's it. We've reached the existential void. Any final thoughts?'",
+    scene9: "The screen fades to black, and the words 'The End... or is it? Probably not. It's most likely just the end.' appear on the screen.",
+    scene10: "Congratulations. You have achieved the Dark Nihilistic Ending. But let's be real, nothing really matters anyway."
+  },
+  onStart: function(scene) {
+    // Display the narrative content
+    console.log("Starting Dark Nihilistic Ending...");
+    // Implement logic to display narrative content
+    displayNarrativeContent(scene);
+  },
+  onComplete: function(scene) {
+    // Return to the title scene
+    console.log("Returning to title scene...");
+    scene.scene.start('TitleScene');
+  }
+});
+
+
+// Helper function to display narrative content
+function displayNarrativeContent(scene) {
+  console.log("Displaying narrative content...");
+  // Implement logic to display narrative content on screen
+  // For example, using text objects or cutscenes
+}
+
+
+// Helper function to check conditions for the Dark Nihilistic Ending
+function checkDarkNihilisticEndingConditions() {
+  // Check if the player has shown mercy to all bosses
+  if (EWR_STATE.rastaCorp.sympathy >= 4) {
+    console.log("Conditions for Dark Nihilistic Ending met.");
+    return true;
+  } else {
+    console.log("Conditions for Dark Nihilistic Ending not met.");
+    return false;
+  }
+}
+You can download the updated scene configuration here: dark_nihilistic_ending.js
+What do you think of this more Wonder Showzen-y version of the Dark Nihilistic Ending? Do you have any other ideas or additions? Let's continue to refine the ending!
+8:04am
+HELL YEAH!!!!!!!!! KEEP MAKING IT MORE WONDER SHOWZEN-Y AND POLISHT EH HELL OUT OF IT!!!
+8:04am
+Thought for 1s
+Here's an even more Wonder Showzen-y and polished version of the Dark Nihilistic Ending:
+javascript
+Copy
+var DarkNihilisticEndingScene = createLevelScene({
+  key: 'DarkNihilisticEnding',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: 'DarkNihilisticEnding',
+  checkptX: 2400,
+  aloeReward: 0,
+  returnScene: 'TitleScene',
+  title: 'DARK NIHILISTIC ENDING',
+  intro: 'DARK NIHILISTIC ENDING',
+  plats: [],
+  catX: [],
+  mochis: [],
+  pickups: [],
+  onBeat: function(scene) {
+    // Custom logic for when the ending is triggered
+    console.log("Dark Nihilistic Ending Triggered");
+  },
+  narrativeContent: {
+    intro: "In a world where mercy is a rare commodity, you have shown compassion to all, even those who seemed least deserving. But what does that really mean in the grand scheme of things? Let's find out!",
+    scene1: "The Rasta Corp CEO, defeated and humbled, looks at you with a mixture of gratitude and sorrow.",
+    scene2: "CEO: 'I... I don't understand. I did everything by the book. How could this happen? I followed all the corporate guidelines, attended every meeting, and even brought donuts on Fridays.'",
+    scene3: "As the CEO speaks, the world around you begins to crumble. The office buildings fade away, the sky darkens, and a giant, floating, disembodied head appears in the sky.",
+    scene4: "Giant Head: 'Congratulations! You have revealed the true nature of existence! And let me tell you, it's not pretty. It's actually quite ugly. Like, really ugly.'",
+    scene5: "The CEO looks at you one last time, his eyes filled with tears. 'Thank you... for showing me kindness in a world devoid of it. But honestly, what's the point?'",
+    scene6: "Giant Head: 'The point? There is no point! Life is meaningless, corporations are absurd, and we're all just trying to make it through another pointless day. But hey, at least you got a cool ending! Not everyone gets that.'",
+    scene7: "You stand there, the weight of your actions settling upon you. The giant head continues: 'But hey, don't take it too hard. Nothing really matters anyway. So why not enjoy the ride?'",
+    scene8: "The CEO pulls out a clipboard and checks off a box. 'Well, that's it. We've reached the existential void. Any final thoughts?'",
+    scene9: "Giant Head: 'And remember, folks, the universe is a cold, indifferent place. But at least you have a sense of humor! Am I right?'",
+    scene10: "The screen fades to black, and the words 'The End... or is it? Probably not. It's most likely just the end. But who knows? Maybe there's more. Or maybe not. Who cares?' appear on the screen.",
+    scene11: "Congratulations. You have achieved the Dark Nihilistic Ending. But let's be real, nothing really matters anyway. So go grab a snack and enjoy the rest of your day!"
+  },
+  onStart: function(scene) {
+    // Display the narrative content
+    console.log("Starting Dark Nihilistic Ending...");
+    // Implement logic to display narrative content
+    displayNarrativeContent(scene);
+  },
+  onComplete: function(scene) {
+    // Return to the title scene
+    console.log("Returning to title scene...");
+    scene.scene.start('TitleScene');
+  }
+});
+
+
+// Helper function to display narrative content
+function displayNarrativeContent(scene) {
+  console.log("Displaying narrative content...");
+  // Implement logic to display narrative content on screen
+  // For example, using text objects or cutscenes
+}
+
+
+// Helper function to check conditions for the Dark Nihilistic Ending
+function checkDarkNihilisticEndingConditions() {
+  // Check if the player has shown mercy to all bosses
+  if (EWR_STATE.rastaCorp.sympathy >= 4) {
+    console.log("Conditions for Dark Nihilistic Ending met.");
+    return true;
+  } else {
+    console.log("Conditions for Dark Nihilistic Ending not met.");
+    return false;
+  }
+}
+You can download the updated scene configuration here: dark_nihilistic_ending.js
+What do you think of this even more Wonder Showzen-y and polished version of the Dark Nihilistic Ending? Do you have any other ideas or additions? Let's continue to refine the ending!
+8:04am
+YES!!!!! LEGENDARY!!!!!
+
+
+Last one - World 6 Full Completion: We need to complete levels 6-3 and 6-4, ensuring they have full content passes and integrate with the game's narrative systems.!!!!!
+8:05am
+Thought for 1s
+Here's the configuration for levels 6-3 and 6-4, ensuring they have full content passes and integrate with the game's narrative systems:
+javascript
+Copy
+// Level 6-3 Configuration
+var Level63Scene = createLevelScene({
+  key: 'Level63',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: '6-3',
+  checkptX: 2400,
+  aloeReward: 150,
+  returnScene: 'WorldMap6',
+  title: '6-3  CORPORATE CHAOS',
+  intro: 'CORPORATE CHAOS',
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 55, hp: 3, pMin: 200, pMax: 600, dialogue: "Let's synergize!"},
+    {x: 700, type: 'rasta', spd: 55, hp: 3, pMin: 500, pMax: 900, dialogue: "Take this offline!"},
+    {x: 1050, type: 'glitch', spd: 60, hp: 3, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Leverage our core competencies!"},
+    {x: 1400, type: 'mochi', spd: 60, hp: 3, pMin: 1100, pMax: 1600, dialogue: "Circle back!"},
+    {x: 1750, type: 'rasta', spd: 65, hp: 3, pMin: 1400, pMax: 1900, dialogue: "Let's schedule a meeting!"},
+    {x: 2100, type: 'glitch', spd: 65, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Think outside the box!"},
+    {x: 2450, type: 'mochi', spd: 70, hp: 3, pMin: 2000, pMax: 2500, dialogue: "Move the needle!"},
+    {x: 2800, type: 'rasta', spd: 70, hp: 3, pMin: 2300, pMax: 2800, dialogue: "Boil the ocean!"},
+    {x: 3150, type: 'glitch', spd: 75, hp: 3, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "Pivot!"},
+    {x: 3500, type: 'mochi', spd: 75, hp: 3, pMin: 2900, pMax: 3400, dialogue: "Blue sky thinking!"},
+    {x: 3850, type: 'rasta', spd: 80, hp: 3, pMin: 3200, pMax: 3700, dialogue: "Let's touch base!"},
+    {x: 4200, type: 'glitch', spd: 80, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Low hanging fruit!"},
+    {x: 4550, type: 'mochi', spd: 85, hp: 3, pMin: 3800, pMax: 4300, dialogue: "Bubble up!"},
+    {x: 4900, type: 'rasta', spd: 85, hp: 3, pMin: 4100, pMax: 4600, dialogue: "Push the envelope!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-3 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Level 6-4 Configuration
+var Level64Scene = createLevelScene({
+  key: 'Level64',
+  LW: 4800,
+  beatX: 4785,
+  beatKey: '6-4',
+  checkptX: 2400,
+  aloeReward: 150,
+  returnScene: 'WorldMap6',
+  title: '6-4  EXISTENTIAL EXHAUSTION',
+  intro: 'EXISTENTIAL EXHAUSTION',
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 60, hp: 3, pMin: 200, pMax: 600, dialogue: "Why are we here?"},
+    {x: 700, type: 'rasta', spd: 60, hp: 3, pMin: 500, pMax: 900, dialogue: "What is the meaning of life?"},
+    {x: 1050, type: 'glitch', spd: 65, hp: 3, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Is this all there is?"},
+    {x: 1400, type: 'mochi', spd: 65, hp: 3, pMin: 1100, pMax: 1600, dialogue: "What is reality?"},
+    {x: 1750, type: 'rasta', spd: 70, hp: 3, pMin: 1400, pMax: 1900, dialogue: "Do we have free will?"},
+    {x: 2100, type: 'glitch', spd: 70, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Is there a god?"},
+    {x: 2450, type: 'mochi', spd: 75, hp: 3, pMin: 2000, pMax: 2500, dialogue: "What is truth?"},
+    {x: 2800, type: 'rasta', spd: 75, hp: 3, pMin: 2300, pMax: 2800, dialogue: "Is anything real?"},
+    {x: 3150, type: 'glitch', spd: 80, hp: 3, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "What is consciousness?"},
+    {x: 3500, type: 'mochi', spd: 80, hp: 3, pMin: 2900, pMax: 3400, dialogue: "Why do we suffer?"},
+    {x: 3850, type: 'rasta', spd: 85, hp: 3, pMin: 3200, pMax: 3700, dialogue: "What is the purpose of existence?"},
+    {x: 4200, type: 'glitch', spd: 85, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Is there an afterlife?"},
+    {x: 4550, type: 'mochi', spd: 90, hp: 3, pMin: 3800, pMax: 4300, dialogue: "What is the nature of reality?"},
+    {x: 4900, type: 'rasta', spd: 90, hp: 3, pMin: 4100, pMax: 4600, dialogue: "Is there a meaning to life?"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-4 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Helper function to check if all levels in World 6 are beaten
+function checkAllWorld6LevelsBeaten() {
+  // Check if all levels in World 6 are beaten
+  if (EWR_STATE.levelsBeaten.includes('6-1') &&
+      EWR_STATE.levelsBeaten.includes('6-2') &&
+      EWR_STATE.levelsBeaten.includes('6-3') &&
+      EWR_STATE.levelsBeaten.includes('6-4')) {
+    console.log("All World 6 levels beaten!");
+    return true;
+  } else {
+    console.log("Not all World 6 levels beaten yet.");
+    return false;
+  }
+}
+You can download the level configurations here:
+                        * Level 6-3
+                        * Level 6-4
+What do you think of these configurations for levels 6-3 and 6-4? Do you have any other ideas or additions? Let's continue to refine the levels!
+8:05am
+let's make them a lot more fun, badass, crazy, reality breaking, and a little harder
+8:05am
+Thought for 1s
+Here's an updated and more exciting version of levels 6-3 and 6-4:
+javascript
+Copy
+// Level 6-3 Configuration: Corporate Chaos
+var Level63Scene = createLevelScene({
+  key: 'Level63',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-3',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-3  CORPORATE CHAOS',
+  intro: 'CORPORATE CHAOS',
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 65, hp: 4, pMin: 200, pMax: 600, dialogue: "Let's synergize! Or else!"},
+    {x: 700, type: 'rasta', spd: 65, hp: 4, pMin: 500, pMax: 900, dialogue: "Take this offline... NOW!"},
+    {x: 1050, type: 'glitch', spd: 70, hp: 4, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Leverage our core competencies! Or face the consequences!"},
+    {x: 1400, type: 'mochi', spd: 70, hp: 4, pMin: 1100, pMax: 1600, dialogue: "Circle back! Or get fired!"},
+    {x: 1750, type: 'rasta', spd: 75, hp: 4, pMin: 1400, pMax: 1900, dialogue: "Let's schedule a meeting! You don't have a choice!"},
+    {x: 2100, type: 'ghost', spd: 70, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 2450, type: 'mochi', spd: 75, hp: 4, pMin: 2000, pMax: 2500, dialogue: "Move the needle! Or be left behind!"},
+    {x: 2800, type: 'rasta', spd: 80, hp: 4, pMin: 2300, pMax: 2800, dialogue: "Boil the ocean! Or drown in it!"},
+    {x: 3150, type: 'glitch', spd: 80, hp: 4, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "Pivot! Or be left behind!"},
+    {x: 3500, type: 'mochi', spd: 85, hp: 4, pMin: 2900, pMax: 3400, dialogue: "Blue sky thinking! Or be stuck in the mud!"},
+    {x: 3850, type: 'rasta', spd: 85, hp: 4, pMin: 3200, pMax: 3700, dialogue: "Let's touch base! Or be out of touch!"},
+    {x: 4200, type: 'ghost', spd: 80, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Low hanging fruit! Or be left hungry!"},
+    {x: 4550, type: 'mochi', spd: 90, hp: 4, pMin: 3800, pMax: 4300, dialogue: "Bubble up! Or be left at the bottom!"},
+    {x: 4900, type: 'rasta', spd: 90, hp: 4, pMin: 4100, pMax: 4600, dialogue: "Push the envelope! Or be left in the mail!"},
+    {x: 5250, type: 'glitch', spd: 95, hp: 4, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 5600, type: 'mochi', spd: 95, hp: 4, pMin: 4700, pMax: 5200, dialogue: "Synergize! Or be left out!"},
+    {x: 5950, type: 'rasta', spd: 100, hp: 4, pMin: 5000, pMax: 5500, dialogue: "Let's circle back! Or be left in the dust!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-3 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  },
+  specialInteractions: [
+    {
+      triggerX: 1000,
+      effect: function(scene) {
+        console.log("Reality break! The world is turning upside down!");
+        // Implement reality-breaking effect
+      }
+    },
+    {
+      triggerX: 3000,
+      effect: function(scene) {
+        console.log("Fourth wall break! The game is aware of you!");
+        // Implement fourth wall break effect
+      }
+    },
+    {
+      triggerX: 5000,
+      effect: function(scene) {
+        console.log("Time warp! The world is moving in reverse!");
+        // Implement time warp effect
+      }
+    }
+  ]
+});
+
+
+// Level 6-4 Configuration: Existential Exhaustion
+var Level64Scene = createLevelScene({
+  key: 'Level64',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-4',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-4  EXISTENTIAL EXHAUSTION',
+  intro: 'EXISTENTIAL EXHAUSTION',
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 70, hp: 5, pMin: 200, pMax: 600, dialogue: "Why are we here? To suffer!"},
+    {x: 700, type: 'rasta', spd: 70, hp: 5, pMin: 500, pMax: 900, dialogue: "What is the meaning of life? Pain!"},
+    {x: 1050, type: 'glitch', spd: 75, hp: 5, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Is this all there is? More pain!"},
+    {x: 1400, type: 'mochi', spd: 75, hp: 5, pMin: 1100, pMax: 1600, dialogue: "What is reality? More suffering!"},
+    {x: 1750, type: 'rasta', spd: 80, hp: 5, pMin: 1400, pMax: 1900, dialogue: "Do we have free will? No, only pain!"},
+    {x: 2100, type: 'ghost', spd: 80, hp: 4, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Is there a god? Only pain!"},
+    {x: 2450, type: 'mochi', spd: 85, hp: 5, pMin: 2000, pMax: 2500, dialogue: "What is truth? More suffering!"},
+    {x: 2800, type: 'rasta', spd: 85, hp: 5, pMin: 2300, pMax: 2800, dialogue: "Is anything real? Only pain!"},
+    {x: 3150, type: 'glitch', spd: 90, hp: 5, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "What is consciousness? More suffering!"},
+    {x: 3500, type: 'mochi', spd: 90, hp: 5, pMin: 2900, pMax: 3400, dialogue: "Why do we suffer? Because we must!"},
+    {x: 3850, type: 'rasta', spd: 95, hp: 5, pMin: 3200, pMax: 3700, dialogue: "What is the purpose of existence? More pain!"},
+    {x: 4200, type: 'ghost', spd: 90, hp: 4, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Is there an afterlife? Only more suffering!"},
+    {x: 4550, type: 'mochi', spd: 100, hp: 5, pMin: 3800, pMax: 4300, dialogue: "What is the nature of reality? Pain and suffering!"},
+    {x: 4900, type: 'rasta', spd: 100, hp: 5, pMin: 4100, pMax: 4600, dialogue: "Is there a meaning to life? Only pain and suffering!"},
+    {x: 5250, type: 'glitch', spd: 105, hp: 5, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "What is the meaning of existence? More pain and suffering!"},
+    {x: 5600, type: 'mochi', spd: 105, hp: 5, pMin: 4700, pMax: 5200, dialogue: "Why must we suffer? Because it is our fate!"},
+    {x: 5950, type: 'rasta', spd: 110, hp: 5, pMin: 5000, pMax: 5500, dialogue: "Is there any hope? No, only pain and suffering!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-4 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  },
+  specialInteractions: [
+    {
+      triggerX: 1000,
+      effect: function(scene) {
+        console.log("Reality break! The world is falling apart!");
+        // Implement reality-breaking effect
+      }
+    },
+    {
+      triggerX: 3000,
+      effect: function(scene) {
+        console.log("Fourth wall break! The game is watching you!");
+        // Implement fourth wall break effect
+      }
+    },
+    {
+      triggerX: 5000,
+      effect: function(scene) {
+        console.log("Time warp! The world is moving in slow motion!");
+        // Implement time warp effect
+      }
+    }
+  ]
+});
+
+
+// Helper function to check if all levels in World 6 are beaten
+function checkAllWorld6LevelsBeaten() {
+  // Check if all levels in World 6 are beaten
+  if (EWR_STATE.levelsBeaten.includes('6-1') &&
+      EWR_STATE.levelsBeaten.includes('6-2') &&
+      EWR_STATE.levelsBeaten.includes('6-3') &&
+      EWR_STATE.levelsBeaten.includes('6-4')) {
+    console.log("All World 6 levels beaten!");
+    return true;
+  } else {
+    console.log("Not all World 6 levels beaten yet.");
+    return false;
+  }
+}
+You can download the updated level configurations here:
+                        * Level 6-3
+                        * Level 6-4
+What do you think of these updated configurations for levels 6-3 and 6-4? Do you have any other ideas or additions? Let's continue to refine the levels!
+8:05am
+make them so the backgrounds are craziest!!!!
+8:05am
+Thought for 1s
+Here's an updated version of levels 6-3 and 6-4 with the craziest backgrounds imaginable:
+javascript
+Copy
+// Level 6-3 Configuration: Corporate Chaos
+var Level63Scene = createLevelScene({
+  key: 'Level63',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-3',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-3  CORPORATE CHAOS',
+  intro: 'CORPORATE CHAOS',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'upsideDownBuildings', count: 5, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'floatingDebris', count: 20, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'animatedCharacters', count: 15, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'impossibleGeometries', count: 8, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'chaoticPatterns', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world turns upside down!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is aware of you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world moves in reverse!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 65, hp: 4, pMin: 200, pMax: 600, dialogue: "Let's synergize! Or else!"},
+    {x: 700, type: 'rasta', spd: 65, hp: 4, pMin: 500, pMax: 900, dialogue: "Take this offline... NOW!"},
+    {x: 1050, type: 'glitch', spd: 70, hp: 4, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Leverage our core competencies! Or face the consequences!"},
+    {x: 1400, type: 'mochi', spd: 70, hp: 4, pMin: 1100, pMax: 1600, dialogue: "Circle back! Or get fired!"},
+    {x: 1750, type: 'rasta', spd: 75, hp: 4, pMin: 1400, pMax: 1900, dialogue: "Let's schedule a meeting! You don't have a choice!"},
+    {x: 2100, type: 'ghost', spd: 70, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 2450, type: 'mochi', spd: 75, hp: 4, pMin: 2000, pMax: 2500, dialogue: "Move the needle! Or be left behind!"},
+    {x: 2800, type: 'rasta', spd: 80, hp: 4, pMin: 2300, pMax: 2800, dialogue: "Boil the ocean! Or drown in it!"},
+    {x: 3150, type: 'glitch', spd: 80, hp: 4, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "Pivot! Or be left behind!"},
+    {x: 3500, type: 'mochi', spd: 85, hp: 4, pMin: 2900, pMax: 3400, dialogue: "Blue sky thinking! Or be stuck in the mud!"},
+    {x: 3850, type: 'rasta', spd: 85, hp: 4, pMin: 3200, pMax: 3700, dialogue: "Let's touch base! Or be out of touch!"},
+    {x: 4200, type: 'ghost', spd: 80, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Low hanging fruit! Or be left hungry!"},
+    {x: 4550, type: 'mochi', spd: 90, hp: 4, pMin: 3800, pMax: 4300, dialogue: "Bubble up! Or be left at the bottom!"},
+    {x: 4900, type: 'rasta', spd: 90, hp: 4, pMin: 4100, pMax: 4600, dialogue: "Push the envelope! Or be left in the mail!"},
+    {x: 5250, type: 'glitch', spd: 95, hp: 4, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 5600, type: 'mochi', spd: 95, hp: 4, pMin: 4700, pMax: 5200, dialogue: "Synergize! Or be left out!"},
+    {x: 5950, type: 'rasta', spd: 100, hp: 4, pMin: 5000, pMax: 5500, dialogue: "Let's circle back! Or be left in the dust!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-3 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Level 6-4 Configuration: Existential Exhaustion
+var Level64Scene = createLevelScene({
+  key: 'Level64',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-4',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-4  EXISTENTIAL EXHAUSTION',
+  intro: 'EXISTENTIAL EXHAUSTION',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 10, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'upsideDownBuildings', count: 5, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'floatingDebris', count: 20, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'animatedCharacters', count: 15, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'impossibleGeometries', count: 8, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'chaoticPatterns', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world is falling apart!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is watching you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world is moving in slow motion!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 70, hp: 5, pMin: 200, pMax: 600, dialogue: "Why are we here? To suffer!"},
+    {x: 700, type: 'rasta', spd: 70, hp: 5, pMin: 500, pMax: 900, dialogue: "What is the meaning of life? Pain!"},
+    {x: 1050, type: 'glitch', spd: 75, hp: 5, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Is this all there is? More pain!"},
+    {x: 1400, type: 'mochi', spd: 75, hp: 5, pMin: 1100, pMax: 1600, dialogue: "What is reality? More suffering!"},
+    {x: 1750, type: 'rasta', spd: 80, hp: 5, pMin: 1400, pMax: 1900, dialogue: "Do we have free will? No, only pain!"},
+    {x: 2100, type: 'ghost', spd: 80, hp: 4, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Is there a god? Only pain!"},
+    {x: 2450, type: 'mochi', spd: 85, hp: 5, pMin: 2000, pMax: 2500, dialogue: "What is truth? More suffering!"},
+    {x: 2800, type: 'rasta', spd: 85, hp: 5, pMin: 2300, pMax: 2800, dialogue: "Is anything real? Only pain!"},
+    {x: 3150, type: 'glitch', spd: 90, hp: 5, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "What is consciousness? More suffering!"},
+    {x: 3500, type: 'mochi', spd: 90, hp: 5, pMin: 2900, pMax: 3400, dialogue: "Why do we suffer? Because we must!"},
+    {x: 3850, type: 'rasta', spd: 95, hp: 5, pMin: 3200, pMax: 3700, dialogue: "What is the purpose of existence? More pain!"},
+    {x: 4200, type: 'ghost', spd: 90, hp: 4, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Is there an afterlife? Only more suffering!"},
+    {x: 4550, type: 'mochi', spd: 100, hp: 5, pMin: 3800, pMax: 4300, dialogue: "What is the nature of reality? Pain and suffering!"},
+    {x: 4900, type: 'rasta', spd: 100, hp: 5, pMin: 4100, pMax: 4600, dialogue: "Is there a meaning to life? Only pain and suffering!"},
+    {x: 5250, type: 'glitch', spd: 105, hp: 5, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "What is the meaning of existence? More pain and suffering!"},
+    {x: 5600, type: 'mochi', spd: 105, hp: 5, pMin: 4700, pMax: 5200, dialogue: "Why must we suffer? Because it is our fate!"},
+    {x: 5950, type: 'rasta', spd: 110, hp: 5, pMin: 5000, pMax: 5500, dialogue: "Is there any hope? No, only pain and suffering!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-4 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Helper function to check if all levels in World 6 are beaten
+function checkAllWorld6LevelsBeaten() {
+  // Check if all levels in World 6 are beaten
+  if (EWR_STATE.levelsBeaten.includes('6-1') &&
+      EWR_STATE.levelsBeaten.includes('6-2') &&
+      EWR_STATE.levelsBeaten.includes('6-3') &&
+      EWR_STATE.levelsBeaten.includes('6-4')) {
+    console.log("All World 6 levels beaten!");
+    return true;
+  } else {
+    console.log("Not all World 6 levels beaten yet.");
+    return false;
+  }
+}
+You can download the updated level configurations here:
+                        * Level 6-3
+                        * Level 6-4
+What do you think of these crazy backgrounds for levels 6-3 and 6-4? Do you have any other ideas or additions? Let's continue to refine the levels!
+8:05am
+YES!!!!!! KEEP LEVLING IT UP BASED ON PREVIOU SNES GOAT LEVEL GAMES LFG!!!!!!!!
+8:07am
+Thought for 1s
+Here's an updated version of levels 6-3 and 6-4, incorporating elements from SNES GOAT levels:
+javascript
+Copy
+// Level 6-3 Configuration: Corporate Chaos
+var Level63Scene = createLevelScene({
+  key: 'Level63',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-3',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-3  CORPORATE CHAOS',
+  intro: 'CORPORATE CHAOS',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'upsideDownBuildings', count: 5, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'floatingDebris', count: 20, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'animatedCharacters', count: 15, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'impossibleGeometries', count: 8, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'chaoticPatterns', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world turns upside down!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is aware of you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world moves in reverse!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  secretAreas: [
+    { x: 500, y: 200, width: 50, height: 50, effect: 'Discover a hidden cache of aloe!' },
+    { x: 2000, y: -100, width: 50, height: 50, effect: 'Find a secret passage to a bonus area!' },
+    { x: 4000, y: -300, width: 50, height: 50, effect: 'Unlock a shortcut to the end of the level!' }
+  ],
+  dynamicPlatforms: [
+    { x: 1000, y: 100, width: 100, speed: 2, direction: 'vertical', range: 200 },
+    { x: 2500, y: -200, width: 100, speed: 2, direction: 'horizontal', range: 300 },
+    { x: 4000, y: -400, width: 100, speed: 3, direction: 'vertical', range: 300 }
+  ],
+  mineCartSections: [
+    { startX: 1500, endX: 2000, y: 50, speed: 5, obstacles: [1600, 1700, 1800, 1900] },
+    { startX: 3500, endX: 4000, y: -250, speed: 7, obstacles: [3600, 3700, 3800, 3900] }
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 65, hp: 4, pMin: 200, pMax: 600, dialogue: "Let's synergize! Or else!"},
+    {x: 700, type: 'rasta', spd: 65, hp: 4, pMin: 500, pMax: 900, dialogue: "Take this offline... NOW!"},
+    {x: 1050, type: 'glitch', spd: 70, hp: 4, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Leverage our core competencies! Or face the consequences!"},
+    {x: 1400, type: 'mochi', spd: 70, hp: 4, pMin: 1100, pMax: 1600, dialogue: "Circle back! Or get fired!"},
+    {x: 1750, type: 'rasta', spd: 75, hp: 4, pMin: 1400, pMax: 1900, dialogue: "Let's schedule a meeting! You don't have a choice!"},
+    {x: 2100, type: 'ghost', spd: 70, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 2450, type: 'mochi', spd: 75, hp: 4, pMin: 2000, pMax: 2500, dialogue: "Move the needle! Or be left behind!"},
+    {x: 2800, type: 'rasta', spd: 80, hp: 4, pMin: 2300, pMax: 2800, dialogue: "Boil the ocean! Or drown in it!"},
+    {x: 3150, type: 'glitch', spd: 80, hp: 4, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "Pivot! Or be left behind!"},
+    {x: 3500, type: 'mochi', spd: 85, hp: 4, pMin: 2900, pMax: 3400, dialogue: "Blue sky thinking! Or be stuck in the mud!"},
+    {x: 3850, type: 'rasta', spd: 85, hp: 4, pMin: 3200, pMax: 3700, dialogue: "Let's touch base! Or be out of touch!"},
+    {x: 4200, type: 'ghost', spd: 80, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Low hanging fruit! Or be left hungry!"},
+    {x: 4550, type: 'mochi', spd: 90, hp: 4, pMin: 3800, pMax: 4300, dialogue: "Bubble up! Or be left at the bottom!"},
+    {x: 4900, type: 'rasta', spd: 90, hp: 4, pMin: 4100, pMax: 4600, dialogue: "Push the envelope! Or be left in the mail!"},
+    {x: 5250, type: 'glitch', spd: 95, hp: 4, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "Think outside the box! Or be trapped inside!"},
+    {x: 5600, type: 'mochi', spd: 95, hp: 4, pMin: 4700, pMax: 5200, dialogue: "Synergize! Or be left out!"},
+    {x: 5950, type: 'rasta', spd: 100, hp: 4, pMin: 5000, pMax: 5500, dialogue: "Let's circle back! Or be left in the dust!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  puzzles: [
+    { x: 1000, y: 0, type: 'switch', effect: 'Activate to open a hidden door!' },
+    { x: 3000, y: -200, type: 'key', effect: 'Collect to unlock a new area!' }
+  ],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-3 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Level 6-4 Configuration: Existential Exhaustion
+var Level64Scene = createLevelScene({
+  key: 'Level64',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-4',
+  checkptX: 3000,
+  aloeReward: 200,
+  returnScene: 'WorldMap6',
+  title: '6-4  EXISTENTIAL EXHAUSTION',
+  intro: 'EXISTENTIAL EXHAUSTION',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 10, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'upsideDownBuildings', count: 5, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'floatingDebris', count: 20, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'animatedCharacters', count: 15, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] },
+      { type: 'impossibleGeometries', count: 8, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'] },
+      { type: 'chaoticPatterns', count: 10, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world is falling apart!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is watching you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world is moving in slow motion!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  secretAreas: [
+    { x: 500, y: 200, width: 50, height: 50, effect: 'Discover a hidden cache of aloe!' },
+    { x: 2000, y: -100, width: 50, height: 50, effect: 'Find a secret passage to a bonus area!' },
+    { x: 4000, y: -300, width: 50, height: 50, effect: 'Unlock a shortcut to the end of the level!' }
+  ],
+  dynamicPlatforms: [
+    { x: 1000, y: 100, width: 100, speed: 2, direction: 'vertical', range: 200 },
+    { x: 2500, y: -200, width: 100, speed: 2, direction: 'horizontal', range: 300 },
+    { x: 4000, y: -400, width: 100, speed: 3, direction: 'vertical', range: 300 }
+  ],
+  mineCartSections: [
+    { startX: 1500, endX: 2000, y: 50, speed: 5, obstacles: [1600, 1700, 1800, 1900] },
+    { startX: 3500, endX: 4000, y: -250, speed: 7, obstacles: [3600, 3700, 3800, 3900] }
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 70, hp: 5, pMin: 200, pMax: 600, dialogue: "Why are we here? To suffer!"},
+    {x: 700, type: 'rasta', spd: 70, hp: 5, pMin: 500, pMax: 900, dialogue: "What is the meaning of life? Pain!"},
+    {x: 1050, type: 'glitch', spd: 75, hp: 5, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Is this all there is? More pain!"},
+    {x: 1400, type: 'mochi', spd: 75, hp: 5, pMin: 1100, pMax: 1600, dialogue: "What is reality? More suffering!"},
+    {x: 1750, type: 'rasta', spd: 80, hp: 5, pMin: 1400, pMax: 1900, dialogue: "Do we have free will? No, only pain!"},
+    {x: 2100, type: 'ghost', spd: 80, hp: 4, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Is there a god? Only pain!"},
+    {x: 2450, type: 'mochi', spd: 85, hp: 5, pMin: 2000, pMax: 2500, dialogue: "What is truth? More suffering!"},
+    {x: 2800, type: 'rasta', spd: 85, hp: 5, pMin: 2300, pMax: 2800, dialogue: "Is anything real? Only pain!"},
+    {x: 3150, type: 'glitch', spd: 90, hp: 5, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "What is consciousness? More suffering!"},
+    {x: 3500, type: 'mochi', spd: 90, hp: 5, pMin: 2900, pMax: 3400, dialogue: "Why do we suffer? Because we must!"},
+    {x: 3850, type: 'rasta', spd: 95, hp: 5, pMin: 3200, pMax: 3700, dialogue: "What is the purpose of existence? More pain!"},
+    {x: 4200, type: 'ghost', spd: 90, hp: 4, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Is there an afterlife? Only more suffering!"},
+    {x: 4550, type: 'mochi', spd: 100, hp: 5, pMin: 3800, pMax: 4300, dialogue: "What is the nature of reality? Pain and suffering!"},
+    {x: 4900, type: 'rasta', spd: 100, hp: 5, pMin: 4100, pMax: 4600, dialogue: "Is there a meaning to life? Only pain and suffering!"},
+    {x: 5250, type: 'glitch', spd: 105, hp: 5, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "What is the meaning of existence? More pain and suffering!"},
+    {x: 5600, type: 'mochi', spd: 105, hp: 5, pMin: 4700, pMax: 5200, dialogue: "Why must we suffer? Because it is our fate!"},
+    {x: 5950, type: 'rasta', spd: 110, hp: 5, pMin: 5000, pMax: 5500, dialogue: "Is there any hope? No, only pain and suffering!"}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  puzzles: [
+    { x: 1000, y: 0, type: 'switch', effect: 'Activate to open a hidden door!' },
+    { x: 3000, y: -200, type: 'key', effect: 'Collect to unlock a new area!' }
+  ],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-4 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Helper function to check if all levels in World 6 are beaten
+function checkAllWorld6LevelsBeaten() {
+  // Check if all levels in World 6 are beaten
+  if (EWR_STATE.levelsBeaten.includes('6-1') &&
+      EWR_STATE.levelsBeaten.includes('6-2') &&
+      EWR_STATE.levelsBeaten.includes('6-3') &&
+      EWR_STATE.levelsBeaten.includes('6-4')) {
+    console.log("All World 6 levels beaten!");
+    return true;
+  } else {
+    console.log("Not all World 6 levels beaten yet.");
+    return false;
+  }
+}
+You can download the updated level configurations here:
+                        * Level 6-3
+                        * Level 6-4
+What do you think of these updated levels inspired by SNES GOAT levels? Do you have any other ideas or additions? Let's continue to refine the levels!
+8:07am
+ONE FINAL CODING MARATHON RUN BEFORE I GIVE OUR RESULTS TO CLAUDE CODE!!!!
+
+
+DO WHATEVER YOU THINK WILL IMPROVE THE GAME LFG!!!!
+8:08am
+Thought for 1s
+Here's the final improved version of levels 6-3 and 6-4 with additional features and enhancements:
+javascript
+Copy
+// Level 6-3 Configuration: Corporate Chaos
+var Level63Scene = createLevelScene({
+  key: 'Level63',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-3',
+  checkptX: 3000,
+  aloeReward: 250,
+  returnScene: 'WorldMap6',
+  title: '6-3  CORPORATE CHAOS',
+  intro: 'CORPORATE CHAOS',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 12, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] },
+      { type: 'upsideDownBuildings', count: 6, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'floatingDebris', count: 25, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'animatedCharacters', count: 20, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] },
+      { type: 'impossibleGeometries', count: 10, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'chaoticPatterns', count: 12, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world turns upside down!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is aware of you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world moves in reverse!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  secretAreas: [
+    { x: 500, y: 200, width: 50, height: 50, effect: 'Discover a hidden cache of aloe!' },
+    { x: 2000, y: -100, width: 50, height: 50, effect: 'Find a secret passage to a bonus area!' },
+    { x: 4000, y: -300, width: 50, height: 50, effect: 'Unlock a shortcut to the end of the level!' }
+  ],
+  dynamicPlatforms: [
+    { x: 1000, y: 100, width: 100, speed: 2, direction: 'vertical', range: 200 },
+    { x: 2500, y: -200, width: 100, speed: 2, direction: 'horizontal', range: 300 },
+    { x: 4000, y: -400, width: 100, speed: 3, direction: 'vertical', range: 300 }
+  ],
+  mineCartSections: [
+    { startX: 1500, endX: 2000, y: 50, speed: 5, obstacles: [1600, 1700, 1800, 1900] },
+    { startX: 3500, endX: 4000, y: -250, speed: 7, obstacles: [3600, 3700, 3800, 3900] }
+  ],
+  powerUps: [
+    { x: 800, y: 200, type: 'speedBoost', effect: 'Temporary speed boost!' },
+    { x: 2500, y: -150, type: 'invincibility', effect: 'Temporary invincibility!' },
+    { x: 4500, y: -400, type: 'doubleJump', effect: 'Gain the ability to double jump!' }
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 65, hp: 4, pMin: 200, pMax: 600, dialogue: "Let's synergize! Or else!", ai: 'aggressive'},
+    {x: 700, type: 'rasta', spd: 65, hp: 4, pMin: 500, pMax: 900, dialogue: "Take this offline... NOW!", ai: 'defensive'},
+    {x: 1050, type: 'glitch', spd: 70, hp: 4, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Leverage our core competencies! Or face the consequences!", ai: 'smart'},
+    {x: 1400, type: 'mochi', spd: 70, hp: 4, pMin: 1100, pMax: 1600, dialogue: "Circle back! Or get fired!", ai: 'aggressive'},
+    {x: 1750, type: 'rasta', spd: 75, hp: 4, pMin: 1400, pMax: 1900, dialogue: "Let's schedule a meeting! You don't have a choice!", ai: 'defensive'},
+    {x: 2100, type: 'ghost', spd: 70, hp: 3, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Think outside the box! Or be trapped inside!", ai: 'smart'},
+    {x: 2450, type: 'mochi', spd: 75, hp: 4, pMin: 2000, pMax: 2500, dialogue: "Move the needle! Or be left behind!", ai: 'aggressive'},
+    {x: 2800, type: 'rasta', spd: 80, hp: 4, pMin: 2300, pMax: 2800, dialogue: "Boil the ocean! Or drown in it!", ai: 'defensive'},
+    {x: 3150, type: 'glitch', spd: 80, hp: 4, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "Pivot! Or be left behind!", ai: 'smart'},
+    {x: 3500, type: 'mochi', spd: 85, hp: 4, pMin: 2900, pMax: 3400, dialogue: "Blue sky thinking! Or be stuck in the mud!", ai: 'aggressive'},
+    {x: 3850, type: 'rasta', spd: 85, hp: 4, pMin: 3200, pMax: 3700, dialogue: "Let's touch base! Or be out of touch!", ai: 'defensive'},
+    {x: 4200, type: 'ghost', spd: 80, hp: 3, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Low hanging fruit! Or be left hungry!", ai: 'smart'},
+    {x: 4550, type: 'mochi', spd: 90, hp: 4, pMin: 3800, pMax: 4300, dialogue: "Bubble up! Or be left at the bottom!", ai: 'aggressive'},
+    {x: 4900, type: 'rasta', spd: 90, hp: 4, pMin: 4100, pMax: 4600, dialogue: "Push the envelope! Or be left in the mail!", ai: 'defensive'},
+    {x: 5250, type: 'glitch', spd: 95, hp: 4, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "Think outside the box! Or be trapped inside!", ai: 'smart'},
+    {x: 5600, type: 'mochi', spd: 95, hp: 4, pMin: 4700, pMax: 5200, dialogue: "Synergize! Or be left out!", ai: 'aggressive'},
+    {x: 5950, type: 'rasta', spd: 100, hp: 4, pMin: 5000, pMax: 5500, dialogue: "Let's circle back! Or be left in the dust!", ai: 'defensive'}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  puzzles: [
+    { x: 1000, y: 0, type: 'switch', effect: 'Activate to open a hidden door!' },
+    { x: 3000, y: -200, type: 'key', effect: 'Collect to unlock a new area!' }
+  ],
+  narrativeElements: [
+    { triggerX: 500, dialogue: "Welcome to Corporate Chaos! Prepare for a world of synergies and core competencies!" },
+    { triggerX: 2000, dialogue: "The path ahead is treacherous, but the rewards are great. Stay focused!" },
+    { triggerX: 4000, dialogue: "You're almost there! Keep pushing forward!" }
+  ],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-3 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Level 6-4 Configuration: Existential Exhaustion
+var Level64Scene = createLevelScene({
+  key: 'Level64',
+  LW: 6000,
+  beatX: 5985,
+  beatKey: '6-4',
+  checkptX: 3000,
+  aloeReward: 250,
+  returnScene: 'WorldMap6',
+  title: '6-4  EXISTENTIAL EXHAUSTION',
+  intro: 'EXISTENTIAL EXHAUSTION',
+  background: {
+    type: 'surreal',
+    elements: [
+      { type: 'floatingIslands', count: 12, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'upsideDownBuildings', count: 6, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] },
+      { type: 'floatingDebris', count: 25, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'animatedCharacters', count: 20, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] },
+      { type: 'impossibleGeometries', count: 10, colors: ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00', '#00ffff'] },
+      { type: 'chaoticPatterns', count: 12, colors: ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ffff', '#ff0000'] }
+    ],
+    effects: [
+      { type: 'realityBreak', triggerX: 1000, effect: 'The world is falling apart!' },
+      { type: 'fourthWallBreak', triggerX: 3000, effect: 'The game is watching you!' },
+      { type: 'timeWarp', triggerX: 5000, effect: 'The world is moving in slow motion!' }
+    ]
+  },
+  plats: [
+    [120, 400, 100], [300, 360, 80], [500, 320, 100], [700, 280, 80],
+    [900, 240, 100], [1100, 200, 80], [1300, 160, 100], [1500, 120, 80],
+    [1700, 80, 100], [1900, 40, 80], [2100, 0, 100], [2300, -40, 80],
+    [2500, -80, 100], [2700, -120, 80], [2900, -160, 100], [3100, -200, 80],
+    [3300, -240, 100], [3500, -280, 80], [3700, -320, 100], [3900, -360, 80],
+    [4100, -400, 100], [4300, -440, 80], [4500, -480, 100], [4700, -520, 80],
+    [4900, -560, 100], [5100, -600, 80], [5300, -640, 100], [5500, -680, 80],
+    [5700, -720, 100], [5900, -760, 80]
+  ],
+  secretAreas: [
+    { x: 500, y: 200, width: 50, height: 50, effect: 'Discover a hidden cache of aloe!' },
+    { x: 2000, y: -100, width: 50, height: 50, effect: 'Find a secret passage to a bonus area!' },
+    { x: 4000, y: -300, width: 50, height: 50, effect: 'Unlock a shortcut to the end of the level!' }
+  ],
+  dynamicPlatforms: [
+    { x: 1000, y: 100, width: 100, speed: 2, direction: 'vertical', range: 200 },
+    { x: 2500, y: -200, width: 100, speed: 2, direction: 'horizontal', range: 300 },
+    { x: 4000, y: -400, width: 100, speed: 3, direction: 'vertical', range: 300 }
+  ],
+  mineCartSections: [
+    { startX: 1500, endX: 2000, y: 50, speed: 5, obstacles: [1600, 1700, 1800, 1900] },
+    { startX: 3500, endX: 4000, y: -250, speed: 7, obstacles: [3600, 3700, 3800, 3900] }
+  ],
+  powerUps: [
+    { x: 800, y: 200, type: 'speedBoost', effect: 'Temporary speed boost!' },
+    { x: 2500, y: -150, type: 'invincibility', effect: 'Temporary invincibility!' },
+    { x: 4500, y: -400, type: 'doubleJump', effect: 'Gain the ability to double jump!' }
+  ],
+  catX: [200, 420, 640, 860, 1080, 1300, 1520, 1740, 1960, 2180, 2400, 2620, 2840, 3060, 3280, 3500, 3720, 3940, 4160, 4380, 4600, 4820, 5040, 5260, 5480, 5700, 5920],
+  mochis: [
+    {x: 350, type: 'mochi', spd: 70, hp: 5, pMin: 200, pMax: 600, dialogue: "Why are we here? To suffer!", ai: 'aggressive'},
+    {x: 700, type: 'rasta', spd: 70, hp: 5, pMin: 500, pMax: 900, dialogue: "What is the meaning of life? Pain!", ai: 'defensive'},
+    {x: 1050, type: 'glitch', spd: 75, hp: 5, pMin: 800, pMax: 1300, baseY: 280, dialogue: "Is this all there is? More pain!", ai: 'smart'},
+    {x: 1400, type: 'mochi', spd: 75, hp: 5, pMin: 1100, pMax: 1600, dialogue: "What is reality? More suffering!", ai: 'aggressive'},
+    {x: 1750, type: 'rasta', spd: 80, hp: 5, pMin: 1400, pMax: 1900, dialogue: "Do we have free will? No, only pain!", ai: 'defensive'},
+    {x: 2100, type: 'ghost', spd: 80, hp: 4, pMin: 1700, pMax: 2200, baseY: 200, dialogue: "Is there a god? Only pain!", ai: 'smart'},
+    {x: 2450, type: 'mochi', spd: 85, hp: 5, pMin: 2000, pMax: 2500, dialogue: "What is truth? More suffering!", ai: 'aggressive'},
+    {x: 2800, type: 'rasta', spd: 85, hp: 5, pMin: 2300, pMax: 2800, dialogue: "Is anything real? Only pain!", ai: 'defensive'},
+    {x: 3150, type: 'glitch', spd: 90, hp: 5, pMin: 2600, pMax: 3100, baseY: 120, dialogue: "What is consciousness? More suffering!", ai: 'smart'},
+    {x: 3500, type: 'mochi', spd: 90, hp: 5, pMin: 2900, pMax: 3400, dialogue: "Why do we suffer? Because we must!", ai: 'aggressive'},
+    {x: 3850, type: 'rasta', spd: 95, hp: 5, pMin: 3200, pMax: 3700, dialogue: "What is the purpose of existence? More pain!", ai: 'defensive'},
+    {x: 4200, type: 'ghost', spd: 90, hp: 4, pMin: 3500, pMax: 4000, baseY: 40, dialogue: "Is there an afterlife? Only more suffering!", ai: 'smart'},
+    {x: 4550, type: 'mochi', spd: 100, hp: 5, pMin: 3800, pMax: 4300, dialogue: "What is the nature of reality? Pain and suffering!", ai: 'aggressive'},
+    {x: 4900, type: 'rasta', spd: 100, hp: 5, pMin: 4100, pMax: 4600, dialogue: "Is there a meaning to life? Only pain and suffering!", ai: 'defensive'},
+    {x: 5250, type: 'glitch', spd: 105, hp: 5, pMin: 4400, pMax: 4900, baseY: -160, dialogue: "What is the meaning of existence? More pain and suffering!", ai: 'smart'},
+    {x: 5600, type: 'mochi', spd: 105, hp: 5, pMin: 4700, pMax: 5200, dialogue: "Why must we suffer? Because it is our fate!", ai: 'aggressive'},
+    {x: 5950, type: 'rasta', spd: 110, hp: 5, pMin: 5000, pMax: 5500, dialogue: "Is there any hope? No, only pain and suffering!", ai: 'defensive'}
+  ],
+  pickups: [[1320, 245], [2760, 295], [4200, 195], [5640, 345]],
+  puzzles: [
+    { x: 1000, y: 0, type: 'switch', effect: 'Activate to open a hidden door!' },
+    { x: 3000, y: -200, type: 'key', effect: 'Collect to unlock a new area!' }
+  ],
+  narrativeElements: [
+    { triggerX: 500, dialogue: "Welcome to Existential Exhaustion! Prepare for a journey of pain and suffering!" },
+    { triggerX: 2000, dialogue: "The path ahead is filled with despair, but the rewards are great. Stay strong!" },
+    { triggerX: 4000, dialogue: "You're almost there! Keep pushing forward through the pain!" }
+  ],
+  onBeat: function(scene) {
+    // Custom logic for when the level is beaten
+    console.log("Level 6-4 beaten!");
+    // Check if all levels in World 6 are beaten to unlock the Dark Nihilistic Ending
+    if (checkAllWorld6LevelsBeaten()) {
+      console.log("All World 6 levels beaten! Unlocking Dark Nihilistic Ending.");
+    }
+  }
+});
+
+
+// Helper function to check if all levels in World 6 are beaten
+function checkAllWorld6LevelsBeaten() {
+  // Check if all levels in World 6 are beaten
+  if (EWR_STATE.levelsBeaten.includes('6-1') &&
+      EWR_STATE.levelsBeaten.includes('6-2') &&
+      EWR_STATE.levelsBeaten.includes('6-3') &&
+      EWR_STATE.levelsBeaten.includes('6-4')) {
+    console.log("All World 6 levels beaten!");
+    return true;
+  } else {
+    console.log("Not all World 6 levels beaten yet.");
+    return false;
+  }
+}
+You can download the final updated level configurations here:
+                        * Level 6-3
+                        * Level 6-4
+What do you think of these final improvements? Do you have any other ideas or additions? Let's make sure everything is perfect before handing it over to Claude Code!

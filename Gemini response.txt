@@ -1,0 +1,214 @@
+﻿Here is the requested output based on my comprehensive audit and architectural planning of the index.html codebase.
+JavaScript
+=== TASK A: AUDIT REPORT ===
+1. **Syntax/Logic Bugs (CRITICAL)**
+   - **Game Crash at Truth Kid:** In `WorldMapScene.prototype._tryBeatCat()`, the code assigns a string via `var line = BEAT_CAT_LINES[this._beatCatLineIdx % BEAT_CAT_LINES.length];`. However, `BEAT_CAT_LINES` is never defined anywhere in the codebase. The array was likely renamed to `WS_KID_QUOTES` in the constants zone, but this reference was missed. This will throw a `ReferenceError` and crash the game as soon as Ed presses Z near the Truth Kid at tile (2,6).
+   - **Gamepad Input Double-Firing:** In `WorldMapScene` and `Level11Scene`, gamepad polling captures both axis thresholds and button presses (e.g., `pad.A` and `pad.up`), assigning them to `gpMapA` / `gpJ`. Depending on the gamepad polling rate, this can double-fire inputs on a single frame.
+
+
+2. **State Leaks**
+   - **Orphaned Particle Pools:** While `SMOKE_POOL` and `EX_POOL` are correctly cleared at the beginning of level boots (`length = 0`), `HEART_POOL` is never cleared. Petting multiple cats and then exiting/re-entering levels will endlessly accumulate orphaned hearts in memory.
+   - **Lingering Fire Hazards:** `FIRE_POOL` is also not flushed appropriately on death (`_triggerDeath()`) causing visual artifacts and lingering hitboxes to carry over if a level resets unexpectedly.
+
+
+3. **Performance Issues**
+   - **Every-Frame Map Rendering:** Inside `WorldMapScene.prototype.update()`, `this.mapG.clear(); this._drawMap();` runs *every single frame*. Drawing 160 tiles and complex geometry on the canvas API 60 times a second is incredibly expensive. The map should be rendered once to a cached graphics object.
+   - **Every-Frame City Skyline Generation:** `Level11Scene.prototype._drawLevel()` completely recalculates the skyline background, including randomized lit windows, on every frame.
+
+
+4. **Missing Connections**
+   - `RASTA_CORP_MSGS`, `RASTA_CORP_SPEECH`, and `RASTA_BOSS_TRAUMA` exist in Zone 2 but are never injected into gameplay or UI logic inside the provided scenes.
+   - `WS_KID_QUOTES` is defined but entirely unused (it is meant to replace the missing `BEAT_CAT_LINES`).
+
+
+5. **Code Style / Architecture**
+   - Several dense variable assignments inside closures heavily rely on ES5 `var` hoisting (`ci2`, `mi3`, etc.) which risks scope collision inside nested async timeouts.
+
+
+
+
+=== TASK B: DARK NIHILISTIC ENDING ===
+
+
+function DarkEpilogueScene() { Phaser.Scene.call(this, {key: 'DarkEpilogue'}); }
+DarkEpilogueScene.prototype = Object.create(Phaser.Scene.prototype);
+DarkEpilogueScene.prototype.constructor = DarkEpilogueScene;
+
+
+DarkEpilogueScene.prototype.create = function() {
+  var W = 960, H = 540, self = this;
+  this.cameras.main.setBackgroundColor('#030006');
+  
+  this.edCigF = 0;
+  this.edG = this.add.graphics().setDepth(10).setAlpha(0);
+  
+  var lines = [
+    "YOU SHOWED THEM MERCY.",
+    "YOU SAT WITH THE CEO.",
+    "HE CRIED. YOU LISTENED.",
+    "IT WAS A BEAUTIFUL, HUMAN MOMENT.",
+    "...",
+    "THE ECONOMY COLLAPSED ANYWAY.",
+    "THE CATS STILL NEED CIGS.",
+    "THE VOID IS STILL EXACTLY THE SAME SIZE."
+  ];
+  
+  var delay = 1500;
+  for (var i = 0; i < lines.length; i++) {
+    (function(idx, textStr) {
+      self.time.delayedCall(delay, function() {
+        var txt = self.add.text(W/2, 120 + (idx * 35), textStr, {
+          fontFamily: 'Inconsolata,monospace',
+          fontSize: '18px',
+          color: '#666677',
+          align: 'center',
+          letterSpacing: 1
+        }).setOrigin(0.5).setAlpha(0);
+        self.tweens.add({targets: txt, alpha: 1, duration: 2500});
+      });
+      delay += 3500;
+    })(i, lines[i]);
+  }
+  
+  this.time.delayedCall(delay + 1000, function() {
+    self.tweens.add({targets: self.edG, alpha: 0.6, duration: 5000});
+    var endTxt = self.add.text(W/2, H - 80, "THE END (NIHILIST ROUTE)", {
+      fontFamily: 'Bangers,Georgia,serif',
+      fontSize: '36px',
+      color: '#444455',
+      letterSpacing: 4
+    }).setOrigin(0.5).setAlpha(0);
+    self.tweens.add({targets: endTxt, alpha: 1, duration: 4000, delay: 2000});
+    
+    EWR_STATE.epilogueSeen = true;
+    if (typeof _saveProgress === 'function') _saveProgress();
+  });
+};
+
+
+DarkEpilogueScene.prototype.update = function(time, delta) {
+  this.edCigF++;
+  this.edG.clear();
+  
+  // Draw Ed in the center, aloof and alone in the void.
+  if (typeof DRAW_ED !== 'undefined') {
+    DRAW_ED.draw(this.edG, 480, 420, 0, false, this.edCigF);
+  }
+  
+  // Minimalist, lonely smoke particle
+  if (Math.random() < 0.03) {
+    this.edG.fillStyle(0x333333, 0.4);
+    this.edG.fillCircle(480 + 14 + (Math.random() - 0.5) * 8, 395 - Math.random() * 30, 2 + Math.random() * 4);
+  }
+};
+
+
+/*
+  INTEGRATION HOOK (To route the ending correctly):
+  if (EWR_STATE.rastaCorp.sympathy >= 4) {
+      scene.scene.start('DarkEpilogue');
+  } else {
+      scene.scene.start('EpilogueScene');
+  }
+*/
+
+
+
+
+=== TASK C: WORLD MAP ANOMALY SYSTEM ===
+
+
+var ANOMALY_MSGS = [
+  'THIS WAS NOT THE MAP.',
+  'YOU ARE IN THE WRONG WORLD.',
+  'ED CHANGED THIS. ED IS UNAWARE.',
+  'THE TILES REMEMBER THE OLD ARRANGEMENT.'
+];
+
+
+function _drawAnomalyOverlay(scene, mapRows, offX, offY, tW, tH) {
+  if (!scene.anomalyG) {
+    scene.anomalyG = scene.add.graphics().setDepth(80);
+    scene._anomalyMsgT = 0;
+  }
+  
+  var g = scene.anomalyG;
+  g.clear();
+  
+  var mandela = EWR_STATE.rastaCorp.mandela || 0;
+  
+  // 1. Floating anomaly text in later maps (World 3 & 4)
+  if (scene.sys.config.key === 'WorldMap3' || scene.sys.config.key === 'WorldMap4') {
+    scene._anomalyMsgT += scene.game.loop.delta;
+    if (scene._anomalyMsgT >= 60000) {
+      scene._anomalyMsgT = 0;
+      var msg = ANOMALY_MSGS[Math.floor(Math.random() * ANOMALY_MSGS.length)];
+      var txt = scene.add.text(
+        150 + Math.random() * 500, 
+        100 + Math.random() * 300, 
+        msg, 
+        {fontFamily: 'Inconsolata,monospace', fontSize: '15px', color: '#666666'}
+      ).setAlpha(0).setDepth(85).setScrollFactor(0);
+      
+      scene.tweens.add({
+        targets: txt,
+        alpha: 0.6,
+        y: txt.y - 30,
+        duration: 3500,
+        yoyo: true,
+        onComplete: function() { txt.destroy(); }
+      });
+    }
+  }
+
+
+  // 2. Visual Glitching on Random Tiles (if mandela >= 10)
+  if (mandela >= 10) {
+    if (Math.random() < 0.1) {
+      var row = Math.floor(Math.random() * mapRows.length);
+      var col = Math.floor(Math.random() * mapRows[0].length);
+      var px = offX + col * tW;
+      var py = offY + row * tH + 36;
+      
+      g.fillStyle(Math.random() > 0.5 ? 0xff00ff : 0x00ffff, 0.25);
+      g.fillRect(px + (Math.random() - 0.5) * 12, py + (Math.random() - 0.5) * 12, tW, tH);
+    }
+  }
+}
+
+
+/* INTEGRATION POINTS: 
+
+
+  1. Shifted Cat Names (In `_spawnCats` of WorldMapScene & other maps):
+  ---------------------------------------------------------------------
+  Locate the line inside the cat spawn loop:
+    name: CAT_NAMES[i % CAT_NAMES.length]
+  Replace it with:
+    var nameShift = (EWR_STATE.rastaCorp.mandela >= 5 && Math.random() < 0.2) ? 1 : 0;
+    var shiftedName = CAT_NAMES[(i + nameShift) % CAT_NAMES.length];
+  And use `shiftedName` for the name assignment.
+
+
+  2. The '??' Level Label Override (In `update` of map scenes):
+  ---------------------------------------------------------------------
+  Locate the nodeTxt label update block:
+    if(curTile&&(curTile.type==='level'||curTile.type==='portal')){ ... this.nodeTxt.setText(curTile.label)... }
+  Modify it to check for the anomaly:
+    var displayLabel = curTile.label;
+    if (EWR_STATE.rastaCorp.mandela >= 10) {
+      // Create a deterministic "random" anomaly tile based on the mandela count
+      var anomX = (EWR_STATE.rastaCorp.mandela * 7) % W1_ROWS[0].length;
+      var anomY = (EWR_STATE.rastaCorp.mandela * 3) % W1_ROWS.length;
+      if (this.edTile.x === anomX && this.edTile.y === anomY) {
+          displayLabel = '??';
+      }
+    }
+    this.nodeTxt.setText(displayLabel).setAlpha(1);
+
+
+  3. Overlay Rendering (End of `update` loop in map scenes):
+  ---------------------------------------------------------------------
+  Add the following right before the end of the `update` function:
+    _drawAnomalyOverlay(this, W1_ROWS, this.offX, this.offY, this.tW, this.tH);
+*/

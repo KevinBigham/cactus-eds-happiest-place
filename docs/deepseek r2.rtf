@@ -1,0 +1,743 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 Menlo-Regular;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red196\green201\blue205;\red247\green249\blue250;
+\red33\green33\blue35;\red123\green143\blue171;\red21\green21\blue21;\red91\green169\blue224;\red226\green158\blue107;
+\red220\green229\blue239;\red129\green201\blue99;\red184\green130\blue220;\red224\green203\blue103;\red157\green163\blue169;
+\red17\green17\blue18;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c81176\c82745\c83922;\cssrgb\c97647\c98039\c98431;
+\cssrgb\c17255\c17255\c18039;\cssrgb\c55294\c63137\c72549;\cssrgb\c10588\c10588\c10980;\cssrgb\c42353\c72157\c90196;\cssrgb\c91373\c68235\c49412;
+\cssrgb\c89020\c91765\c94902;\cssrgb\c56863\c81569\c46275;\cssrgb\c77647\c60000\c89020;\cssrgb\c90196\c82745\c47843;\cssrgb\c67843\c69804\c72157;
+\cssrgb\c8235\c8235\c9020;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\fs28 \cf3 We need to write the RastaCorpBossScene based on the InsulinAdmiralScene template, with the specific boss mechanics described. We'll also update the fourth wall messages, WorldMap6, and registration.\
+We need to ensure we follow the exact pattern: ES5, use of prototypes, etc. The code will be added to the existing file. We'll output the required blocks.\
+We should first write the addition to FOURTH_WALL_BOSS_MSGS. Then the full scene, then WorldMap6 modifications, then scene registration.\
+Important to reference existing globals: AT, ALOE, SOUND, _takeDmg, _addCombo, _triggerFourthWallBreak, _flash, spawnExplosion, etc. The scene should use these as they are defined in the global scope.\
+We'll create a new function RastaCorpBossScene, and define its methods.\
+We need to be careful with variable names and not conflict with existing ones.\
+\pard\pardeftab720\partightenfactor0
+\cf3 Let's start.\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \
+\pard\pardeftab720\partightenfactor0
+
+\f2 \cf4 \cb5 javascript
+\f1\fs25\fsmilli12573 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf6 \cb7 // Add to existing FOURTH_WALL_BOSS_MSGS object (find the object in the file, add this line inside it)\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 rastaCorpCeo\cf9 :\cf4  \cf10 [\cf4 \
+  \cf11 '...'\cf10 ,\cf4 \
+  \cf11 'he really did just want someone to sit with him.'\cf10 ,\cf4 \
+  \cf11 '...'\cf10 ,\cf4 \
+  \cf11 'i sat with him.'\cf10 ,\cf4 \
+  \cf11 '...'\cf10 ,\cf4 \
+  \cf11 'for a minute.'\cf10 ,\cf4 \
+  \cf11 '...ok.'\cf4 \
+\cf10 ]\cf4 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf4 \cb5 javascript
+\f1\fs25\fsmilli12573 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf6 \cb7 // \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \cf4 \
+\cf6 // RASTA CORP CEO BOSS SCENE \'97 World 6 Final Boss\cf4 \
+\cf6 // \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf9 function\cf4  \cf12 RastaCorpBossScene\cf10 ()\{\cf4  Phaser\cf10 .\cf12 Scene\cf10 .\cf12 call\cf10 (\cf9 this\cf10 ,\{\cf8 key\cf9 :\cf11 'RastaCorpBossScene'\cf10 \});\cf4  \cf10 \}\cf4 \
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype \cf9 =\cf4  Object\cf10 .\cf12 create\cf10 (\cf4 Phaser\cf10 .\cf8 Scene\cf10 .\cf4 prototype\cf10 );\cf4 \
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf4 constructor \cf9 =\cf4  RastaCorpBossScene\cf10 ;\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 create\cf4  \cf9 =\cf4  \cf9 function\cf10 ()\{\cf4 \
+  \cf9 var\cf4  self \cf9 =\cf4  \cf9 this\cf10 ;\cf4 \
+  \cf9 var\cf4  \cf13 W\cf4  \cf9 =\cf4  \cf13 960\cf10 ,\cf4  \cf13 H\cf4  \cf9 =\cf4  \cf13 540\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 _t \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 _beaten \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 _dead \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+\
+  \cf6 // Ed state\cf4 \
+  \cf9 this\cf10 .\cf4 ep \cf9 =\cf4  \cf10 \{\cf8 x\cf9 :\cf13 120\cf10 ,\cf4  \cf8 y\cf9 :\cf13 440\cf10 ,\cf4  \cf8 vx\cf9 :\cf13 0\cf10 ,\cf4  \cf8 vy\cf9 :\cf13 0\cf10 ,\cf4  \cf8 grounded\cf9 :\cf13 true\cf10 ,\cf4  \cf8 coyoteMs\cf9 :\cf13 0\cf10 ,\cf4  \cf8 djUsed\cf9 :\cf13 false\cf10 \};\cf4 \
+  \cf9 this\cf10 .\cf4 es \cf9 =\cf4  \cf10 \{\cf8 facing\cf9 :\cf13 1\cf10 ,\cf4  \cf8 frame\cf9 :\cf13 0\cf10 ,\cf4  \cf8 cigF\cf9 :\cf13 0\cf10 ,\cf4  \cf8 smokeT\cf9 :\cf13 0\cf10 ,\cf4  \cf8 walkT\cf9 :\cf13 0\cf10 ,\cf4 \
+             \cf8 punchTimer\cf9 :\cf13 0\cf10 ,\cf4  \cf8 punchActive\cf9 :\cf13 false\cf10 ,\cf4 \
+             \cf8 kickTimer\cf9 :\cf13 0\cf10 ,\cf4  \cf8 kickActive\cf9 :\cf13 false\cf10 ,\cf4 \
+             \cf8 hurtTimer\cf9 :\cf13 0\cf10 \};\cf4 \
+\
+  \cf6 // Boss state\cf4 \
+  \cf9 this\cf10 .\cf4 boss \cf9 =\cf4  \cf10 \{\cf4 \
+    \cf8 x\cf9 :\cf4  \cf13 480\cf10 ,\cf4  \cf8 y\cf9 :\cf4  \cf13 440\cf10 ,\cf4 \
+    \cf8 hp\cf9 :\cf4  \cf13 30\cf10 ,\cf4  \cf8 maxHp\cf9 :\cf4  \cf13 30\cf10 ,\cf4 \
+    \cf8 phase\cf9 :\cf4  \cf13 0\cf10 ,\cf4               \cf6 // 0=memo, 1=rebrand, 2=shield, 3=breakdown\cf4 \
+    \cf8 vx\cf9 :\cf4  \cf13 0\cf10 ,\cf4  \cf8 dir\cf9 :\cf4  \cf9 -\cf13 1\cf10 ,\cf4 \
+    \cf8 bT\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 hitFlash\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 dieT\cf9 :\cf4  \cf9 -\cf13 1\cf10 ,\cf4 \
+    \cf8 memoT\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 memos\cf9 :\cf4  \cf10 [],\cf4 \
+    \cf8 shieldActive\cf9 :\cf4  \cf13 false\cf10 ,\cf4 \
+    \cf8 shieldT\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 chargeActive\cf9 :\cf4  \cf13 false\cf10 ,\cf4 \
+    \cf8 chargeT\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 cryAlpha\cf9 :\cf4  \cf13 0\cf10 ,\cf4 \
+    \cf8 minions\cf9 :\cf4  \cf10 []\cf4 \
+  \cf10 \};\cf4 \
+\
+  \cf6 // Platforms\cf4 \
+  \cf9 this\cf10 .\cf4 plats \cf9 =\cf4  \cf10 [\cf4 \
+    \cf10 \{\cf8 x\cf9 :\cf13 0\cf10 ,\cf4    \cf8 y\cf9 :\cf13 456\cf10 ,\cf4  \cf8 w\cf9 :\cf13 960\cf10 ,\cf4  \cf8 h\cf9 :\cf13 24\cf10 \},\cf4    \cf6 // floor\cf4 \
+    \cf10 \{\cf8 x\cf9 :\cf13 200\cf10 ,\cf4  \cf8 y\cf9 :\cf13 400\cf10 ,\cf4  \cf8 w\cf9 :\cf13 560\cf10 ,\cf4  \cf8 h\cf9 :\cf13 20\cf10 \},\cf4    \cf6 // conference table (walkable)\cf4 \
+    \cf10 \{\cf8 x\cf9 :\cf13 80\cf10 ,\cf4   \cf8 y\cf9 :\cf13 330\cf10 ,\cf4  \cf8 w\cf9 :\cf13 160\cf10 ,\cf4  \cf8 h\cf9 :\cf13 14\cf10 \},\cf4    \cf6 // left filing cabinet\cf4 \
+    \cf10 \{\cf8 x\cf9 :\cf13 720\cf10 ,\cf4  \cf8 y\cf9 :\cf13 330\cf10 ,\cf4  \cf8 w\cf9 :\cf13 160\cf10 ,\cf4  \cf8 h\cf9 :\cf13 14\cf10 \}\cf4     \cf6 // right filing cabinet\cf4 \
+  \cf10 ];\cf4 \
+\
+  \cf6 // Graphics layers\cf4 \
+  \cf9 this\cf10 .\cf4 bgG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setDepth\cf10 (\cf13 0\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 platG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setDepth\cf10 (\cf13 1\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 bossG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setDepth\cf10 (\cf13 4\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 edG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setDepth\cf10 (\cf13 5\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setScrollFactor\cf10 (\cf13 0\cf10 ).\cf12 setDepth\cf10 (\cf13 20\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 flashTxt \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 text\cf10 (\cf13 W\cf9 /\cf13 2\cf10 ,\cf4  \cf13 200\cf10 ,\cf4  \cf11 ''\cf10 ,\cf4  \cf10 \{\cf4 \
+    \cf8 fontFamily\cf9 :\cf4  \cf11 'Bangers,Georgia,serif'\cf10 ,\cf4 \
+    \cf8 fontSize\cf9 :\cf4  \cf11 '48px'\cf10 ,\cf4 \
+    \cf8 color\cf9 :\cf4  \cf11 '#ffd700'\cf10 ,\cf4 \
+    \cf8 stroke\cf9 :\cf4  \cf13 AT\cf10 .\cf4 outline\cf10 ,\cf4 \
+    \cf8 strokeThickness\cf9 :\cf4  \cf13 8\cf10 ,\cf4 \
+    \cf8 backgroundColor\cf9 :\cf4  \cf11 '#00000099'\cf10 ,\cf4 \
+    \cf8 padding\cf9 :\cf4  \cf10 \{\cf8 x\cf9 :\cf13 16\cf10 ,\cf4  \cf8 y\cf9 :\cf13 8\cf10 \}\cf4 \
+  \cf10 \}).\cf12 setOrigin\cf10 (\cf13 0.5\cf10 ).\cf12 setDepth\cf10 (\cf13 30\cf10 ).\cf12 setAlpha\cf10 (\cf13 0\cf10 );\cf4 \
+\
+  \cf6 // Input\cf4 \
+  \cf9 this\cf10 .\cf4 keys \cf9 =\cf4  \cf10 \{\cf4 \
+    \cf8 left\cf9 :\cf4   \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 LEFT\cf10 ),\cf4 \
+    \cf8 right\cf9 :\cf4  \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 RIGHT\cf10 ),\cf4 \
+    \cf8 up\cf9 :\cf4     \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 UP\cf10 ),\cf4 \
+    \cf8 w\cf9 :\cf4      \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 W\cf10 ),\cf4 \
+    \cf8 a\cf9 :\cf4      \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 A\cf10 ),\cf4 \
+    \cf8 d\cf9 :\cf4      \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 D\cf10 ),\cf4 \
+    \cf8 z\cf9 :\cf4      \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 Z\cf10 ),\cf4 \
+    \cf8 x\cf9 :\cf4      \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 X\cf10 ),\cf4 \
+    \cf8 space\cf9 :\cf4  \cf9 this\cf10 .\cf4 input\cf10 .\cf4 keyboard\cf10 .\cf12 addKey\cf10 (\cf4 Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf4 KeyCodes\cf10 .\cf13 SPACE\cf10 )\cf4 \
+  \cf10 \};\cf4 \
+\
+  \cf12 _initVPad\cf10 (\cf9 this\cf10 );\cf4 \
+  \cf12 _startBgAnim\cf10 (\cf9 this\cf10 ,\cf4  \cf10 \{\cf8 color\cf9 :\cf13 0x5c3317\cf10 ,\cf4  \cf8 count\cf9 :\cf13 10\cf10 ,\cf4  \cf8 speed\cf9 :\cf13 0.8\cf10 \});\cf4  \cf6 // mahogany dust\cf4 \
+\
+  \cf6 // Clear particle pools\cf4 \
+  \cf13 EX_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 SMOKE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 FIRE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+\
+  \cf6 // Intro text sequence\cf4 \
+  \cf9 this\cf10 .\cf4 introTxt \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 text\cf10 (\cf13 W\cf9 /\cf13 2\cf10 ,\cf4  \cf13 160\cf10 ,\cf4  \cf11 ''\cf10 ,\cf4  \cf10 \{\cf4 \
+    \cf8 fontFamily\cf9 :\cf4  \cf11 'Inconsolata,monospace'\cf10 ,\cf4 \
+    \cf8 fontSize\cf9 :\cf4  \cf11 '18px'\cf10 ,\cf4 \
+    \cf8 color\cf9 :\cf4  \cf11 '#ffdd99'\cf10 ,\cf4 \
+    \cf8 stroke\cf9 :\cf4  \cf13 AT\cf10 .\cf4 outline\cf10 ,\cf4 \
+    \cf8 strokeThickness\cf9 :\cf4  \cf13 4\cf10 ,\cf4 \
+    \cf8 align\cf9 :\cf4  \cf11 'center'\cf10 ,\cf4 \
+    \cf8 backgroundColor\cf9 :\cf4  \cf11 '#00000088'\cf10 ,\cf4 \
+    \cf8 padding\cf9 :\cf4  \cf10 \{\cf8 x\cf9 :\cf13 12\cf10 ,\cf4  \cf8 y\cf9 :\cf13 6\cf10 \}\cf4 \
+  \cf10 \}).\cf12 setOrigin\cf10 (\cf13 0.5\cf10 ).\cf12 setDepth\cf10 (\cf13 35\cf10 ).\cf12 setAlpha\cf10 (\cf13 0\cf10 );\cf4 \
+\
+  \cf9 var\cf4  ceoLines \cf9 =\cf4  \cf10 [\cf4 \
+    \cf11 'AH.'\cf10 ,\cf4 \
+    \cf11 'THE CACTUS.'\cf10 ,\cf4 \
+    \cf11 '...'\cf10 ,\cf4 \
+    \cf11 'I BUILT AN EMPIRE BECAUSE NOBODY WOULD'\cf10 ,\cf4 \
+    \cf11 'JUST SIT WITH ME.'\cf10 ,\cf4 \
+    \cf11 '\'97 CEO BARRY GOLDSTEIN, RASTA CORP'\cf4 \
+  \cf10 ];\cf4 \
+\
+  \cf9 var\cf4  delay \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  li\cf9 =\cf13 0\cf10 ;\cf4  li\cf9 <\cf4 ceoLines\cf10 .\cf4 length\cf10 ;\cf4  li\cf9 ++\cf10 )\{\cf4 \
+    \cf10 (\cf9 function\cf10 (\cf8 line\cf10 ,\cf8  d\cf10 )\{\cf4 \
+      self\cf10 .\cf4 time\cf10 .\cf12 delayedCall\cf10 (\cf4 d\cf10 ,\cf4  \cf9 function\cf10 ()\{\cf4 \
+        self\cf10 .\cf4 introTxt\cf10 .\cf12 setText\cf10 (\cf4 line\cf10 ).\cf12 setAlpha\cf10 (\cf13 1\cf10 );\cf4 \
+        self\cf10 .\cf4 tweens\cf10 .\cf12 add\cf10 (\{\cf8 targets\cf9 :\cf4  self\cf10 .\cf4 introTxt\cf10 ,\cf4  \cf8 alpha\cf9 :\cf13 0\cf10 ,\cf4  \cf8 duration\cf9 :\cf13 800\cf10 ,\cf4  \cf8 delay\cf9 :\cf13 1400\cf10 \});\cf4 \
+      \cf10 \});\cf4 \
+    \cf10 \})(\cf4 ceoLines\cf10 [\cf4 li\cf10 ],\cf4  delay\cf10 );\cf4 \
+    delay \cf9 +=\cf4  \cf13 2200\cf10 ;\cf4 \
+  \cf10 \}\cf4 \
+  \cf9 this\cf10 .\cf4 _introEnd \cf9 =\cf4  delay \cf9 +\cf4  \cf13 600\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 'CEO BARRY GOLDSTEIN'\cf10 ,\cf4  \cf13 2400\cf10 ,\cf4  \cf13 42\cf10 ,\cf4  \cf11 '#ffd700'\cf10 );\cf4 \
+\
+  \cf9 this\cf10 .\cf12 _drawArena\cf10 ();\cf4 \
+  \cf9 this\cf10 .\cf12 _drawPlats\cf10 ();\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _flash\cf4  \cf9 =\cf4  \cf9 function\cf10 (\cf8 txt\cf10 ,\cf8  dur\cf10 ,\cf8  sz\cf10 ,\cf8  col\cf10 )\{\cf4 \
+  \cf9 var\cf4  self \cf9 =\cf4  \cf9 this\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 flashTxt\cf10 .\cf12 setText\cf10 (\cf4 txt\cf10 ).\cf12 setFontSize\cf10 ((\cf4 sz\cf9 ||\cf13 44\cf10 )\cf9 +\cf11 'px'\cf10 ).\cf12 setColor\cf10 (\cf4 col\cf9 ||\cf11 '#ffd700'\cf10 ).\cf12 setAlpha\cf10 (\cf13 1\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 tweens\cf10 .\cf12 add\cf10 (\{\cf8 targets\cf9 :\cf4  \cf9 this\cf10 .\cf4 flashTxt\cf10 ,\cf4  \cf8 alpha\cf9 :\cf13 0\cf10 ,\cf4  \cf8 duration\cf9 :\cf4  dur\cf9 ||\cf13 1400\cf10 ,\cf4  \cf8 delay\cf9 :\cf13 200\cf10 \});\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _drawArena\cf4  \cf9 =\cf4  \cf9 function\cf10 ()\{\cf4 \
+  \cf9 var\cf4  g \cf9 =\cf4  \cf9 this\cf10 .\cf4 bgG\cf10 ;\cf4 \
+  g\cf10 .\cf12 clear\cf10 ();\cf4 \
+  \cf9 var\cf4  \cf13 W\cf4  \cf9 =\cf4  \cf13 960\cf10 ,\cf4  \cf13 H\cf4  \cf9 =\cf4  \cf13 540\cf10 ;\cf4 \
+\
+  \cf6 // Background walls\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xf5f0e8\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 0\cf10 ,\cf4  \cf13 0\cf10 ,\cf4  \cf13 W\cf10 ,\cf4  \cf13 420\cf10 );\cf4           \cf6 // white walls\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x5c3317\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 0\cf10 ,\cf4  \cf13 420\cf10 ,\cf4  \cf13 W\cf10 ,\cf4  \cf13 H\cf9 -\cf13 420\cf10 );\cf4       \cf6 // mahogany floor\cf4 \
+\
+  \cf6 // Motivational poster\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x2a0050\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 300\cf10 ,\cf4  \cf13 60\cf10 ,\cf4  \cf13 360\cf10 ,\cf4  \cf13 100\cf10 );\cf4 \
+  g\cf10 .\cf12 lineStyle\cf10 (\cf13 3\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+  g\cf10 .\cf12 strokeRect\cf10 (\cf13 303\cf10 ,\cf4  \cf13 63\cf10 ,\cf4  \cf13 354\cf10 ,\cf4  \cf13 94\cf10 );\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffd700\cf10 ,\cf4  \cf13 0.9\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 400\cf10 ,\cf4  \cf13 100\cf10 ,\cf4  \cf13 160\cf10 ,\cf4  \cf13 16\cf10 );\cf4       \cf6 // "VIBE HARDER" suggestion\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 430\cf10 ,\cf4  \cf13 122\cf10 ,\cf4  \cf13 100\cf10 ,\cf4  \cf13 8\cf10 );\cf4 \
+\
+  \cf6 // Windows\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x1a2b4a\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf13 850\cf10 ,\cf4  \cf13 60\cf10 ,\cf4  \cf13 70\cf10 ,\cf4  \cf13 180\cf10 );\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x2a4b7a\cf10 ,\cf4  \cf13 0.7\cf10 );\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  w\cf9 =\cf13 0\cf10 ;\cf4  w\cf9 <\cf13 3\cf10 ;\cf4  w\cf9 ++\cf10 )\cf4  g\cf10 .\cf12 fillRect\cf10 (\cf13 858\cf10 ,\cf4  \cf13 70\cf9 +\cf4 w\cf9 *\cf13 55\cf10 ,\cf4  \cf13 54\cf10 ,\cf4  \cf13 40\cf10 );\cf4 \
+\
+  \cf6 // Overhead lights\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  li\cf9 =\cf13 150\cf10 ;\cf4  li\cf9 <\cf13 W\cf10 ;\cf4  li\cf9 +=\cf13 300\cf10 )\{\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffdd99\cf10 ,\cf4  \cf13 0.25\cf4  \cf9 +\cf4  Math\cf10 .\cf12 sin\cf10 (\cf9 this\cf10 .\cf4 _t\cf9 *\cf13 0.005\cf9 +\cf4 li\cf10 )\cf9 *\cf13 0.1\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 li\cf10 ,\cf4  \cf13 30\cf10 ,\cf4  \cf13 18\cf10 );\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffaa66\cf10 ,\cf4  \cf13 0.3\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 li\cf10 ,\cf4  \cf13 30\cf10 ,\cf4  \cf13 12\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _drawPlats\cf4  \cf9 =\cf4  \cf9 function\cf10 ()\{\cf4 \
+  \cf9 var\cf4  g \cf9 =\cf4  \cf9 this\cf10 .\cf4 platG\cf10 ;\cf4 \
+  g\cf10 .\cf12 clear\cf10 ();\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  pi\cf9 =\cf13 0\cf10 ;\cf4  pi\cf9 <this\cf10 .\cf4 plats\cf10 .\cf4 length\cf10 ;\cf4  pi\cf9 ++\cf10 )\{\cf4 \
+    \cf9 var\cf4  p \cf9 =\cf4  \cf9 this\cf10 .\cf4 plats\cf10 [\cf4 pi\cf10 ];\cf4 \
+    \cf9 if\cf10 (\cf4 p\cf10 .\cf4 y \cf9 ===\cf4  \cf13 400\cf10 )\{\cf4  \cf6 // conference table\cf4 \
+      g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x4a2a10\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+      g\cf10 .\cf12 fillRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  p\cf10 .\cf4 h\cf10 );\cf4 \
+      g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x6b4423\cf10 ,\cf4  \cf13 0.5\cf10 );\cf4 \
+      g\cf10 .\cf12 fillRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+      g\cf10 .\cf12 lineStyle\cf10 (\cf13 1\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 0.3\cf10 );\cf4 \
+      g\cf10 .\cf12 strokeRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  p\cf10 .\cf4 h\cf10 );\cf4 \
+    \cf10 \}\cf4  \cf9 else\cf4  \cf10 \{\cf4 \
+      g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x8a6e4b\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+      g\cf10 .\cf12 fillRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  p\cf10 .\cf4 h\cf10 );\cf4 \
+      g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x6b4a2b\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+      g\cf10 .\cf12 fillRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+      g\cf10 .\cf12 lineStyle\cf10 (\cf13 1\cf10 ,\cf4  \cf13 0x4a2a10\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+      g\cf10 .\cf12 strokeRect\cf10 (\cf4 p\cf10 .\cf4 x\cf10 ,\cf4  p\cf10 .\cf4 y\cf10 ,\cf4  p\cf10 .\cf4 w\cf10 ,\cf4  p\cf10 .\cf4 h\cf10 );\cf4 \
+    \cf10 \}\cf4 \
+  \cf10 \}\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _drawCEO\cf4  \cf9 =\cf4  \cf9 function\cf10 (\cf8 g\cf10 ,\cf8  boss\cf10 )\{\cf4 \
+  \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 dieT \cf9 >=\cf4  \cf13 0\cf10 )\cf4  \cf9 return\cf10 ;\cf4 \
+\
+  \cf9 var\cf4  bx \cf9 =\cf4  boss\cf10 .\cf4 x\cf10 ,\cf4  by \cf9 =\cf4  boss\cf10 .\cf4 y\cf10 ;\cf4 \
+  \cf9 var\cf4  dir \cf9 =\cf4  boss\cf10 .\cf4 dir\cf10 ;\cf4 \
+  \cf9 var\cf4  phase \cf9 =\cf4  boss\cf10 .\cf4 phase\cf10 ;\cf4 \
+  \cf9 var\cf4  hitFlash \cf9 =\cf4  boss\cf10 .\cf4 hitFlash \cf9 >\cf4  \cf13 0\cf10 ;\cf4 \
+  \cf9 var\cf4  bodyCol \cf9 =\cf4  hitFlash \cf9 ?\cf4  \cf13 0xffffff\cf4  \cf9 :\cf4  \cf13 0x555555\cf10 ;\cf4 \
+  \cf9 var\cf4  headCol \cf9 =\cf4  hitFlash \cf9 ?\cf4  \cf13 0xffffff\cf4  \cf9 :\cf4  \cf13 0xccaa88\cf10 ;\cf4 \
+\
+  \cf6 // Slight hunch in phase 3\cf4 \
+  \cf9 var\cf4  hunch \cf9 =\cf4  \cf10 (\cf4 phase \cf9 ===\cf4  \cf13 3\cf10 )\cf4  \cf9 ?\cf4  \cf13 8\cf4  \cf9 :\cf4  \cf13 0\cf10 ;\cf4 \
+\
+  \cf6 // Shadow\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x000000\cf10 ,\cf4  \cf13 0.2\cf10 );\cf4 \
+  g\cf10 .\cf12 fillEllipse\cf10 (\cf4 bx\cf9 +\cf13 2\cf10 ,\cf4  by\cf9 +\cf13 4\cf10 ,\cf4  \cf13 50\cf10 ,\cf4  \cf13 18\cf10 );\cf4 \
+\
+  \cf6 // Body (suit jacket)\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf4 bodyCol\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRoundedRect\cf10 (\cf4 bx\cf9 -\cf13 22\cf10 ,\cf4  by\cf9 -\cf13 60\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 44\cf10 ,\cf4  \cf13 50\cf10 ,\cf4  \cf13 6\cf10 );\cf4 \
+  \cf6 // Lapels\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x333333\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillTriangle\cf10 (\cf4 bx\cf9 -\cf13 14\cf10 ,\cf4  by\cf9 -\cf13 40\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf10 ,\cf4  by\cf9 -\cf13 30\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 -\cf13 4\cf10 ,\cf4  by\cf9 -\cf13 20\cf9 +\cf4 hunch\cf10 );\cf4 \
+  g\cf10 .\cf12 fillTriangle\cf10 (\cf4 bx\cf9 +\cf13 14\cf10 ,\cf4  by\cf9 -\cf13 40\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf10 ,\cf4  by\cf9 -\cf13 30\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 +\cf13 4\cf10 ,\cf4  by\cf9 -\cf13 20\cf9 +\cf4 hunch\cf10 );\cf4 \
+  \cf6 // Tie\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffd700\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf4 bx\cf9 -\cf13 4\cf10 ,\cf4  by\cf9 -\cf13 35\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 8\cf10 ,\cf4  \cf13 22\cf10 );\cf4 \
+\
+  \cf6 // Head\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf4 headCol\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRoundedRect\cf10 (\cf4 bx\cf9 -\cf13 16\cf10 ,\cf4  by\cf9 -\cf13 82\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 32\cf10 ,\cf4  \cf13 30\cf10 ,\cf4  \cf13 8\cf10 );\cf4 \
+  \cf6 // Ears\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf4 headCol\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillTriangle\cf10 (\cf4 bx\cf9 -\cf13 24\cf10 ,\cf4  by\cf9 -\cf13 82\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 -\cf13 14\cf10 ,\cf4  by\cf9 -\cf13 82\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 -\cf13 20\cf10 ,\cf4  by\cf9 -\cf13 94\cf9 +\cf4 hunch\cf10 );\cf4 \
+  g\cf10 .\cf12 fillTriangle\cf10 (\cf4 bx\cf9 +\cf13 14\cf10 ,\cf4  by\cf9 -\cf13 82\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 +\cf13 24\cf10 ,\cf4  by\cf9 -\cf13 82\cf9 +\cf4 hunch\cf10 ,\cf4  bx\cf9 +\cf13 20\cf10 ,\cf4  by\cf9 -\cf13 94\cf9 +\cf4 hunch\cf10 );\cf4 \
+\
+  \cf6 // Eyes\cf4 \
+  \cf9 if\cf10 (\cf4 phase \cf9 ===\cf4  \cf13 3\cf10 )\{\cf4 \
+    \cf6 // Big watery eyes\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xeeeeff\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    g\cf10 .\cf12 fillEllipse\cf10 (\cf4 bx\cf9 -\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 72\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 6\cf10 ,\cf4  \cf13 8\cf10 );\cf4 \
+    g\cf10 .\cf12 fillEllipse\cf10 (\cf4 bx\cf9 +\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 72\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 6\cf10 ,\cf4  \cf13 8\cf10 );\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x0000aa\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 bx\cf9 -\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 72\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 bx\cf9 +\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 72\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+    \cf6 // Tear drops\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xaaccff\cf10 ,\cf4  \cf13 0.7\cf10 );\cf4 \
+    g\cf10 .\cf12 fillEllipse\cf10 (\cf4 bx\cf9 -\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 62\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 ,\cf4  \cf13 6\cf10 );\cf4 \
+    g\cf10 .\cf12 fillEllipse\cf10 (\cf4 bx\cf9 +\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 62\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 ,\cf4  \cf13 6\cf10 );\cf4 \
+  \cf10 \}\cf4  \cf9 else\cf4  \cf10 \{\cf4 \
+    \cf6 // Normal eyes\cf4 \
+    g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x000000\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 bx\cf9 -\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 74\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+    g\cf10 .\cf12 fillCircle\cf10 (\cf4 bx\cf9 +\cf13 8\cf10 ,\cf4  by\cf9 -\cf13 74\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf6 // Briefcase (in hand depending on direction)\cf4 \
+  \cf9 var\cf4  caseX \cf9 =\cf4  dir \cf9 ===\cf4  \cf13 1\cf4  \cf9 ?\cf4  bx\cf9 +\cf13 26\cf4  \cf9 :\cf4  bx\cf9 -\cf13 40\cf10 ;\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x8b4513\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRoundedRect\cf10 (\cf4 caseX\cf10 ,\cf4  by\cf9 -\cf13 44\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 14\cf10 ,\cf4  \cf13 10\cf10 ,\cf4  \cf13 2\cf10 );\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0xcd853f\cf10 ,\cf4  \cf13 0.7\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf4 caseX\cf9 +\cf13 2\cf10 ,\cf4  by\cf9 -\cf13 46\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 10\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+\
+  \cf6 // Shield visual if active\cf4 \
+  \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 shieldActive\cf10 )\{\cf4 \
+    g\cf10 .\cf12 lineStyle\cf10 (\cf13 3\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+    g\cf10 .\cf12 strokeCircle\cf10 (\cf4 bx\cf10 ,\cf4  by\cf9 -\cf13 40\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 40\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf6 // HP bar\cf4 \
+  \cf9 var\cf4  hpFrac \cf9 =\cf4  Math\cf10 .\cf12 max\cf10 (\cf13 0\cf10 ,\cf4  boss\cf10 .\cf4 hp \cf9 /\cf4  boss\cf10 .\cf4 maxHp\cf10 );\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf13 0x1a0a00\cf10 ,\cf4  \cf13 0.9\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRoundedRect\cf10 (\cf4 bx\cf9 -\cf13 44\cf10 ,\cf4  by\cf9 -\cf13 98\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 88\cf10 ,\cf4  \cf13 12\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+  \cf9 var\cf4  hpCol \cf9 =\cf4  \cf10 (\cf4 phase \cf9 ===\cf4  \cf13 3\cf10 )\cf4  \cf9 ?\cf4  \cf13 0xff8888\cf4  \cf9 :\cf4  \cf13 0xffd700\cf10 ;\cf4 \
+  g\cf10 .\cf12 fillStyle\cf10 (\cf4 hpCol\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  g\cf10 .\cf12 fillRect\cf10 (\cf4 bx\cf9 -\cf13 42\cf10 ,\cf4  by\cf9 -\cf13 96\cf9 +\cf4 hunch\cf10 ,\cf4  Math\cf10 .\cf12 max\cf10 (\cf13 0\cf10 ,\cf4  \cf13 84\cf4  \cf9 *\cf4  hpFrac\cf10 ),\cf4  \cf13 8\cf10 );\cf4 \
+  g\cf10 .\cf12 lineStyle\cf10 (\cf13 1\cf10 ,\cf4  \cf13 0xffffff\cf10 ,\cf4  \cf13 0.5\cf10 );\cf4 \
+  g\cf10 .\cf12 strokeRoundedRect\cf10 (\cf4 bx\cf9 -\cf13 44\cf10 ,\cf4  by\cf9 -\cf13 98\cf9 +\cf4 hunch\cf10 ,\cf4  \cf13 88\cf10 ,\cf4  \cf13 12\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 update\cf4  \cf9 =\cf4  \cf9 function\cf10 (\cf8 time\cf10 ,\cf8  delta\cf10 )\{\cf4 \
+  \cf9 var\cf4  self \cf9 =\cf4  \cf9 this\cf10 ;\cf4 \
+  \cf9 var\cf4  dt \cf9 =\cf4  delta \cf9 /\cf4  \cf13 1000\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 _t \cf9 +=\cf4  delta\cf10 ;\cf4 \
+  \cf9 if\cf10 (\cf9 this\cf10 .\cf4 _beaten\cf10 )\cf4  \cf9 return\cf10 ;\cf4 \
+\
+  \cf9 var\cf4  ep \cf9 =\cf4  \cf9 this\cf10 .\cf4 ep\cf10 ,\cf4  es \cf9 =\cf4  \cf9 this\cf10 .\cf4 es\cf10 ,\cf4  boss \cf9 =\cf4  \cf9 this\cf10 .\cf4 boss\cf10 ;\cf4 \
+  \cf9 var\cf4  \cf13 W\cf4  \cf9 =\cf4  \cf13 960\cf10 ;\cf4 \
+\
+  \cf6 // Ed physics\cf4 \
+  ep\cf10 .\cf4 vy \cf9 +=\cf4  \cf13 28\cf10 ;\cf4 \
+  ep\cf10 .\cf4 vy \cf9 =\cf4  Math\cf10 .\cf12 min\cf10 (\cf4 ep\cf10 .\cf4 vy\cf10 ,\cf4  \cf13 700\cf10 );\cf4 \
+  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 hurtTimer \cf9 >\cf4  \cf13 0\cf10 )\cf4  es\cf10 .\cf4 hurtTimer \cf9 -=\cf4  delta\cf10 ;\cf4 \
+  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 punchTimer \cf9 >\cf4  \cf13 0\cf10 )\{\cf4  es\cf10 .\cf4 punchTimer \cf9 -=\cf4  delta\cf10 ;\cf4  es\cf10 .\cf4 punchActive \cf9 =\cf4  es\cf10 .\cf4 punchTimer \cf9 >\cf4  \cf13 300\cf4  \cf9 &&\cf4  es\cf10 .\cf4 punchTimer \cf9 <\cf4  \cf13 700\cf10 ;\cf4  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 kickTimer \cf9 >\cf4  \cf13 0\cf10 )\{\cf4  es\cf10 .\cf4 kickTimer \cf9 -=\cf4  delta\cf10 ;\cf4  es\cf10 .\cf4 kickActive \cf9 =\cf4  es\cf10 .\cf4 kickTimer \cf9 >\cf4  \cf13 200\cf4  \cf9 &&\cf4  es\cf10 .\cf4 kickTimer \cf9 <\cf4  \cf13 500\cf10 ;\cf4  \cf10 \}\cf4 \
+\
+  \cf6 // Input\cf4 \
+  \cf9 var\cf4  left  \cf9 =\cf4  \cf9 this\cf10 .\cf4 keys\cf10 .\cf4 left\cf10 .\cf4 isDown  \cf9 ||\cf4  \cf9 this\cf10 .\cf4 keys\cf10 .\cf4 a\cf10 .\cf4 isDown\cf10 ;\cf4 \
+  \cf9 var\cf4  right \cf9 =\cf4  \cf9 this\cf10 .\cf4 keys\cf10 .\cf4 right\cf10 .\cf4 isDown \cf9 ||\cf4  \cf9 this\cf10 .\cf4 keys\cf10 .\cf4 d\cf10 .\cf4 isDown\cf10 ;\cf4 \
+  \cf9 var\cf4  jumpJD \cf9 =\cf4  Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf12 JustDown\cf10 (\cf9 this\cf10 .\cf4 keys\cf10 .\cf4 up\cf10 )\cf4  \cf9 ||\cf4 \
+               Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf12 JustDown\cf10 (\cf9 this\cf10 .\cf4 keys\cf10 .\cf4 w\cf10 )\cf4  \cf9 ||\cf4 \
+               Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf12 JustDown\cf10 (\cf9 this\cf10 .\cf4 keys\cf10 .\cf4 space\cf10 );\cf4 \
+  \cf9 var\cf4  punchJD \cf9 =\cf4  Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf12 JustDown\cf10 (\cf9 this\cf10 .\cf4 keys\cf10 .\cf4 z\cf10 );\cf4 \
+  \cf9 var\cf4  kickJD  \cf9 =\cf4  Phaser\cf10 .\cf4 Input\cf10 .\cf4 Keyboard\cf10 .\cf12 JustDown\cf10 (\cf9 this\cf10 .\cf4 keys\cf10 .\cf4 x\cf10 );\cf4 \
+  \cf9 if\cf10 (\cf9 this\cf10 .\cf4 vpad\cf10 )\{\cf4 \
+    left \cf9 =\cf4  left \cf9 ||\cf4  \cf9 this\cf10 .\cf4 vpad\cf10 .\cf4 left\cf10 ;\cf4 \
+    right \cf9 =\cf4  right \cf9 ||\cf4  \cf9 this\cf10 .\cf4 vpad\cf10 .\cf4 right\cf10 ;\cf4 \
+    \cf9 if\cf10 (\cf9 this\cf10 .\cf4 vpad\cf10 .\cf4 jumpJD\cf10 )\cf4  jumpJD \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+    \cf9 if\cf10 (\cf9 this\cf10 .\cf4 vpad\cf10 .\cf4 punchJD\cf10 )\cf4  punchJD \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+    \cf9 if\cf10 (\cf9 this\cf10 .\cf4 vpad\cf10 .\cf4 kickJD\cf10 )\cf4  kickJD \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf9 if\cf10 (\cf4 left\cf10 )\cf4   \cf10 \{\cf4  ep\cf10 .\cf4 vx \cf9 =\cf4  Math\cf10 .\cf12 max\cf10 (\cf4 ep\cf10 .\cf4 vx\cf9 -\cf13 18\cf10 ,\cf4  \cf9 -\cf13 140\cf10 );\cf4  es\cf10 .\cf4 facing \cf9 =\cf4  \cf9 -\cf13 1\cf10 ;\cf4  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf4 right\cf10 )\cf4  \cf10 \{\cf4  ep\cf10 .\cf4 vx \cf9 =\cf4  Math\cf10 .\cf12 min\cf10 (\cf4 ep\cf10 .\cf4 vx\cf9 +\cf13 18\cf10 ,\cf4  \cf13 140\cf10 );\cf4   es\cf10 .\cf4 facing \cf9 =\cf4  \cf13 1\cf10 ;\cf4  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf9 !\cf4 left \cf9 &&\cf4  \cf9 !\cf4 right\cf10 )\cf4  ep\cf10 .\cf4 vx \cf9 *=\cf4  \cf13 0.75\cf10 ;\cf4 \
+\
+  \cf9 if\cf10 (\cf4 jumpJD \cf9 &&\cf4  \cf10 (\cf4 ep\cf10 .\cf4 grounded \cf9 ||\cf4  ep\cf10 .\cf4 coyoteMs \cf9 >\cf4  \cf13 0\cf10 ))\{\cf4 \
+    ep\cf10 .\cf4 vy \cf9 =\cf4  \cf9 -\cf13 520\cf10 ;\cf4 \
+    ep\cf10 .\cf4 grounded \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+    ep\cf10 .\cf4 coyoteMs \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+    \cf13 SOUND\cf10 .\cf12 jump\cf10 ();\cf4 \
+  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf4 jumpJD \cf9 &&\cf4  \cf9 !\cf4 ep\cf10 .\cf4 grounded \cf9 &&\cf4  \cf9 !\cf4 ep\cf10 .\cf4 djUsed \cf9 &&\cf4  \cf13 EWR_STATE\cf10 .\cf4 shop\cf10 .\cf4 doubleJump\cf10 )\{\cf4 \
+    ep\cf10 .\cf4 vy \cf9 =\cf4  \cf9 -\cf13 400\cf10 ;\cf4 \
+    ep\cf10 .\cf4 djUsed \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+    \cf13 SOUND\cf10 .\cf12 jump\cf10 ();\cf4 \
+  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf4 punchJD \cf9 &&\cf4  es\cf10 .\cf4 punchTimer \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4 \
+    es\cf10 .\cf4 punchTimer \cf9 =\cf4  \cf13 900\cf10 ;\cf4 \
+    \cf13 SOUND\cf10 .\cf12 punch\cf10 ();\cf4 \
+  \cf10 \}\cf4 \
+  \cf9 if\cf10 (\cf4 kickJD \cf9 &&\cf4  es\cf10 .\cf4 kickTimer \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4 \
+    es\cf10 .\cf4 kickTimer \cf9 =\cf4  \cf13 700\cf10 ;\cf4 \
+    \cf13 SOUND\cf10 .\cf12 kick\cf10 ();\cf4 \
+  \cf10 \}\cf4 \
+\
+  ep\cf10 .\cf4 coyoteMs \cf9 -=\cf4  delta\cf10 ;\cf4 \
+  ep\cf10 .\cf4 x \cf9 +=\cf4  ep\cf10 .\cf4 vx \cf9 *\cf4  dt\cf10 ;\cf4 \
+  ep\cf10 .\cf4 y \cf9 +=\cf4  ep\cf10 .\cf4 vy \cf9 *\cf4  dt\cf10 ;\cf4 \
+\
+  ep\cf10 .\cf4 grounded \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  pi\cf9 =\cf13 0\cf10 ;\cf4  pi\cf9 <this\cf10 .\cf4 plats\cf10 .\cf4 length\cf10 ;\cf4  pi\cf9 ++\cf10 )\{\cf4 \
+    \cf9 var\cf4  p \cf9 =\cf4  \cf9 this\cf10 .\cf4 plats\cf10 [\cf4 pi\cf10 ];\cf4 \
+    \cf9 if\cf10 (\cf4 ep\cf10 .\cf4 x\cf9 +\cf13 10\cf4  \cf9 >\cf4  p\cf10 .\cf4 x \cf9 &&\cf4  ep\cf10 .\cf4 x\cf9 -\cf13 10\cf4  \cf9 <\cf4  p\cf10 .\cf4 x\cf9 +\cf4 p\cf10 .\cf4 w \cf9 &&\cf4  ep\cf10 .\cf4 y \cf9 >\cf4  p\cf10 .\cf4 y \cf9 &&\cf4  ep\cf10 .\cf4 y \cf9 -\cf4  ep\cf10 .\cf4 vy\cf9 *\cf4 dt \cf9 <=\cf4  p\cf10 .\cf4 y\cf9 +\cf13 2\cf10 )\{\cf4 \
+      ep\cf10 .\cf4 y \cf9 =\cf4  p\cf10 .\cf4 y\cf10 ;\cf4 \
+      ep\cf10 .\cf4 vy \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+      ep\cf10 .\cf4 grounded \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+      ep\cf10 .\cf4 coyoteMs \cf9 =\cf4  \cf13 90\cf10 ;\cf4 \
+      ep\cf10 .\cf4 djUsed \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+    \cf10 \}\cf4 \
+  \cf10 \}\cf4 \
+  ep\cf10 .\cf4 x \cf9 =\cf4  Math\cf10 .\cf12 max\cf10 (\cf13 20\cf10 ,\cf4  Math\cf10 .\cf12 min\cf10 (\cf13 W\cf9 -\cf13 20\cf10 ,\cf4  ep\cf10 .\cf4 x\cf10 ));\cf4 \
+  \cf9 if\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 >\cf4  \cf13 560\cf10 )\{\cf4 \
+    ep\cf10 .\cf4 y \cf9 =\cf4  \cf13 440\cf10 ;\cf4 \
+    ep\cf10 .\cf4 vy \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+    \cf9 if\cf10 (\cf9 !\cf12 _takeDmg\cf10 (\cf13 1\cf10 ))\{\cf4  \cf9 this\cf10 .\cf12 _edDie\cf10 ();\cf4  \cf9 return\cf10 ;\cf4  \cf10 \}\cf4 \
+    \cf13 SOUND\cf10 .\cf12 hurt\cf10 ();\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf6 // Boss AI (only after intro)\cf4 \
+  \cf9 if\cf10 (\cf9 this\cf10 .\cf4 _t \cf9 >\cf4  \cf9 this\cf10 .\cf4 _introEnd \cf9 &&\cf4  boss\cf10 .\cf4 dieT \cf9 <\cf4  \cf13 0\cf10 )\{\cf4 \
+    boss\cf10 .\cf4 bT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 hitFlash \cf9 >\cf4  \cf13 0\cf10 )\cf4  boss\cf10 .\cf4 hitFlash \cf9 -=\cf4  delta\cf10 ;\cf4 \
+\
+    \cf6 // Phase transitions\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 0\cf4  \cf9 &&\cf4  boss\cf10 .\cf4 hp \cf9 <=\cf4  \cf13 21\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 phase \cf9 =\cf4  \cf13 1\cf10 ;\cf4 \
+      boss\cf10 .\cf4 vx \cf9 =\cf4  \cf10 (\cf4 boss\cf10 .\cf4 vx \cf9 >\cf4  \cf13 0\cf4  \cf9 ?\cf4  \cf13 90\cf4  \cf9 :\cf4  \cf9 -\cf13 90\cf10 );\cf4 \
+      \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 'INITIATING REBRAND PROTOCOL'\cf10 ,\cf4  \cf13 1800\cf10 ,\cf4  \cf13 28\cf10 ,\cf4  \cf11 '#ffd700'\cf10 );\cf4 \
+    \cf10 \}\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 1\cf4  \cf9 &&\cf4  boss\cf10 .\cf4 hp \cf9 <=\cf4  \cf13 13\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 phase \cf9 =\cf4  \cf13 2\cf10 ;\cf4 \
+      \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 'LEGAL NOTICE: CEASE AND DESIST'\cf10 ,\cf4  \cf13 1800\cf10 ,\cf4  \cf13 24\cf10 ,\cf4  \cf11 '#ffffff'\cf10 );\cf4 \
+    \cf10 \}\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 2\cf4  \cf9 &&\cf4  boss\cf10 .\cf4 hp \cf9 <=\cf4  \cf13 6\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 phase \cf9 =\cf4  \cf13 3\cf10 ;\cf4 \
+      \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 '...I JUST WANTED SOMEONE TO SIT WITH ME.'\cf10 ,\cf4  \cf13 2400\cf10 ,\cf4  \cf13 20\cf10 ,\cf4  \cf11 '#aaaaff'\cf10 );\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Movement\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 chargeActive\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 chargeT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+      boss\cf10 .\cf4 x \cf9 +=\cf4  boss\cf10 .\cf4 vx \cf9 *\cf4  dt \cf9 *\cf4  \cf13 2.2\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 x \cf9 <\cf4  \cf13 40\cf4  \cf9 ||\cf4  boss\cf10 .\cf4 x \cf9 >\cf4  \cf13 920\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 chargeActive \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+        boss\cf10 .\cf4 chargeT \cf9 =\cf4  \cf13 3500\cf10 ;\cf4  \cf6 // cooldown\cf4 \
+        boss\cf10 .\cf4 vx \cf9 =\cf4  \cf9 -\cf4 boss\cf10 .\cf4 vx\cf10 ;\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4  \cf9 else\cf4  \cf10 \{\cf4 \
+      boss\cf10 .\cf4 x \cf9 +=\cf4  boss\cf10 .\cf4 vx \cf9 *\cf4  dt\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 x \cf9 <\cf4  \cf13 80\cf10 )\cf4  \cf10 \{\cf4  boss\cf10 .\cf4 x \cf9 =\cf4  \cf13 80\cf10 ;\cf4  boss\cf10 .\cf4 vx \cf9 =\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 boss\cf10 .\cf4 vx\cf10 );\cf4  boss\cf10 .\cf4 dir \cf9 =\cf4  \cf13 1\cf10 ;\cf4  \cf10 \}\cf4 \
+      \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 x \cf9 >\cf4  \cf13 880\cf10 )\{\cf4  boss\cf10 .\cf4 x \cf9 =\cf4  \cf13 880\cf10 ;\cf4  boss\cf10 .\cf4 vx \cf9 =\cf4  \cf9 -\cf4 Math\cf10 .\cf12 abs\cf10 (\cf4 boss\cf10 .\cf4 vx\cf10 );\cf4  boss\cf10 .\cf4 dir \cf9 =\cf4  \cf9 -\cf13 1\cf10 ;\cf4  \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Memo barrage (phases 0,1,2)\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 !==\cf4  \cf13 3\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 memoT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 memoT \cf9 >=\cf4  \cf13 2500\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 memoT \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+        \cf6 // throw 2 memos\cf4 \
+        \cf9 for\cf10 (\cf9 var\cf4  m\cf9 =\cf13 0\cf10 ;\cf4  m\cf9 <\cf13 2\cf10 ;\cf4  m\cf9 ++\cf10 )\{\cf4 \
+          boss\cf10 .\cf4 memos\cf10 .\cf12 push\cf10 (\{\cf4 \
+            \cf8 x\cf9 :\cf4  boss\cf10 .\cf4 x\cf10 ,\cf4 \
+            \cf8 y\cf9 :\cf4  boss\cf10 .\cf4 y\cf9 -\cf13 20\cf10 ,\cf4 \
+            \cf8 vx\cf9 :\cf4  \cf10 (\cf4 boss\cf10 .\cf4 dir \cf9 *\cf4  \cf10 (\cf13 180\cf4  \cf9 +\cf4  m\cf9 *\cf13 40\cf10 ))\cf4  \cf9 *\cf4  \cf10 (\cf4 m\cf9 ===\cf13 0\cf9 ?\cf13 1\cf9 :-\cf13 1\cf10 ),\cf4 \
+            \cf8 vy\cf9 :\cf4  \cf9 -\cf13 80\cf10 ,\cf4 \
+            \cf8 life\cf9 :\cf4  \cf13 2000\cf4 \
+          \cf10 \});\cf4 \
+        \cf10 \}\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Update memos\cf4 \
+    \cf9 for\cf10 (\cf9 var\cf4  mi \cf9 =\cf4  boss\cf10 .\cf4 memos\cf10 .\cf4 length\cf9 -\cf13 1\cf10 ;\cf4  mi \cf9 >=\cf4  \cf13 0\cf10 ;\cf4  mi\cf9 --\cf10 )\{\cf4 \
+      \cf9 var\cf4  memo \cf9 =\cf4  boss\cf10 .\cf4 memos\cf10 [\cf4 mi\cf10 ];\cf4 \
+      memo\cf10 .\cf4 x \cf9 +=\cf4  memo\cf10 .\cf4 vx \cf9 *\cf4  dt\cf10 ;\cf4 \
+      memo\cf10 .\cf4 y \cf9 +=\cf4  memo\cf10 .\cf4 vy \cf9 *\cf4  dt\cf10 ;\cf4 \
+      memo\cf10 .\cf4 vy \cf9 +=\cf4  \cf13 20\cf4  \cf9 *\cf4  dt\cf10 ;\cf4 \
+      memo\cf10 .\cf4 life \cf9 -=\cf4  delta\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 memo\cf10 .\cf4 life \cf9 <=\cf4  \cf13 0\cf4  \cf9 ||\cf4  memo\cf10 .\cf4 y \cf9 >\cf4  \cf13 560\cf4  \cf9 ||\cf4  memo\cf10 .\cf4 x \cf9 <\cf4  \cf9 -\cf13 20\cf4  \cf9 ||\cf4  memo\cf10 .\cf4 x \cf9 >\cf4  \cf13 W\cf9 +\cf13 20\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 memos\cf10 .\cf12 splice\cf10 (\cf4 mi\cf10 ,\cf13 1\cf10 );\cf4 \
+        \cf9 continue\cf10 ;\cf4 \
+      \cf10 \}\cf4 \
+      \cf9 if\cf10 (\cf4 es\cf10 .\cf4 hurtTimer \cf9 <=\cf4  \cf13 0\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 x \cf9 -\cf4  memo\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 20\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  memo\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 20\cf10 )\{\cf4 \
+        es\cf10 .\cf4 hurtTimer \cf9 =\cf4  \cf13 1200\cf10 ;\cf4 \
+        \cf9 if\cf10 (\cf9 !\cf12 _takeDmg\cf10 (\cf13 1\cf10 ))\{\cf4  \cf9 this\cf10 .\cf12 _edDie\cf10 ();\cf4  \cf9 return\cf10 ;\cf4  \cf10 \}\cf4 \
+        \cf13 SOUND\cf10 .\cf12 hurt\cf10 ();\cf4 \
+        boss\cf10 .\cf4 memos\cf10 .\cf12 splice\cf10 (\cf4 mi\cf10 ,\cf13 1\cf10 );\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Phase 1: Rebrand flash and minion spawn\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 1\cf4  \cf9 &&\cf4  boss\cf10 .\cf4 minions\cf10 .\cf4 length \cf9 ===\cf4  \cf13 0\cf4  \cf9 &&\cf4  boss\cf10 .\cf4 bT \cf9 >\cf4  \cf13 500\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 minions \cf9 =\cf4  \cf10 [\cf4 \
+        \cf10 \{\cf8 x\cf9 :\cf13 200\cf10 ,\cf4  \cf8 y\cf9 :\cf13 440\cf10 ,\cf4  \cf8 vx\cf9 :\cf13 70\cf10 ,\cf4   \cf8 hp\cf9 :\cf13 1\cf10 ,\cf4  \cf8 hurtT\cf9 :\cf13 0\cf10 ,\cf4  \cf8 dead\cf9 :\cf13 false\cf10 \},\cf4 \
+        \cf10 \{\cf8 x\cf9 :\cf13 700\cf10 ,\cf4  \cf8 y\cf9 :\cf13 440\cf10 ,\cf4  \cf8 vx\cf9 :-\cf13 70\cf10 ,\cf4  \cf8 hp\cf9 :\cf13 1\cf10 ,\cf4  \cf8 hurtT\cf9 :\cf13 0\cf10 ,\cf4  \cf8 dead\cf9 :\cf13 false\cf10 \}\cf4 \
+      \cf10 ];\cf4 \
+      \cf6 // Flash effect\cf4 \
+      \cf9 var\cf4  flashG \cf9 =\cf4  \cf9 this\cf10 .\cf4 add\cf10 .\cf12 graphics\cf10 ().\cf12 setDepth\cf10 (\cf13 40\cf10 );\cf4 \
+      flashG\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffd700\cf10 ,\cf4  \cf13 0.3\cf10 );\cf4 \
+      flashG\cf10 .\cf12 fillRect\cf10 (\cf13 0\cf10 ,\cf13 0\cf10 ,\cf13 W\cf10 ,\cf13 540\cf10 );\cf4 \
+      \cf9 this\cf10 .\cf4 tweens\cf10 .\cf12 add\cf10 (\{\cf8 targets\cf9 :\cf4  flashG\cf10 ,\cf4  \cf8 alpha\cf9 :\cf13 0\cf10 ,\cf4  \cf8 duration\cf9 :\cf13 200\cf10 ,\cf4  \cf12 onComplete\cf9 :\cf4  \cf9 function\cf10 ()\{\cf4  flashG\cf10 .\cf12 destroy\cf10 ();\cf4  \cf10 \}\});\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Phase 2: Shield\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 2\cf10 )\{\cf4 \
+      \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 shieldActive\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 shieldT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+        \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 shieldT \cf9 >=\cf4  \cf13 2500\cf10 )\{\cf4 \
+          boss\cf10 .\cf4 shieldActive \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+          boss\cf10 .\cf4 shieldT \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+        \cf10 \}\cf4 \
+      \cf10 \}\cf4  \cf9 else\cf4  \cf10 \{\cf4 \
+        boss\cf10 .\cf4 shieldT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+        \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 shieldT \cf9 >=\cf4  \cf13 8000\cf10 )\{\cf4 \
+          boss\cf10 .\cf4 shieldActive \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+          boss\cf10 .\cf4 shieldT \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+        \cf10 \}\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Phase 3: Charge and tears\cf4 \
+    \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 phase \cf9 ===\cf4  \cf13 3\cf10 )\{\cf4 \
+      boss\cf10 .\cf4 cryAlpha \cf9 =\cf4  \cf13 0.7\cf4  \cf9 +\cf4  Math\cf10 .\cf12 sin\cf10 (\cf4 boss\cf10 .\cf4 bT\cf9 *\cf13 0.01\cf10 )\cf9 *\cf13 0.3\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf9 !\cf4 boss\cf10 .\cf4 chargeActive \cf9 &&\cf4  boss\cf10 .\cf4 chargeT \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 chargeActive \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+        boss\cf10 .\cf4 chargeT \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+        boss\cf10 .\cf4 vx \cf9 =\cf4  \cf10 (\cf4 ep\cf10 .\cf4 x \cf9 >\cf4  boss\cf10 .\cf4 x \cf9 ?\cf4  \cf13 280\cf4  \cf9 :\cf4  \cf9 -\cf13 280\cf10 );\cf4 \
+      \cf10 \}\cf4  \cf9 else\cf4  \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 chargeActive\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 chargeT \cf9 +=\cf4  delta\cf10 ;\cf4 \
+        \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 chargeT \cf9 >\cf4  \cf13 1000\cf10 )\{\cf4 \
+          boss\cf10 .\cf4 chargeActive \cf9 =\cf4  \cf13 false\cf10 ;\cf4 \
+          boss\cf10 .\cf4 chargeT \cf9 =\cf4  \cf13 3500\cf10 ;\cf4 \
+          boss\cf10 .\cf4 vx \cf9 =\cf4  \cf10 (\cf4 boss\cf10 .\cf4 vx \cf9 >\cf4  \cf13 0\cf4  \cf9 ?\cf4  \cf13 90\cf4  \cf9 :\cf4  \cf9 -\cf13 90\cf10 );\cf4 \
+        \cf10 \}\cf4 \
+      \cf10 \}\cf4  \cf9 else\cf4  \cf10 \{\cf4 \
+        boss\cf10 .\cf4 chargeT \cf9 -=\cf4  delta\cf10 ;\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Punch hits boss (no damage if shield active)\cf4 \
+    \cf9 if\cf10 (\cf4 es\cf10 .\cf4 punchActive \cf9 &&\cf4  \cf9 !\cf4 boss\cf10 .\cf4 shieldActive \cf9 &&\cf4  boss\cf10 .\cf4 hitFlash \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4 \
+      \cf9 var\cf4  punchX \cf9 =\cf4  ep\cf10 .\cf4 x \cf9 +\cf4  es\cf10 .\cf4 facing \cf9 *\cf4  \cf13 56\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 Math\cf10 .\cf12 abs\cf10 (\cf4 punchX \cf9 -\cf4  boss\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 55\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  boss\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 60\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 hp\cf9 --\cf10 ;\cf4 \
+        boss\cf10 .\cf4 hitFlash \cf9 =\cf4  \cf13 220\cf10 ;\cf4 \
+        \cf12 spawnExplosion\cf10 (\cf4 boss\cf10 .\cf4 x\cf10 ,\cf4  boss\cf10 .\cf4 y\cf9 -\cf13 10\cf10 ,\cf4  \cf13 0xffd60a\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+        \cf13 EWR_STATE\cf10 .\cf4 aloe \cf9 +=\cf4  \cf13 ALOE\cf10 .\cf4 bossHit\cf10 ;\cf4 \
+        \cf12 _addCombo\cf10 (\cf9 this\cf10 ,\cf4  boss\cf10 .\cf4 x\cf10 ,\cf4  boss\cf10 .\cf4 y\cf9 -\cf13 20\cf10 );\cf4 \
+        \cf13 SOUND\cf10 .\cf12 bossHit\cf10 ();\cf4 \
+        \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 hp \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4  \cf9 this\cf10 .\cf12 _killBoss\cf10 ();\cf4  \cf9 return\cf10 ;\cf4  \cf10 \}\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+    \cf6 // Kick hits boss\cf4 \
+    \cf9 if\cf10 (\cf4 es\cf10 .\cf4 kickActive \cf9 &&\cf4  \cf9 !\cf4 boss\cf10 .\cf4 shieldActive \cf9 &&\cf4  boss\cf10 .\cf4 hitFlash \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4 \
+      \cf9 var\cf4  kickX \cf9 =\cf4  ep\cf10 .\cf4 x \cf9 +\cf4  es\cf10 .\cf4 facing \cf9 *\cf4  \cf13 72\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 Math\cf10 .\cf12 abs\cf10 (\cf4 kickX \cf9 -\cf4  boss\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 60\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  boss\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 60\cf10 )\{\cf4 \
+        boss\cf10 .\cf4 hp \cf9 -=\cf4  \cf13 1\cf10 ;\cf4 \
+        boss\cf10 .\cf4 hitFlash \cf9 =\cf4  \cf13 220\cf10 ;\cf4 \
+        \cf12 spawnExplosion\cf10 (\cf4 boss\cf10 .\cf4 x\cf10 ,\cf4  boss\cf10 .\cf4 y\cf9 -\cf13 10\cf10 ,\cf4  \cf13 0xff6b35\cf10 ,\cf4  \cf13 1.5\cf10 );\cf4 \
+        \cf13 EWR_STATE\cf10 .\cf4 aloe \cf9 +=\cf4  \cf13 ALOE\cf10 .\cf4 bossHit\cf10 ;\cf4 \
+        \cf12 _addCombo\cf10 (\cf9 this\cf10 ,\cf4  boss\cf10 .\cf4 x\cf10 ,\cf4  boss\cf10 .\cf4 y\cf9 -\cf13 20\cf10 );\cf4 \
+        \cf13 SOUND\cf10 .\cf12 bossHit\cf10 ();\cf4 \
+        \cf9 if\cf10 (\cf4 boss\cf10 .\cf4 hp \cf9 <=\cf4  \cf13 0\cf10 )\{\cf4  \cf9 this\cf10 .\cf12 _killBoss\cf10 ();\cf4  \cf9 return\cf10 ;\cf4  \cf10 \}\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Hit minions\cf4 \
+    \cf9 for\cf10 (\cf9 var\cf4  mi2 \cf9 =\cf4  boss\cf10 .\cf4 minions\cf10 .\cf4 length\cf9 -\cf13 1\cf10 ;\cf4  mi2 \cf9 >=\cf4  \cf13 0\cf10 ;\cf4  mi2\cf9 --\cf10 )\{\cf4 \
+      \cf9 var\cf4  min \cf9 =\cf4  boss\cf10 .\cf4 minions\cf10 [\cf4 mi2\cf10 ];\cf4 \
+      \cf9 if\cf10 (\cf4 min\cf10 .\cf4 dead\cf10 )\cf4  \cf9 continue\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf4 es\cf10 .\cf4 punchActive \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 x \cf9 +\cf4  es\cf10 .\cf4 facing\cf9 *\cf13 56\cf4  \cf9 -\cf4  min\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 30\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  min\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 30\cf10 )\{\cf4 \
+        min\cf10 .\cf4 dead \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+        \cf12 spawnExplosion\cf10 (\cf4 min\cf10 .\cf4 x\cf10 ,\cf4  min\cf10 .\cf4 y\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+        \cf13 SOUND\cf10 .\cf12 punch\cf10 ();\cf4 \
+      \cf10 \}\cf4 \
+      \cf9 if\cf10 (\cf4 es\cf10 .\cf4 kickActive \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 x \cf9 +\cf4  es\cf10 .\cf4 facing\cf9 *\cf13 72\cf4  \cf9 -\cf4  min\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 30\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  min\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 30\cf10 )\{\cf4 \
+        min\cf10 .\cf4 dead \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+        \cf12 spawnExplosion\cf10 (\cf4 min\cf10 .\cf4 x\cf10 ,\cf4  min\cf10 .\cf4 y\cf10 ,\cf4  \cf13 0xff6b35\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+        \cf13 SOUND\cf10 .\cf12 kick\cf10 ();\cf4 \
+      \cf10 \}\cf4 \
+    \cf10 \}\cf4 \
+\
+    \cf6 // Boss contact damage\cf4 \
+    \cf9 if\cf10 (\cf4 es\cf10 .\cf4 hurtTimer \cf9 <=\cf4  \cf13 0\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 x \cf9 -\cf4  boss\cf10 .\cf4 x\cf10 )\cf4  \cf9 <\cf4  \cf13 30\cf4  \cf9 &&\cf4  Math\cf10 .\cf12 abs\cf10 (\cf4 ep\cf10 .\cf4 y \cf9 -\cf4  boss\cf10 .\cf4 y\cf10 )\cf4  \cf9 <\cf4  \cf13 50\cf10 )\{\cf4 \
+      es\cf10 .\cf4 hurtTimer \cf9 =\cf4  \cf13 1200\cf10 ;\cf4 \
+      \cf9 if\cf10 (\cf9 !\cf12 _takeDmg\cf10 (\cf13 1\cf10 ))\{\cf4  \cf9 this\cf10 .\cf12 _edDie\cf10 ();\cf4  \cf9 return\cf10 ;\cf4  \cf10 \}\cf4 \
+      \cf13 SOUND\cf10 .\cf12 hurt\cf10 ();\cf4 \
+      \cf12 spawnExplosion\cf10 (\cf4 ep\cf10 .\cf4 x\cf10 ,\cf4  ep\cf10 .\cf4 y\cf9 -\cf13 10\cf10 ,\cf4  \cf13 0xff4444\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    \cf10 \}\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf6 // Draw everything\cf4 \
+  \cf9 this\cf10 .\cf4 edG\cf10 .\cf12 clear\cf10 ();\cf4 \
+  \cf9 var\cf4  cigF \cf9 =\cf4  Math\cf10 .\cf12 sin\cf10 (\cf9 this\cf10 .\cf4 _t\cf9 *\cf13 0.004\cf10 )\cf4  \cf9 *\cf4  \cf13 2\cf10 ;\cf4 \
+  es\cf10 .\cf4 cigF \cf9 =\cf4  cigF\cf10 ;\cf4 \
+  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 smokeT \cf9 <=\cf4  \cf13 0\cf4  \cf9 &&\cf4  ep\cf10 .\cf4 grounded\cf10 )\{\cf4 \
+    es\cf10 .\cf4 smokeT \cf9 =\cf4  \cf13 1200\cf4  \cf9 +\cf4  Math\cf10 .\cf12 random\cf10 ()\cf9 *\cf13 800\cf10 ;\cf4 \
+    \cf12 spawnSmoke\cf10 (\cf4 ep\cf10 .\cf4 x \cf9 +\cf4  \cf10 (\cf4 es\cf10 .\cf4 facing\cf9 *\cf13 10\cf10 ),\cf4  ep\cf10 .\cf4 y\cf9 -\cf13 36\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+  es\cf10 .\cf4 smokeT \cf9 -=\cf4  delta\cf10 ;\cf4 \
+  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 hurtTimer \cf9 >\cf4  \cf13 900\cf10 )\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  \cf13 7\cf10 ;\cf4 \
+  \cf9 else\cf4  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 kickTimer \cf9 >\cf4  \cf13 400\cf10 )\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  \cf13 6\cf10 ;\cf4 \
+  \cf9 else\cf4  \cf9 if\cf10 (\cf4 es\cf10 .\cf4 punchTimer \cf9 >\cf4  \cf13 200\cf10 )\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  \cf13 5\cf10 ;\cf4 \
+  \cf9 else\cf4  \cf9 if\cf10 (\cf9 !\cf4 ep\cf10 .\cf4 grounded\cf10 )\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  \cf13 4\cf10 ;\cf4 \
+  \cf9 else\cf4  \cf10 \{\cf4 \
+    \cf9 if\cf10 (\cf4 left \cf9 ||\cf4  right\cf10 )\{\cf4  es\cf10 .\cf4 walkT \cf9 +=\cf4  delta\cf10 ;\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  Math\cf10 .\cf12 floor\cf10 (\cf4 es\cf10 .\cf4 walkT\cf9 /\cf13 180\cf10 )\cf4  \cf9 %\cf4  \cf13 3\cf4  \cf9 +\cf4  \cf13 1\cf10 ;\cf4  \cf10 \}\cf4 \
+    \cf9 else\cf4  \cf10 \{\cf4  es\cf10 .\cf4 frame \cf9 =\cf4  \cf13 0\cf10 ;\cf4  es\cf10 .\cf4 walkT \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf10 \}\cf4 \
+  \cf10 \}\cf4 \
+  \cf13 DRAW_ED\cf10 .\cf12 draw\cf10 (\cf9 this\cf10 .\cf4 edG\cf10 ,\cf4  ep\cf10 .\cf4 x\cf10 ,\cf4  ep\cf10 .\cf4 y\cf10 ,\cf4  es\cf10 .\cf4 frame\cf10 ,\cf4  es\cf10 .\cf4 facing\cf9 <\cf13 0\cf10 ,\cf4  es\cf10 .\cf4 cigF\cf10 );\cf4 \
+\
+  \cf6 // Draw memos\cf4 \
+  \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 clear\cf10 ();\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  mm\cf9 =\cf13 0\cf10 ;\cf4  mm\cf9 <\cf4 boss\cf10 .\cf4 memos\cf10 .\cf4 length\cf10 ;\cf4  mm\cf9 ++\cf10 )\{\cf4 \
+    \cf9 var\cf4  mem \cf9 =\cf4  boss\cf10 .\cf4 memos\cf10 [\cf4 mm\cf10 ];\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillStyle\cf10 (\cf13 0xffffff\cf10 ,\cf4  \cf13 0.9\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillRect\cf10 (\cf4 mem\cf10 .\cf4 x\cf9 -\cf13 8\cf10 ,\cf4  mem\cf10 .\cf4 y\cf9 -\cf13 5\cf10 ,\cf4  \cf13 16\cf10 ,\cf4  \cf13 10\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 lineStyle\cf10 (\cf13 1\cf10 ,\cf4  \cf13 0x888888\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 strokeRect\cf10 (\cf4 mem\cf10 .\cf4 x\cf9 -\cf13 8\cf10 ,\cf4  mem\cf10 .\cf4 y\cf9 -\cf13 5\cf10 ,\cf4  \cf13 16\cf10 ,\cf4  \cf13 10\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillStyle\cf10 (\cf13 0x000000\cf10 ,\cf4  \cf13 0.2\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillRect\cf10 (\cf4 mem\cf10 .\cf4 x\cf9 -\cf13 6\cf10 ,\cf4  mem\cf10 .\cf4 y\cf9 -\cf13 3\cf10 ,\cf4  \cf13 12\cf10 ,\cf4  \cf13 2\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf6 // Draw minions\cf4 \
+  \cf9 for\cf10 (\cf9 var\cf4  mn\cf9 =\cf13 0\cf10 ;\cf4  mn\cf9 <\cf4 boss\cf10 .\cf4 minions\cf10 .\cf4 length\cf10 ;\cf4  mn\cf9 ++\cf10 )\{\cf4 \
+    \cf9 var\cf4  min \cf9 =\cf4  boss\cf10 .\cf4 minions\cf10 [\cf4 mn\cf10 ];\cf4 \
+    \cf9 if\cf10 (\cf4 min\cf10 .\cf4 dead\cf10 )\cf4  \cf9 continue\cf10 ;\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillStyle\cf10 (\cf13 0x666666\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillRoundedRect\cf10 (\cf4 min\cf10 .\cf4 x\cf9 -\cf13 10\cf10 ,\cf4  min\cf10 .\cf4 y\cf9 -\cf13 30\cf10 ,\cf4  \cf13 20\cf10 ,\cf4  \cf13 30\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillStyle\cf10 (\cf13 0xccaa88\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+    \cf9 this\cf10 .\cf4 bossG\cf10 .\cf12 fillCircle\cf10 (\cf4 min\cf10 .\cf4 x\cf10 ,\cf4  min\cf10 .\cf4 y\cf9 -\cf13 36\cf10 ,\cf4  \cf13 10\cf10 );\cf4 \
+  \cf10 \}\cf4 \
+\
+  \cf9 this\cf10 .\cf12 _drawCEO\cf10 (\cf9 this\cf10 .\cf4 bossG\cf10 ,\cf4  boss\cf10 );\cf4 \
+  \cf12 updateSmoke\cf10 ();\cf4  \cf12 updateExplosions\cf10 ();\cf4 \
+  \cf12 drawExplosions\cf10 (\cf9 this\cf10 .\cf4 bossG\cf10 );\cf4 \
+\
+  \cf6 // HUD\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 clear\cf10 ();\cf4 \
+  \cf9 var\cf4  hpFrac \cf9 =\cf4  Math\cf10 .\cf12 max\cf10 (\cf13 0\cf10 ,\cf4  boss\cf10 .\cf4 hp \cf9 /\cf4  boss\cf10 .\cf4 maxHp\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 fillStyle\cf10 (\cf13 0x222222\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 fillRoundedRect\cf10 (\cf13 W\cf9 /\cf13 2\cf9 -\cf13 180\cf10 ,\cf4  \cf13 12\cf10 ,\cf4  \cf13 360\cf10 ,\cf4  \cf13 18\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+  \cf9 var\cf4  hpColor \cf9 =\cf4  hpFrac \cf9 >\cf4  \cf13 0.5\cf4  \cf9 ?\cf4  \cf13 0xffd700\cf4  \cf9 :\cf4  hpFrac \cf9 >\cf4  \cf13 0.25\cf4  \cf9 ?\cf4  \cf13 0xffaa00\cf4  \cf9 :\cf4  \cf13 0xff4444\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 fillStyle\cf10 (\cf4 hpColor\cf10 ,\cf4  \cf13 1\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 fillRect\cf10 (\cf13 W\cf9 /\cf13 2\cf9 -\cf13 178\cf10 ,\cf4  \cf13 14\cf10 ,\cf4  Math\cf10 .\cf12 max\cf10 (\cf13 0\cf10 ,\cf4  \cf13 356\cf9 *\cf4 hpFrac\cf10 ),\cf4  \cf13 14\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 lineStyle\cf10 (\cf13 1\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 0.8\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 hudG\cf10 .\cf12 strokeRoundedRect\cf10 (\cf13 W\cf9 /\cf13 2\cf9 -\cf13 180\cf10 ,\cf4  \cf13 12\cf10 ,\cf4  \cf13 360\cf10 ,\cf4  \cf13 18\cf10 ,\cf4  \cf13 4\cf10 );\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _edDie\cf4  \cf9 =\cf4  \cf9 function\cf10 ()\{\cf4 \
+  \cf9 var\cf4  self \cf9 =\cf4  \cf9 this\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 'ED NEEDS A MINUTE'\cf10 ,\cf4  \cf13 1600\cf10 ,\cf4  \cf13 32\cf10 ,\cf4  \cf11 '#ff4444'\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 time\cf10 .\cf12 delayedCall\cf10 (\cf13 2200\cf10 ,\cf4  \cf9 function\cf10 ()\{\cf4 \
+    \cf13 SMOKE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 EX_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 FIRE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+    \cf13 EWR_STATE\cf10 .\cf4 health\cf10 [\cf13 0\cf10 ]\cf4  \cf9 =\cf4  \cf13 EWR_STATE\cf10 .\cf4 maxHealth\cf10 [\cf13 0\cf10 ];\cf4 \
+    self\cf10 .\cf4 scene\cf10 .\cf12 restart\cf10 ();\cf4 \
+  \cf10 \});\cf4 \
+\cf10 \};\cf4 \
+\
+\cf8 RastaCorpBossScene\cf10 .\cf4 prototype\cf10 .\cf12 _killBoss\cf4  \cf9 =\cf4  \cf9 function\cf10 ()\{\cf4 \
+  \cf9 var\cf4  self \cf9 =\cf4  \cf9 this\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 _beaten \cf9 =\cf4  \cf13 true\cf10 ;\cf4 \
+  \cf12 spawnExplosion\cf10 (\cf9 this\cf10 .\cf4 boss\cf10 .\cf4 x\cf10 ,\cf4  \cf9 this\cf10 .\cf4 boss\cf10 .\cf4 y\cf10 ,\cf4  \cf13 0xffd700\cf10 ,\cf4  \cf13 3\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf12 _flash\cf10 (\cf11 'RASTA CORP: DISSOLVED.'\cf10 ,\cf4  \cf13 2400\cf10 ,\cf4  \cf13 36\cf10 ,\cf4  \cf11 '#ffd700'\cf10 );\cf4 \
+  \cf9 this\cf10 .\cf4 time\cf10 .\cf12 delayedCall\cf10 (\cf13 2400\cf10 ,\cf4  \cf9 function\cf10 ()\{\cf4 \
+    \cf13 EWR_STATE\cf10 .\cf4 aloe \cf9 +=\cf4  \cf13 ALOE\cf10 .\cf4 rastaCorpBoss\cf10 ;\cf4 \
+    \cf13 EWR_STATE\cf10 .\cf4 rastaCorp\cf10 .\cf4 bossesDefeated\cf9 ++\cf10 ;\cf4 \
+    \cf12 _triggerFourthWallBreak\cf10 (\cf4 self\cf10 ,\cf4  \cf11 'rastaCorpCeo'\cf10 );\cf4 \
+    self\cf10 .\cf4 time\cf10 .\cf12 delayedCall\cf10 (\cf13 8000\cf10 ,\cf4  \cf9 function\cf10 ()\{\cf4 \
+      \cf13 SMOKE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 EX_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 FIRE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+      self\cf10 .\cf4 scene\cf10 .\cf12 start\cf10 (\cf11 'WorldMap6'\cf10 ,\cf4  \cf10 \{\cf8 fromBoss\cf9 :\cf11 'rastaCorpCeo'\cf10 \});\cf4 \
+    \cf10 \});\cf4 \
+  \cf10 \});\cf4 \
+\cf10 \};\cf4 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf4 \cb5 javascript
+\f1\fs25\fsmilli12573 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf6 \cb7 // WorldMap6 modifications\cf4 \
+\
+\cf6 // 1. In W6_TILES (add new boss tile)\cf4 \
+\cf6 // Find the W6_TILES object and add this line inside:\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 'B'\cf9 :\cf4  \cf10 \{\cf8 type\cf9 :\cf11 'boss'\cf10 ,\cf4  \cf8 passable\cf9 :\cf13 true\cf10 ,\cf4  \cf8 id\cf9 :\cf11 'rcboss'\cf10 ,\cf4  \cf8 label\cf9 :\cf11 'RASTA CORP HQ'\cf10 \}\cf4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf6 // 2. In W6_ROWS (insert 'B' somewhere near the end)\cf4 \
+\cf6 // Example: row 5 column 10 (adjust as needed)\cf4 \
+\cf6 // Original row 5: "V   P       H  V" -> change to "V   P   B   H  V"\cf4 \
+\cf6 // But to be safe, we'll just indicate that you need to place a 'B' on a reachable path after '6-4' is beaten.\cf4 \
+\cf6 // Since we don't have the exact row layout, we'll provide a generic instruction:\cf4 \
+\cf6 // "Add 'B' to W6_ROWS at a position accessible after beating '6-4'. For example, in row 5, col 7 (replacing a space)."\cf4 \
+\
+\cf6 // 3. In WorldMap6Scene._tryEnter6(), add the case for 'rcboss'\cf4 \
+\cf6 // Locate the function _tryEnter6 and add this after the gate checks:\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf9 if\cf10 (\cf4 tile\cf10 .\cf4 id \cf9 ===\cf4  \cf11 'rcboss'\cf10 )\{\cf4 \
+  \cf9 if\cf10 (\cf13 EWR_STATE\cf10 .\cf4 levelsBeaten\cf10 .\cf12 indexOf\cf10 (\cf11 '6-4'\cf10 )\cf4  \cf9 <\cf4  \cf13 0\cf10 )\{\cf4 \
+    self\cf10 .\cf12 _showMsg6\cf10 (\cf11 'Beat LHC Threshold first!'\cf10 ,\cf4  \cf13 2500\cf10 );\cf4 \
+    \cf9 return\cf10 ;\cf4 \
+  \cf10 \}\cf4 \
+  \cf13 SMOKE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 EX_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4  \cf13 FIRE_POOL\cf10 .\cf4 length \cf9 =\cf4  \cf13 0\cf10 ;\cf4 \
+  \cf9 this\cf10 .\cf4 scene\cf10 .\cf12 start\cf10 (\cf11 'RastaCorpBossScene'\cf10 );\cf4 \
+  \cf9 return\cf10 ;\cf4 \
+\cf10 \}\cf4 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf4 \cb5 javascript
+\f1\fs25\fsmilli12573 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf6 \cb7 // Add scene to Phaser config's scene array\cf4 \
+\cf6 // Find the config object at the very bottom of the file and add 'RastaCorpBossScene' to the scene list.\cf4 \
+\cf6 // Example:\cf4 \
+\cf6 // scene: [\cf4 \
+\cf6 //   BootScene,\cf4 \
+\cf6 //   TitleScene,\cf4 \
+\cf6 //   ...,\cf4 \
+\cf6 //   RastaCorpBossScene  // <-- add this line\cf4 \
+\cf6 // ]\cf4 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\fs32 \cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf14 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs32 \cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf14 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs32 \cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf14 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs32 \cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf14 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs28 \cf14 \cb15 \
+\pard\pardeftab720\partightenfactor0
+
+\fs32 \cf14 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf14 \
+}

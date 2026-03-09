@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "project": "Cactus Ed's Happy Place",
+    "manifest_version": "1.0",
+    "created": "2026-03-09",
+    "authority": "Claude Sonnet 4.6, Original Architect",
+    "purpose": "Exact file list and paths for new repo setup. Use in conjunction with TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md."
+  },
+
+  "must_port": [
+    {
+      "old_path": "index.html",
+      "new_path": "index.html",
+      "reason": "THE ENTIRE GAME. Non-negotiable. Port this first. Nothing works without it.",
+      "verify_after_port": [
+        "wc -l index.html (expect ~9662 lines)",
+        "First line: <script> tag loading Phaser CDN",
+        "Last line: new Phaser.Game(config)"
+      ]
+    },
+    {
+      "old_path": "HANDOFF_BIBLE.md",
+      "new_path": "HANDOFF_BIBLE.md",
+      "reason": "Complete technical and narrative overview. TIER 1 authority. Must be at repo root, not in docs/.",
+      "note": "Already at repo root in old repo — do NOT look for it in docs/"
+    },
+    {
+      "old_path": "TRANSFER/00_START_HERE.md",
+      "new_path": "TRANSFER/00_START_HERE.md",
+      "reason": "Entry point for all future agents. First file any new agent reads."
+    },
+    {
+      "old_path": "TRANSFER/10_ARCHITECT_GUARDRAILS.md",
+      "new_path": "TRANSFER/10_ARCHITECT_GUARDRAILS.md",
+      "reason": "21 non-negotiable laws. TIER 1 authority for soul, tone, humor, character."
+    },
+    {
+      "old_path": "TRANSFER/11_DRIFT_WARNINGS_AND_KILL_SWITCHES.md",
+      "new_path": "TRANSFER/11_DRIFT_WARNINGS_AND_KILL_SWITCHES.md",
+      "reason": "7 drift types with kill switches. TIER 1 authority."
+    },
+    {
+      "old_path": "TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md",
+      "new_path": "TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md",
+      "reason": "Ordered setup sequence for new repo. TIER 1 authority for setup."
+    },
+    {
+      "old_path": "TRANSFER/13_SOURCE_OF_TRUTH_ORDER.md",
+      "new_path": "TRANSFER/13_SOURCE_OF_TRUTH_ORDER.md",
+      "reason": "Conflict resolution hierarchy. TIER 2 authority."
+    },
+    {
+      "old_path": "TRANSFER/14_GAPS_AND_OPEN_QUESTIONS.md",
+      "new_path": "TRANSFER/14_GAPS_AND_OPEN_QUESTIONS.md",
+      "reason": "Living document of unresolved questions. Must travel with the project."
+    },
+    {
+      "old_path": "TRANSFER/migration_manifest.json",
+      "new_path": "TRANSFER/migration_manifest.json",
+      "reason": "This file. Needed for future repo-to-repo moves."
+    },
+    {
+      "old_path": "TRANSFER/bootstrap_context.json",
+      "new_path": "TRANSFER/bootstrap_context.json",
+      "reason": "High-signal compressed context for cold-start agents."
+    },
+    {
+      "old_path": "docs/GAME_STATE.md",
+      "new_path": "docs/GAME_STATE.md",
+      "reason": "Current codebase state snapshot. TIER 2 authority."
+    },
+    {
+      "old_path": "docs/UPDATE_LOG.md",
+      "new_path": "docs/UPDATE_LOG.md",
+      "reason": "Chronological record of changes. Necessary for debugging regressions."
+    },
+    {
+      "old_path": "docs/CACTUS_ED_AI_GAMEPLAN.md",
+      "new_path": "docs/CACTUS_ED_AI_GAMEPLAN.md",
+      "reason": "High-level feature roadmap and feature flag status. TIER 3 advisory."
+    },
+    {
+      "old_path": "docs/BRIEFING_CODEX.md",
+      "new_path": "docs/BRIEFING_CODEX.md",
+      "reason": "World 2+ feature specs. TIER 3 advisory."
+    },
+    {
+      "old_path": "docs/BRIEFING_CODEX_R2.md",
+      "new_path": "docs/BRIEFING_CODEX_R2.md",
+      "reason": "CatDemocracyScene spec and World 2 content. TIER 3 advisory."
+    },
+    {
+      "old_path": "docs/BRIEFING_DEEPSEEK.md",
+      "new_path": "docs/BRIEFING_DEEPSEEK.md",
+      "reason": "RastaCorpBossScene spec — the only remaining TIER 1 unfinished feature."
+    },
+    {
+      "old_path": "docs/BRIEFING_CLAUDE_CODE_FIGHT_ENGINE_PRESENTATION.md",
+      "new_path": "docs/BRIEFING_CLAUDE_CODE_FIGHT_ENGINE_PRESENTATION.md",
+      "reason": "Fight system context and history. Useful when touching combat code."
+    }
+  ],
+
+  "do_not_port_yet": [
+    {
+      "old_path": "combat/",
+      "reason": "Contains a deterministic fight engine scaffold. Unclear if integrated into index.html or purely experimental. Do not port until Kevin clarifies.",
+      "who_decides": "Kevin"
+    },
+    {
+      "old_path": "developer version.html",
+      "reason": "Unclear relationship to index.html — could be superset, branch, or archive. Porting signals it is authoritative. Do not port until Kevin confirms.",
+      "who_decides": "Kevin"
+    },
+    {
+      "old_path": "index (2).html",
+      "reason": "Unknown if newer or older than index.html. Porting the wrong file corrupts the bloodline. Confirm with Kevin before touching.",
+      "who_decides": "Kevin"
+    },
+    {
+      "old_path": "cehp_racing_goat.html",
+      "reason": "Standalone F-Zero racing prototype. Unclear if FZeroScene in index.html already supersedes it.",
+      "who_decides": "Kevin"
+    },
+    {
+      "old_path": "cehp_racing_only.html",
+      "reason": "Standalone F-Zero racing prototype. Same uncertainty as cehp_racing_goat.html.",
+      "who_decides": "Kevin"
+    },
+    {
+      "old_path": "HANDOFF.md",
+      "reason": "Older handoff document (Mar 1), superseded by HANDOFF_BIBLE.md (Mar 3). Historical reference only. Do not port as authoritative.",
+      "note": "If ported, put in docs/archive/ and mark clearly as superseded"
+    },
+    {
+      "old_path": "errors claude code noticed 3:4 8:11pm.ipynb",
+      "reason": "Debugging artifact from a specific session. Not a living document. No future agent needs it."
+    },
+    {
+      "old_path": "Codex response.rtf",
+      "reason": "Raw AI output. Historical. Superseded by briefing docs."
+    },
+    {
+      "old_path": "Gemini response.txt",
+      "reason": "Raw AI output. Historical. Superseded by briefing docs."
+    },
+    {
+      "old_path": "Meta's Results and Convo.txt",
+      "reason": "Raw AI output. Historical."
+    },
+    {
+      "old_path": "Mistral's Results and Convo.txt",
+      "reason": "Raw AI output. Historical."
+    },
+    {
+      "old_path": "chat gpt response research.md",
+      "reason": "Raw AI output. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_GEMINI.md",
+      "reason": "Advisory briefing. Lower signal than Tier 1-2 docs. Port only if Kevin wants full briefing archive."
+    },
+    {
+      "old_path": "docs/BRIEFING_GEMINI_R2.md",
+      "reason": "Advisory briefing. Port if WorldMap anomaly overlay work needs tracing."
+    },
+    {
+      "old_path": "docs/BRIEFING_META_AI.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_META_R2.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_MISTRAL.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_MISTRAL_R2.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_CHATGPT.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/BRIEFING_CHATGPT_R2.md",
+      "reason": "Advisory briefing. Historical."
+    },
+    {
+      "old_path": "docs/CODEX R2.rtf",
+      "reason": "Raw AI output format. Historical."
+    },
+    {
+      "old_path": "docs/GEMINI R2 - v1.rtf",
+      "reason": "Raw AI output format. Historical."
+    },
+    {
+      "old_path": "docs/Gemini r2 -v2.txt",
+      "reason": "Raw AI output format. Historical."
+    },
+    {
+      "old_path": "docs/Mistral R2.rtf",
+      "reason": "Raw AI output format. Historical."
+    },
+    {
+      "old_path": "docs/deepseek r2.rtf",
+      "reason": "Raw AI output format. Briefing already distilled into docs/BRIEFING_DEEPSEEK.md."
+    },
+    {
+      "old_path": "docs/meta r2.rtf",
+      "reason": "Raw AI output format. Historical."
+    },
+    {
+      "old_path": "docs/chat gpt r2.md",
+      "reason": "Raw AI output. Historical."
+    },
+    {
+      "old_path": "docs/index (1).html",
+      "reason": "Unknown purpose. Do not port until Kevin clarifies."
+    }
+  ],
+
+  "new_repo_structure": {
+    "description": "The new repo must be flat. No build system. No src/ folder. No package.json.",
+    "layout": {
+      "index.html": "THE ENTIRE GAME",
+      "HANDOFF_BIBLE.md": "Complete technical and narrative overview",
+      "TRANSFER/": "All 8 TRANSFER pack files",
+      "docs/": "Authoritative briefing docs only (see must_port list)"
+    },
+    "must_not_create": [
+      "src/",
+      "dist/",
+      "package.json",
+      "webpack.config.js",
+      "vite.config.js",
+      "tsconfig.json",
+      "Any build configuration file"
+    ]
+  },
+
+  "acceptance_test_after_port": [
+    "Open live GitHub Pages URL in browser",
+    "Title screen loads",
+    "Press Start → WorldMap loads",
+    "Walk to Level 1-1 → Ed can move, jump, punch, kick",
+    "Kill one mochi → aloe increases",
+    "Complete Level 1-1 → WorldMap returns → level node shows beaten",
+    "Optionally: Level 1-5 → Big Mochi dies → 300 aloe → WorldMap2 appears"
+  ]
+}

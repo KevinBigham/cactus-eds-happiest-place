@@ -1,0 +1,121 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 HELL YES IS RIGHT, CEO! Let's get this final design doc locked in and perfect the feel of the game for every single player, no matter where they are. A flawless mobile experience isn't a luxury; it's a necessity for a game this legendary.\
+\
+Here is the refined design spec for the Mobile D-Pad polish.\
+\
+---\
+\
+### **DESIGN DOCUMENT: VPAD POLISH \'97 "THE THUMBS-UP"**\
+\
+**Codename:** Operation FeelGood\
+**Creative Director:** META \'97 The Visionary\
+\
+#### **The Problems to Solve:**\
+\
+1.  **Ergonomics:** Buttons are poorly sized and positioned.\
+2.  **Feedback:** No visual indication of a button press.\
+3.  **Usability:** Jump (Up on D-Pad) is unreliable; Punch/Kick are too close.\
+\
+This design addresses all three with a new layout, visual states, and smarter button placement.\
+\
+#### **1. New Layout: The "Comfort Zone" Redesign**\
+\
+The goal is to move the primary action buttons to more natural thumb positions and make "Jump" its own dedicated, can't-miss button.\
+\
+**A. Portrait Mode (360x640 screen):**\
+\
+*   **Movement Stick:** Remains a dynamic circular zone on the **bottom-left**.\
+    *   Center: `(90, 520)`\
+    *   Radius: `80px`\
+    *   This provides a larger, more forgiving area for directional input.\
+*   **Action Buttons (Bottom-Right):**\
+    *   **JUMP:** The largest and most important button.\
+        *   Position: `(270, 520)`\
+        *   Radius: `70px`\
+    *   **PUNCH:** Positioned above and to the right of Jump.\
+        *   Position: `(300, 440)`\
+        *   Radius: `50px`\
+    *   **KICK:** Positioned below and to the right of Jump.\
+        *   Position: `(300, 600)`\
+        *   Radius: `50px`\
+\
+**B. Landscape Mode (844x390 screen - assumed, common aspect ratio):**\
+\
+*   **Movement Stick:**\
+    *   Center: `(140, 280)`\
+    *   Radius: `90px`\
+*   **Action Buttons:**\
+    *   **JUMP:**\
+        *   Position: `(704, 280)`\
+        *   Radius: `80px`\
+    *   **PUNCH:**\
+        *   Position: `(760, 180)`\
+        *   Radius: `60px`\
+    *   **KICK:**\
+        *   Position: `(760, 380)`\
+        *   Radius: `60px`\
+\
+#### **2. ASCII Mockup (Portrait 360x640)**\
+\
+```\
++--------------------------------------+\
+|                                      |\
+|                                      |\
+|                                      |\
+|            (Game World)              |\
+|                                      |\
+|                                      |\
+|                                      |\
+|                                      |\
+|                                      |\
+|                                      |\
+|                                      |\
+|                                      |\
+|        (MOVE)               (PUNCH)  |\
+|                                      |\
+|                             (JUMP)   |\
+|                                      |\
+|                       (KICK)         |\
++--------------------------------------+\
+```\
+\
+This layout creates a comfortable diagonal arc for the thumb, making it easy to roll from Jump to Punch or Kick.\
+\
+#### **3. Visual Feedback: The "Pressed" State**\
+\
+This is critical for making the controls feel responsive.\
+\
+*   **Default State:**\
+    *   Buttons are drawn as circles with a `AT.uiPanel` (`#2d1254`) fill.\
+    *   They have a 2px `AT.uiText` (`#f5f0dc`) border.\
+    *   Opacity: `70%`. They should be visible but not distracting.\
+    *   Icon: A simple, clean icon (a boot for Kick, a fist for Punch, an arrow for Jump) is drawn in the center of each button using `AT.uiText`.\
+*   **"Pressed" State:**\
+    *   When a button is touched, its fill color changes to `AT.uiBg` (`#1a0a2e`).\
+    *   The border color brightens to `AT.uiGold` (`#ffd60a`).\
+    *   The opacity of the entire button (fill, border, and icon) becomes `95%`.\
+    *   The button's radius momentarily increases by `10%` to provide a subtle "pop" effect.\
+    *   This provides immediate, multi-faceted confirmation that the input was registered.\
+\
+#### **4. Jump: A Dedicated Button**\
+\
+*   **The Fix:** "Up" on the d-pad/stick no longer triggers a jump. This was unreliable and a common source of player frustration.\
+*   **New Implementation:** Jumping is now tied *exclusively* to the new, large **JUMP** button on the right side of the screen. This is a standard convention for mobile platformers and is far more intuitive and reliable. The "Up" input on the stick can be reserved for interactions (like entering doors) if needed in the future.\
+\
+#### **5. Technical Implementation Notes**\
+\
+*   **Drawing:** All VPAD elements will be drawn in the `drawMobileControls` function within `DRAW_HUD`. Their state will be checked against the `this.input.activePointers` array.\
+*   **Coordinate System:** All VPAD coordinates should be relative to the screen dimensions, not the game world, so they remain fixed.\
+*   **Hitboxes:** The touchable area for each button should be slightly larger than its visual radius (e.g., +15%) to create a more forgiving feel for the player's thumbs.\
+\
+---\
+\
+This new VPAD design is ergonomic, responsive, and intuitive. It solves the key complaints from user feedback and elevates the mobile experience from "functional" to "flawless," ensuring that Cactus Ed's journey can be enjoyed anywhere, with controls that feel just as tight and satisfying as a real gamepad.\
+\
+All tasks from Briefing R2 are complete, CEO. The vision is documented. I'm standing by for the next big play. LFG}
