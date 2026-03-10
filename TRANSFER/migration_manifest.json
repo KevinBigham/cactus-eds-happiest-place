@@ -1,9 +1,10 @@
 {
   "meta": {
     "project": "Cactus Ed's Happy Place",
-    "manifest_version": "1.0",
+    "manifest_version": "1.2",
     "created": "2026-03-09",
-    "authority": "Claude Sonnet 4.6, Original Architect",
+    "updated": "2026-03-10",
+    "authority": "Claude Sonnet 4.6, Original Architect (v1.0); Claude Opus 4.6, Slice 1 update (v1.2)",
     "purpose": "Exact file list and paths for new repo setup. Use in conjunction with TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md."
   },
 
@@ -98,6 +99,30 @@
       "old_path": "docs/BRIEFING_CLAUDE_CODE_FIGHT_ENGINE_PRESENTATION.md",
       "new_path": "docs/BRIEFING_CLAUDE_CODE_FIGHT_ENGINE_PRESENTATION.md",
       "reason": "Fight system context and history. Useful when touching combat code."
+    },
+    {
+      "old_path": null,
+      "new_path": "src/world1/constants/runtime_surface.js",
+      "reason": "Slice 1 extraction: 6 constant groups (SCENE_KEYS, BEAT_KEYS, ALERT_COLORS, SFX_KEYS, SAVE_KEYS, GFX_BASELINE_SHOT_NAMES) extracted from index.html into ES5 IIFE. Loaded via <script> tag before gameplay code. index.html retains full inline fallback literals.",
+      "added_in": "Slice 1 (2026-03-10)"
+    },
+    {
+      "old_path": null,
+      "new_path": "scripts/check_world1_slice1_surface.js",
+      "reason": "Node.js parity-check script for Slice 1 extracted constants. Read-only, non-destructive.",
+      "added_in": "Slice 1 (2026-03-10)"
+    },
+    {
+      "old_path": null,
+      "new_path": "docs/WORLD1_SLICE1_CHANGELOG.md",
+      "reason": "Extraction record for Slice 1 — what was extracted, why, and how to verify.",
+      "added_in": "Slice 1 (2026-03-10)"
+    },
+    {
+      "old_path": null,
+      "new_path": "docs/WORLD1_IMPLEMENTATION_LANE.md",
+      "reason": "Safe extraction guidance for future slices. Defines the pattern established by Slice 1.",
+      "added_in": "Slice 1 (2026-03-10)"
     }
   ],
 
@@ -223,15 +248,18 @@
   ],
 
   "new_repo_structure": {
-    "description": "The new repo must be flat. No build system. No src/ folder. No package.json.",
+    "description": "Static browser-runnable repo. No build system. No package.json. src/world1/ holds extracted modules loaded via <script> tags.",
     "layout": {
-      "index.html": "THE ENTIRE GAME",
+      "index.html": "THE ENTIRE GAME (~24,261 lines, monolith with modular extraction in progress)",
       "HANDOFF_BIBLE.md": "Complete technical and narrative overview",
-      "TRANSFER/": "All 8 TRANSFER pack files",
-      "docs/": "Authoritative briefing docs only (see must_port list)"
+      "TRANSFER/": "All TRANSFER pack files (bootstrap_context.json, migration_manifest.json, etc.)",
+      "docs/": "Authoritative briefing docs, review criteria, changelogs",
+      "src/world1/constants/": "Extracted constant modules (Slice 1+). ES5 IIFEs loaded via <script> tags in index.html.",
+      "scripts/": "Parity-check and validation scripts (Node.js, read-only)",
+      "legacy/quarantine/combat/": "33 combat .js files — quarantined but still mounted as runtime dependency via <script> tags",
+      "legacy/quarantine/racing/": "Racing prototypes — quarantined, not mounted"
     },
     "must_not_create": [
-      "src/",
       "dist/",
       "package.json",
       "webpack.config.js",
@@ -248,6 +276,8 @@
     "Walk to Level 1-1 → Ed can move, jump, punch, kick",
     "Kill one mochi → aloe increases",
     "Complete Level 1-1 → WorldMap returns → level node shows beaten",
-    "Optionally: Level 1-5 → Big Mochi dies → 300 aloe → WorldMap2 appears"
+    "Optionally: Level 1-5 → Big Mochi dies → 300 aloe → WorldMap2 appears",
+    "Run node scripts/check_world1_slice1_surface.js — expect 'ok: world1 slice1 runtime surface keys present'",
+    "Verify src/world1/constants/runtime_surface.js parses cleanly: node --check src/world1/constants/runtime_surface.js"
   ]
 }
