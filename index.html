@@ -39,6 +39,10 @@
   <script src="legacy/quarantine/combat/presentation/stageRenderer.js"></script>
   <script src="legacy/quarantine/combat/presentation/fighterRenderer.js"></script>
   <script src="src/world1/constants/runtime_surface.js"></script>
+  <script src="src/world1/text/world1_map_labels.js"></script>
+  <script src="src/world1/text/world1_broadcast_copy.js"></script>
+  <script src="src/world1/text/world1_receipt_templates.js"></script>
+  <script src="src/world1/text/world1_overlay_labels.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
@@ -2258,7 +2262,9 @@ var CAT_NAMES = [
   'Shanae','Ciara','Unique','Diamond'
 ];
 
-var NEWS_TICKER = [
+var NEWS_TICKER = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.NEWS_TICKER)
+  ? window.CEHP_WORLD1_TEXT.NEWS_TICKER
+  : [
   'BREAKING: CAT NATIONS EXCHANGE NUCLEAR WARHEADS / BACKGROUND FOOTAGE AT 11 / MARKET UNAFFECTED',
   'RASTA CAT COALITION REJECTS CIG DEAL: "WE WANT THE GANJ NOT THE CIG" / TALKS COLLAPSE',
   'ALOE REACHES NEW ALL-TIME HIGH / ANALYSTS CONFIRM: 1 ALOE = 1 ALOE / EXPERTS DISAGREE',
@@ -2476,7 +2482,9 @@ var WS_MSGS = [
   'THE TERMS OF SERVICE ARE 400 PAGES. GOD IS ON PAGE 3.',
   'EXISTENCE IS ON SALE. WHILE SUPPLIES LAST. SUPPLIES ARE INFINITE.'
 ];
-var WS_CAT_SPEECH = [
+var WS_CAT_SPEECH = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.WS_CAT_SPEECH)
+  ? window.CEHP_WORLD1_TEXT.WS_CAT_SPEECH
+  : [
   'I AM A CAT','THIS IS MY JOB','MEOW IS POLITICS',
   'I VOTE EVERY DAY','THE CIGARETTE FOUND ME',
   'MY TAIL IS MY PENSION','CONSUME PRODUCE REPEAT',
@@ -2533,7 +2541,9 @@ var WS_CAT_SPEECH = [
   'ED SOLD ME A CIG. IT WAS THE BEST DAY OF MY LIFE.',
   'FOLLOW YOUR INTUITION EVEN WHEN YOUR INTUITION IS A PARTICLE COLLIDER'
 ];
-var WS_KID_QUOTES = [
+var WS_KID_QUOTES = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.WS_KID_QUOTES)
+  ? window.CEHP_WORLD1_TEXT.WS_KID_QUOTES
+  : [
   '"do you know where cigarettes go when they die?"',
   '"my dad invested all our aloe. we live in the void now."',
   '"what does it feel like to make something that kills cats?"',
@@ -2550,9 +2560,13 @@ var WS_KID_QUOTES = [
   '"my friend says mochi is right. i don\'t know."',
   '"do you ever just. stop."'
 ];
-var BEAT_CAT_LINES = WS_KID_QUOTES; // alias — used for beat-cat interaction dialogue
+var BEAT_CAT_LINES = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.BEAT_CAT_LINES)
+  ? window.CEHP_WORLD1_TEXT.BEAT_CAT_LINES
+  : WS_KID_QUOTES;
 
-var ANOMALY_MSGS = [
+var ANOMALY_MSGS = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.ANOMALY_MSGS)
+  ? window.CEHP_WORLD1_TEXT.ANOMALY_MSGS
+  : [
   'THIS WAS NOT THE MAP.',
   'YOU ARE IN THE WRONG WORLD.',
   'ED CHANGED THIS. ED IS UNAWARE.',
@@ -2586,7 +2600,9 @@ var CAT_COLORS = [
 ];
 
 // World 1 Map — row 4 pos 8 changed to 'V' (The Void secret level)
-var W1_ROWS = [
+var W1_ROWS = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.W1_ROWS)
+  ? window.CEHP_WORLD1_TEXT.W1_ROWS
+  : [
   'MMMMMMMMMMMMMMMM',
   'M   M    T  5 MM',
   'M G  G  GT  P MM',
@@ -2599,7 +2615,9 @@ var W1_ROWS = [
   'MMMMMMMMMMMMMMMM'
 ];
 
-var W1_TILES = {
+var W1_TILES = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.W1_TILES)
+  ? window.CEHP_WORLD1_TEXT.W1_TILES
+  : {
   ' ':{type:'empty',   passable:true},
   'G':{type:'grass',   passable:true},
   'P':{type:'path',    passable:true},
@@ -2616,7 +2634,9 @@ var W1_TILES = {
   '!':{type:'portal',  passable:true, id:'portal-W2', label:'THE NEON DISTRICT'}
 };
 
-var WS_TEXTS = [
+var WS_TEXTS = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.WS_TEXTS)
+  ? window.CEHP_WORLD1_TEXT.WS_TEXTS
+  : [
   'CONSUME','ARE YOU REAL?','DO YOU FEEL?',
   'BIRTH SCHOOL WORK DEATH','YOU ARE PRODUCT',
   'LOOK AWAY','CACTUS MOMENT','THIS IS FINE',
@@ -2751,7 +2771,9 @@ var RASTA_CORP_SPEECH = [
   'I AM DISRUPTING THE PARADIGM OF BEING FINE',
   'RASTA CORP GAVE ME PURPOSE. RASTA CORP OWNS MY PURPOSE.'
 ];
-var RASTA_BOSS_TRAUMA = [
+var RASTA_BOSS_TRAUMA = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.RASTA_BOSS_TRAUMA)
+  ? window.CEHP_WORLD1_TEXT.RASTA_BOSS_TRAUMA
+  : [
   'I BUILT AN EMPIRE BECAUSE NOBODY WOULD JUST SIT WITH ME.',
   'THE FIRST FRANCHISE WAS A SUPPORT GROUP. NOBODY SHOWED UP.',
   'I MONETIZED PEACE BECAUSE I COULD NOT FIND IT.',
@@ -2762,7 +2784,9 @@ var RASTA_BOSS_TRAUMA = [
 ];
 
 // ── CAT ARCHETYPES ───────────────────────────────────────────────
-var CAT_ARCHETYPES = [
+var CAT_ARCHETYPES = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.CAT_ARCHETYPES)
+  ? window.CEHP_WORLD1_TEXT.CAT_ARCHETYPES
+  : [
   {
     name:'anxious',
     speech:['WHAT IF THE VOID IS WATCHING RIGHT NOW','I COUNTED MY ALOE FOUR TIMES AND IT IS STILL WRONG','IS THE CIG JUDGING ME','I DO NOT KNOW IF I AM OK','THE PARADE MIGHT COME BACK','SOMETHING IS ABOUT TO HAPPEN. I CAN FEEL IT.','I AM FINE (I AM NOT FINE)'],
@@ -2809,7 +2833,9 @@ function _getCatArchetype(catIndex) {
 }
 
 // ── COMMERCIAL BREAKS ────────────────────────────────────────────
-var COMMERCIALS = [
+var COMMERCIALS = (window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.COMMERCIALS)
+  ? window.CEHP_WORLD1_TEXT.COMMERCIALS
+  : [
   {
     id:'aloe_max',
     lines:['ALOE MAX™','THE ONLY ALOE WITH A SOUL.','SIDE EFFECTS: TRUTH, MILD OMNISCIENCE, CRAVINGS FOR MORE ALOE.','ALOE MAX™: BECAUSE YOU DESERVE THE CONSTRUCT.','NOT APPROVED BY THE FDA. THE FDA IS A CONSTRUCT.'],
@@ -4826,7 +4852,7 @@ WorldMapScene.prototype._tryPossessed=function(){
   var pc=this._possessedCat;
   if(Phaser.Math.Distance.Between(this.edPx.x,this.edPx.y,pc.x,pc.y)<62){
     var pSelf=this; this._possessedCat=null;
-    var WP_KOANS=['THE CIG IS THE SELF','YOUR VIOLENCE IS LOVE','MOCHI = YOU / YOU = MOCHI','THE VOID BEGAN WHEN YOU FIRST PRESSED Z','ED IS A VERB','ALOE DREAMS OF BEING USED'];
+    var WP_KOANS=(window.CEHP_WORLD1_TEXT&&window.CEHP_WORLD1_TEXT.WP_KOANS)?window.CEHP_WORLD1_TEXT.WP_KOANS:['THE CIG IS THE SELF','YOUR VIOLENCE IS LOVE','MOCHI = YOU / YOU = MOCHI','THE VOID BEGAN WHEN YOU FIRST PRESSED Z','ED IS A VERB','ALOE DREAMS OF BEING USED'];
     var bov=this.add.graphics().setDepth(50);
     bov.fillStyle(0x000000,0.92); bov.fillRect(0,0,960,540);
     var kt=this.add.text(480,220,WP_KOANS[Math.floor(Math.random()*WP_KOANS.length)],{fontFamily:'Inconsolata,monospace',fontSize:'26px',color:'#ff6666',stroke:'#000000',strokeThickness:5,align:'center',wordWrap:{width:700},backgroundColor:'#000000bb',padding:{x:18,y:10}}).setOrigin(0.5).setDepth(51).setAlpha(0);
