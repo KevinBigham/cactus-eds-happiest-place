@@ -1,15 +1,16 @@
 {
   "meta": {
     "project": "Cactus Ed's Happy Place",
-    "version": "1.0",
+    "version": "1.2",
     "created": "2026-03-09",
+    "updated": "2026-03-10",
     "authority": "Claude Sonnet 4.6, Original Architect",
     "purpose": "High-signal compressed context for cold-start agents. Read this when you cannot read the full doc set. Then read the full doc set anyway before writing code.",
     "full_reading_order": "TRANSFER/00_START_HERE.md"
   },
 
   "game_identity": {
-    "one_sentence": "Cactus Ed's Happy Place is a single-file Phaser 3.70.0 browser platformer about a chain-smoking cactus who walks through institutional absurdism without reacting to it.",
+    "one_sentence": "Cactus Ed's Happy Place is a Phaser 3.70.0 browser platformer about a chain-smoking cactus who walks through institutional absurdism without reacting to it. Runtime centered on index.html with World-1-first modular extraction in progress.",
     "creative_thesis": "The world misclassifies violence, theft, and cat politics in polite bureaucratic terms. The humor engine is institutional language applied to chaos. Ed is the eye of the storm — he does not react to absurdity, he is absurdity's landlord.",
     "four_pillars": [
       "Counterfeit educational universe: announcements and HUD labels sound like wellness committees and corporate compliance memos",
@@ -20,20 +21,20 @@
   },
 
   "technical_stack": {
-    "renderer": "Phaser.CANVAS — forced, non-negotiable. No WebGL ever.",
+    "renderer": "Phaser.CANVAS forced in index.html. No WebGL in current runtime.",
     "phaser_version": "3.70.0",
-    "language": "ES5 only — var, function(){}, prototype OOP. No const, let, =>, class. Ever.",
-    "file_count": 1,
+    "language": "ES5 required for index.html and code extracted from it. New standalone modules may use modern syntax if Kevin approves.",
+    "file_count": "Multi-file repo; canonical runtime entry is index.html (~24,261 lines). Modular extraction into src/world1/ in progress.",
     "primary_file": "index.html",
-    "deployment": "GitHub Pages — index.html at root, no build step, no package.json",
-    "line_count_expected": "~9662",
+    "deployment": "GitHub Pages — static browser-runnable, no build step, no bundler, no transpiler, no package.json",
+    "line_count_expected": "~24261",
     "file_write_strategy": "Never write index.html in one tool call (32k token limit). Use Python append strategy (5-chunk). See HANDOFF_BIBLE.md for exact pattern."
   },
 
   "character_laws": {
     "ed": {
       "personality": "Aloof. Deadpan. Continues regardless of context. Never surprised. Never excited. Never alarmed.",
-      "dialogue_rule": "Maximum 8 words per line. No exclamation marks. Ever.",
+      "dialogue_rule": "Target 8 words or fewer per line; exceptions only when materially stronger. No exclamation marks in Ed's voice. Institutional/system language may use formal emphasis.",
       "weapon": "Cigarette lance (extends for punch/kick)",
       "visual": "Cactus. Sunglasses. Chain-smoking. Adventure Time outline (#2d1b00) on all drawn elements.",
       "if_ed_is_excited": "Fix it immediately. This is drift."
@@ -143,7 +144,10 @@
       "Commercial break system — complete (max 2 per world)",
       "EWR_STATE schema with save versioning — complete",
       "WS_TEXTS system — complete",
-      "Cat dialogue pool — complete"
+      "Cat dialogue pool — complete",
+      "Repository normalized to World-1-first layout with legacy/quarantine/ for combat, racing, variants",
+      "combat/ quarantined at legacy/quarantine/combat/ — still mounted as runtime dependency from index.html",
+      "Slice 1 extraction: runtime surface constants extracted to src/world1/constants/runtime_surface.js"
     ],
     "what_is_not_done": [
       "RastaCorpBossScene — TIER 1, highest priority unfinished item. Spec in docs/BRIEFING_DEEPSEEK.md.",
@@ -152,26 +156,34 @@
       "Shop item list — 12 slots scaffolded, exact items not canonized",
       "World 2 detailed design docs — levels exist but narrative arc not documented",
       "World 2 boss — not named",
-      "WorldMap anomaly overlays for WorldMap1-5 — partial (WorldMap6 done)"
+      "WorldMap anomaly overlays for WorldMap1-5 — partial (WorldMap6 done)",
+      "Further extraction slices from index.html into src/world1/ (Slice 1 done, more to follow)",
+      "Combat dependency detachment from index.html (intentionally deferred)",
+      "Promotion decision for combat/racing/runtime variants (requires Kevin explicit sign-off)"
     ],
     "known_bugs_to_watch": [
       "Level 1-2 through 1-4 less playtested than 1-1 — verify before building World 2",
       "Boss health bar in 1-5 — verify setScrollFactor(0) applied",
       "_wsTimer in Level 1-3 — verify fires every ~8s",
-      "Bus parallax depth in 1-4 — verify busParallaxG doesn't occlude Ed"
+      "Bus parallax depth in 1-4 — verify busParallaxG doesn't occlude Ed",
+      "Any path changes that break script include loading from index.html",
+      "Doc drift between TRANSFER truth docs and actual folder layout"
     ]
   },
 
   "open_questions_requiring_human": [
     "Is index (2).html newer or older than index.html?",
     "Is developer version.html superseded by index.html?",
-    "Is combat/ folder integrated into index.html or purely experimental?",
+    "Is combat/ folder integrated into index.html or purely experimental? — ANSWERED: YES, integrated via 33 script tags. Status: legacy runtime dependency, quarantined but mounted.",
     "Have cehp_racing_*.html prototypes been absorbed into FZeroScene?",
     "What is Josh's character design (co-op player)?",
     "What are the exact 12 shop items, prices, and effects?",
     "Is sympathy threshold of 4 correct for DarkEpilogue routing?",
     "What is the World 2 boss?",
-    "Can players return to World 1 after clearing World 2?"
+    "Can players return to World 1 after clearing World 2?",
+    "When can combat be detached from runtime mounting and fully isolated?",
+    "When (if ever) should racing prototypes be promoted from quarantine?",
+    "Does GAME_STATE.md describe the current index.html or a different branch/version?"
   ],
 
   "drift_kill_switches": {
@@ -182,15 +194,15 @@
     "if_aloe_reward_reduced": "Revert or compensate equivalently.",
     "if_level_id_not_hyphen_format": "Fix all instances before other work.",
     "if_particle_pools_not_cleared": "Add 3-line clear to create() immediately.",
-    "if_es6_syntax_appears": "Rewrite in ES5 before committing.",
-    "if_webgl_used": "Force Phaser.CANVAS or remove the scene.",
-    "if_new_file_created_outside_index_html": "Delete unless human explicitly authorized."
+    "if_es6_syntax_appears_in_index_html_or_extracted_code": "Rewrite in ES5 before committing. New standalone modules outside the extraction path may use modern syntax if Kevin approves.",
+    "if_webgl_used": "Force Phaser.CANVAS in index.html runtime. No WebGL unless Kevin explicitly promotes it.",
+    "if_new_file_created_outside_active_paths": "New files allowed in src/world1/, docs/, scripts/. Avoid arbitrary sprawl elsewhere without explicit authorization."
   },
 
   "first_action_for_new_repo": {
     "step": 1,
-    "action": "Copy index.html to new repo root. Push to main. Enable GitHub Pages. Wait 2 minutes. Open live URL. Play Title → WorldMap → Level 1-1 → Level 1-5 → Boss kill. Confirm all 5 levels run.",
-    "if_this_fails": "Nothing else matters. Debug index.html first.",
-    "then": "See TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md for steps 2-10."
+    "action": "Confirm index.html runtime smoke path (Title → WorldMap → Level 1-1 → Level 1-5 → Boss kill) with mounted combat dependency intact. Then follow docs/WORLD1_IMPLEMENTATION_LANE.md for guarded extraction slices.",
+    "if_this_fails": "Revert extraction slice and restore runtime parity before proceeding.",
+    "then": "Follow docs/WORLD1_IMPLEMENTATION_LANE.md and docs/WORLD1_SLICE1_CHANGELOG.md for parity-checked next slices."
   }
 }
