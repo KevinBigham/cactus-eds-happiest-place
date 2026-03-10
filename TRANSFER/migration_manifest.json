@@ -1,7 +1,7 @@
 {
   "meta": {
     "project": "Cactus Ed's Happy Place",
-    "manifest_version": "1.1",
+    "manifest_version": "1.2",
     "created": "2026-03-09",
     "authority": "Claude Sonnet 4.6, Original Architect",
     "purpose": "Truth-synced layout manifest reflecting the currently migrated repository state and safe World-1-first implementation lane.",
@@ -67,6 +67,21 @@
       "path": "tests/",
       "status": "active-scaffold",
       "reason": "Future test domain."
+    },
+    {
+      "path": "src/world1/constants/runtime_surface.js",
+      "status": "active-slice1",
+      "reason": "Behavior-preserving extracted runtime surface constants for Slice 1."
+    },
+    {
+      "path": "scripts/check_world1_slice1_surface.js",
+      "status": "active-slice1",
+      "reason": "Validation script for extracted runtime surface keys."
+    },
+    {
+      "path": "docs/WORLD1_SLICE1_CHANGELOG.md",
+      "status": "active-doc",
+      "reason": "Slice 1 extraction record and parity checklist."
     }
   ],
   "do_not_port_yet": [
@@ -127,6 +142,7 @@
     "Enter Level 1-1: movement/jump/punch/kick functional.",
     "Defeat one mochi: aloe increases.",
     "Complete Level 1-1: return to WorldMap and beaten node updates.",
-    "No quarantine promotion occurred during slice."
+    "No quarantine promotion occurred during slice.",
+    "Run node scripts/check_world1_slice1_surface.js and confirm expected keys are present."
   ]
 }
