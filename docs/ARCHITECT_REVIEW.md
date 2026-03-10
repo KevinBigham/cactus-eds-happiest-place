@@ -1,11 +1,13 @@
 # ARCHITECT REVIEW
 ## Cactus Ed's Happy Place — New Repo Structural Audit
 ### Authority: Claude Opus 4.6, Audit Pass
-### Date: 2026-03-09
+### Date: 2026-03-09 (updated 2026-03-10)
 
 ---
 
 > This document is the result of a full structural audit of the migrated repository. It identifies what is clean, what is drifting, what must be fixed before implementation begins, and what is safe to build now.
+>
+> **Update 2026-03-10:** Combat/ status resolved by Kevin as "legacy runtime dependency — quarantined but mounted." See `ARCHITECT_IMPLEMENTATION_CLEARANCE.md` for go/no-go ruling.
 
 ---
 
@@ -104,15 +106,12 @@ The very first table in HANDOFF_BIBLE.md says `index.html (root) — 9,662 lines
 
 ## WHAT MUST BE FIXED BEFORE IMPLEMENTATION
 
-### FIX 1 — Reconcile `combat/` Status (CRITICAL)
-**The problem:** `combat/` is labeled experimental in docs but is a runtime dependency loaded by `index.html`.
+### FIX 1 — Reconcile `combat/` Status (RESOLVED)
+**The problem:** `combat/` was labeled experimental in docs but is a runtime dependency loaded by `index.html`.
 
-**The fix (requires Kevin):** Kevin must decide one of:
-- **(A)** Combat/ IS integrated and should be ported as a first-class dependency. Update `16_COMBAT_RACING_STATUS_DECISION.md` and `migration_manifest.json` to reflect this.
-- **(B)** Combat/ should be inlined back into `index.html` to restore the true one-file architecture, and the external scripts removed.
-- **(C)** Combat/ remains external but is reclassified from "experimental" to "integrated-secondary" — it must be ported for the game to run, but World 1 core gameplay (levels 1-1 through 1-5) still takes priority for polish and validation.
+**Resolution (2026-03-10):** Kevin decided: **"legacy_runtime_dependency_quarantined_but_mounted."** Combat/ is a mounted dependency that must travel with `index.html` for the game to run, but it is NOT active feature scope. No combat feature work, polish, or promotion until Kevin explicitly says so. World 1 remains primary. See `ARCHITECT_IMPLEMENTATION_CLEARANCE.md` for full details.
 
-**Do not begin migration until this is resolved.**
+**Remaining action:** Update `16_COMBAT_RACING_STATUS_DECISION.md`, `migration_manifest.json`, and `bootstrap_context.json` to reflect this status. The docs still say "unclear if integrated" — the answer is definitively yes.
 
 ### FIX 2 — Update Line Count References
 Update `HANDOFF_BIBLE.md`, `bootstrap_context.json`, and `migration_manifest.json` to reflect the actual ~24,261 line count. Change the verification check to something like "expect 20,000+ lines" to accommodate future growth.
