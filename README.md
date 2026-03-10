@@ -4,7 +4,7 @@
 
 Cactus Ed's Happy Place is a browser-based platformer that plays like Wonder Showzen directed a SNES Contra remake while on a bad trip in Kansas City's West Bottoms. You are Ed — an aloof, sunglasses-wearing cactus whose cigarette doubles as a weapon. Fight evil Mochi Ice Cream creatures. Pet sassy cats. Survive commercial interruptions from a sinister corporation. Question the nature of reality. Become God [TM].
 
-No sprites. No build system. No npm. Just one 24,000-line HTML file and pure, unfiltered chaos.
+No sprites. No build system. No npm. Canonical runtime at `index.html` with migration-ready structure around it.
 
 > **Play Now:** [Cactus Ed's Happy Place](https://kevinbigham.github.io/Cactus-Eds-Happy-Place/)
 
@@ -52,17 +52,17 @@ Ed is slow. Ed doesn't care. Ed's cigarette IS the weapon.
 | Phaser 3.70.0 | Game engine (Canvas renderer, loaded via CDN) |
 | ES5 JavaScript | Mandatory — no classes, no arrow functions, no let/const |
 | HTML5 Canvas | All rendering (zero sprite assets) |
-| Single HTML file | The entire game is one file. 24,146 lines. |
+| Single runtime entry | `index.html` remains canonical runtime entry (currently ~24,261 lines). |
 
-**Zero build system. Zero npm. Zero external assets.** Open the HTML file and play. That's it.
+**Zero build system. Zero npm. Zero transpile step.** Open `index.html` and play.
 
 ### Why ES5?
 
 Not a mistake. A mandate. ES5 prototype-based OOP ensures maximum browser compatibility and forces a specific architectural discipline. The entire codebase uses constructor functions and prototype chains.
 
-### Why One File?
+### Why One File (Legacy Runtime Context)?
 
-Deployment friction = zero. Share a link, open a file, push to GitHub Pages. Done. The game IS the document.
+`index.html` is still the canonical runnable entry for World 1. The repo is now structured for safe multi-file extraction while preserving static browser-run behavior and zero build-step deployment.
 
 ### Why No Sprites?
 
@@ -108,15 +108,16 @@ EWR_STATE = {
 
 ```
 root/
-  index.html              → THE ENTIRE GAME (24,146 lines)
-  combat/                 → Deterministic fight engine (22 modules)
-    ├─ api/               → Combat engine API
-    ├─ core/              → World, fighter, input, moves, sim
-    ├─ presentation/      → Render stack, animation, FX
-    ├─ data/              → Fighter & stage visual data
-    └─ tools/             → Determinism verification
-  docs/                   → AI briefings, handoffs, architecture
-  scripts/                → Validation utilities
+  index.html                        → Canonical World 1 runtime entry
+  TRANSFER/                         → Migration/source-of-truth pack (read first)
+  docs/                             → Active docs + migration logs
+  scripts/                          → Validation utilities
+  src/world1/, content/, ui/, ...   → Active modularization scaffold (no build step)
+  legacy/quarantine/                → Experimental/legacy material
+    ├─ combat/                      → Quarantined scope, mounted legacy runtime dependency
+    ├─ racing/                      → Racing prototypes (quarantined)
+    ├─ runtime-variants/            → Non-canonical HTML variants
+    └─ ai-artifacts/, scratch/, docs-archive/
 ```
 
 ---

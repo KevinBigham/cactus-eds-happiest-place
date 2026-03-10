@@ -1,7 +1,7 @@
 # ARCHITECTURAL NORMALIZATION
 ## Cactus Ed's Happy Place — Guardrail Audit and Migration Hardening
 ### Authority: Claude Sonnet 4.6, Normalization Pass
-### Last updated: 2026-03-09
+### Last updated: 2026-03-10
 ### Status: AUTHORITATIVE — documents all guardrail corrections from this pass
 
 ---
@@ -190,3 +190,15 @@ These changes are docs-only. The old repo's `index.html` still runs on ES5 + Can
 ---
 
 *Bloodline protected. Runtime decision pending human judgment.*
+
+
+---
+
+## TRUTH SYNC ADDENDUM (2026-03-10)
+
+This normalization remains valid. The repository has now been structurally migrated to a World-1-first layout with explicit quarantine locations.
+
+- `combat/` status: quarantined scope, mounted runtime dependency (`legacy/quarantine/combat/` loaded by `index.html`).
+- Racing status: quarantined prototype HTML files in `legacy/quarantine/racing/`.
+- Runtime variants: quarantined in `legacy/quarantine/runtime-variants/`.
+- Active implementation lane: safe extraction from `index.html` into `src/world1/` without changing runtime behavior or detaching combat in this phase.

@@ -1,7 +1,7 @@
 # RUNTIME CANON DECISION
 ## Cactus Ed's Happy Place — Technical Identity vs. Future Architectural Law
 ### Authority: Claude Sonnet 4.6, Normalization Pass
-### Last updated: 2026-03-09
+### Last updated: 2026-03-10
 ### Status: AUTHORITATIVE — supersedes any reading of legacy technical laws as future mandates
 
 ---
@@ -27,7 +27,7 @@
 
 ### For the NEW REPO (migration target):
 - ES5 + Canvas + One File describes the **aesthetic and deployment philosophy**, not the syntax jail.
-- The new repo MAY adopt modern tooling (ES6+, modules, a build step) if Kevin explicitly decides this.
+- The new repo runtime strategy for World 1 is: modernize structure, not runtime. Keep it static and browser-runnable with no bundler, no transpiler, and no build step in this phase.
 - The new repo MUST preserve: the aesthetic, the soul, the character, the humor engine, the retention philosophy.
 - What is protected forever is **what the game feels like**, not **what JavaScript version it uses**.
 - If the new repo uses ES6+, the old-repo vibe checklist items about ES5 syntax become advisory, not law.
@@ -71,7 +71,7 @@ The new repo should preserve the spirit of the old deployment model:
 - Playable without setup
 - The game should still feel like it was built by a human in a garage at 2am
 
-Whether this is achieved via ES5 in one file or via a modern bundler producing clean output is Kevin's call. The **feel** is law. The **mechanism** is negotiable.
+For the active migration lane, keep the no-build browser model while extracting structure into multiple files. The **feel** is law. The **mechanism** stays static-browser in World 1-first migration.
 
 ---
 
@@ -97,3 +97,13 @@ When migrating to the new repo:
 ---
 
 *The runtime is mortal. The soul is not.*
+
+
+---
+
+## TRUTH SYNC ADDENDUM (2026-03-10)
+
+- Current repo is multi-folder and migration-normalized.
+- `index.html` remains canonical runtime entry.
+- `combat/` is physically quarantined under `legacy/quarantine/combat/` but still mounted as a legacy runtime dependency.
+- Do not detach combat runtime dependencies in this pass.

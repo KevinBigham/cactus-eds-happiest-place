@@ -1,16 +1,16 @@
 {
   "meta": {
     "project": "Cactus Ed's Happy Place",
-    "version": "1.0",
+    "version": "1.1",
     "created": "2026-03-09",
     "authority": "Claude Sonnet 4.6, Original Architect",
     "purpose": "High-signal compressed context for cold-start agents. Read this when you cannot read the full doc set. Then read the full doc set anyway before writing code.",
-    "full_reading_order": "TRANSFER/00_START_HERE.md"
+    "full_reading_order": "TRANSFER/00_START_HERE.md",
+    "updated": "2026-03-10"
   },
-
   "game_identity": {
-    "one_sentence": "Cactus Ed's Happy Place is a single-file Phaser 3.70.0 browser platformer about a chain-smoking cactus who walks through institutional absurdism without reacting to it.",
-    "creative_thesis": "The world misclassifies violence, theft, and cat politics in polite bureaucratic terms. The humor engine is institutional language applied to chaos. Ed is the eye of the storm — he does not react to absurdity, he is absurdity's landlord.",
+    "one_sentence": "Cactus Ed's Happy Place is a browser-runnable World-1-first runtime centered on index.html, with a modernized repo structure and explicit legacy quarantine paths.",
+    "creative_thesis": "The world misclassifies violence, theft, and cat politics in polite bureaucratic terms. The humor engine is institutional language applied to chaos. Ed is the eye of the storm \u2014 he does not react to absurdity, he is absurdity's landlord.",
     "four_pillars": [
       "Counterfeit educational universe: announcements and HUD labels sound like wellness committees and corporate compliance memos",
       "Ed as calm center: slow-moving, aloof, chain-smoking cactus who never expresses surprise or enthusiasm",
@@ -18,33 +18,30 @@
       "Need satisfaction as return engine: players come back because the game gives things generously, not because it withholds punitively"
     ]
   },
-
   "technical_stack": {
-    "renderer": "Phaser.CANVAS — forced, non-negotiable. No WebGL ever.",
+    "renderer": "Current runtime remains Canvas-first via existing index.html behavior; no runtime stack rewrite in this phase.",
     "phaser_version": "3.70.0",
-    "language": "ES5 only — var, function(){}, prototype OOP. No const, let, =>, class. Ever.",
-    "file_count": 1,
-    "primary_file": "index.html",
-    "deployment": "GitHub Pages — index.html at root, no build step, no package.json",
-    "line_count_expected": "~9662",
+    "language": "Current runtime code in index.html is legacy-style JS; new repo structure modernization is allowed without bundler/transpiler/build-step in World 1 lane.",
+    "file_count": "Repository is multi-file; canonical runtime entry remains index.html.",
+    "primary_file": "index.html (canonical runtime entry)",
+    "deployment": "Static browser-runnable repository; no bundler, no transpiler, no build step for current World 1 lane.",
+    "line_count_expected": "~24261 (verify with wc -l before asserting exact count)",
     "file_write_strategy": "Never write index.html in one tool call (32k token limit). Use Python append strategy (5-chunk). See HANDOFF_BIBLE.md for exact pattern."
   },
-
   "character_laws": {
     "ed": {
       "personality": "Aloof. Deadpan. Continues regardless of context. Never surprised. Never excited. Never alarmed.",
-      "dialogue_rule": "Maximum 8 words per line. No exclamation marks. Ever.",
+      "dialogue_rule": "Ed's lines are short by default (target 8 words or fewer). No exclamation marks in Ed's own voice. Institutional/system language may use formal emphasis when on-brand.",
       "weapon": "Cigarette lance (extends for punch/kick)",
       "visual": "Cactus. Sunglasses. Chain-smoking. Adventure Time outline (#2d1b00) on all drawn elements.",
       "if_ed_is_excited": "Fix it immediately. This is drift."
     },
     "cats": "Philosophers who happen to be cats. Their dialogue sounds like they've been thinking about this for years. NOT comedic relief. NOT quippy. If a cat says something that would work as a tweet, it has drifted.",
     "rasta_corp": "Satirical corporation that must remain sincere. It sells things that shouldn't be sold, in language designed to sound reasonable. Must never become sympathetic enough to root for.",
-    "ws_texts": "Wonder Showzen-style confrontational text (CONSUME, ARE YOU REAL?). Not wacky — they create genuine unease. They accuse."
+    "ws_texts": "Wonder Showzen-style confrontational text (CONSUME, ARE YOU REAL?). Not wacky \u2014 they create genuine unease. They accuse."
   },
-
   "humor_law": {
-    "engine": "Institutional language applied to chaos. The world processes everything — player violence, cat politics, aloe theft — as routine administrative events.",
+    "engine": "Institutional language applied to chaos. The world processes everything \u2014 player violence, cat politics, aloe theft \u2014 as routine administrative events.",
     "do": "Write new content as if it were a policy announcement from a government agency that genuinely believes what it says. Then cut it by 40%. Then remove any word trying to be funny.",
     "do_not": [
       "Add jokes that require the player to be in on it",
@@ -55,7 +52,6 @@
     ],
     "tell_for_drift": "If it sounds like parody, it has drifted. If a cat says something tweet-worthy, it has drifted. Rewrite as sincere municipal announcement."
   },
-
   "retention_law": {
     "engine": "Satisfaction, not frustration. Players return because the game is generous.",
     "reward_tiers": {
@@ -69,26 +65,24 @@
     },
     "laws": [
       "Every level must have at least 3 distinct 'oh nice' moments",
-      "Death is never the point — coyote time (90ms) and jump buffer (130ms) are mandatory",
+      "Death is never the point \u2014 coyote time (90ms) and jump buffer (130ms) are mandatory",
       "No mechanic may lock player out for more than 30 seconds without offering something to do",
       "Never reduce reward numbers without Kevin's sign-off",
-      "The shop must offer genuine power — not cosmetic placebo"
+      "The shop must offer genuine power \u2014 not cosmetic placebo"
     ]
   },
-
   "world_1_slice": {
     "status": "Complete and canonical. Do not touch without strong reason.",
     "levels": {
-      "1-1": "Ed Wakes Up — daytime, green, West Bottoms KC aesthetic, 8 mochis, 5 cats, controls HUD for 30s",
-      "1-2": "The Cat Rave — black room, neon lasers, ALL cats dancing, mochis with sunglasses. Dancing cats are non-negotiable.",
-      "1-3": "After Dark — night KC, WS_TEXTS flashing every ~8s. Smoker cats. Verify _wsTimer fires.",
-      "1-4": "Hippie Bus Highway — bus parallax in background. Bus is lore, not decoration.",
-      "1-5": "Mochi HQ — Big Mochi boss (3 phases: patrol → spawn → charge). 300 aloe reward. Biggest W1 payout."
+      "1-1": "Ed Wakes Up \u2014 daytime, green, West Bottoms KC aesthetic, 8 mochis, 5 cats, controls HUD for 30s",
+      "1-2": "The Cat Rave \u2014 black room, neon lasers, ALL cats dancing, mochis with sunglasses. Dancing cats are non-negotiable.",
+      "1-3": "After Dark \u2014 night KC, WS_TEXTS flashing every ~8s. Smoker cats. Verify _wsTimer fires.",
+      "1-4": "Hippie Bus Highway \u2014 bus parallax in background. Bus is lore, not decoration.",
+      "1-5": "Mochi HQ \u2014 Big Mochi boss (3 phases: patrol \u2192 spawn \u2192 charge). 300 aloe reward. Biggest W1 payout."
     },
-    "world_map": "Super Mario World style — tile grid, Ed walks between nodes, sequential unlock",
-    "level_id_format": "Always 'W-L' with hyphen — '1-1', '1-2', etc. Never '11', 'Level11', 'l1_1'."
+    "world_map": "Super Mario World style \u2014 tile grid, Ed walks between nodes, sequential unlock",
+    "level_id_format": "Always 'W-L' with hyphen \u2014 '1-1', '1-2', etc. Never '11', 'Level11', 'l1_1'."
   },
-
   "critical_constants": {
     "ed_move": {
       "walkSpeed": 140,
@@ -116,64 +110,45 @@
       "rule": "Must be called in every scene's create(). Missing pool clear causes explosions in wrong positions."
     }
   },
-
   "ewr_state_schema": {
     "note": "Full schema in HANDOFF_BIBLE.md. Key fields only here.",
-    "aloe": "number — player currency. Never reduce rewards without Kevin sign-off.",
-    "world": "number — current world (1-6)",
-    "levelsBeaten": "string[] — level IDs in 'W-L' hyphen format. Wrong format breaks world gate checks.",
-    "coopMode": "boolean — false (Josh's character not yet designed)",
+    "aloe": "number \u2014 player currency. Never reduce rewards without Kevin sign-off.",
+    "world": "number \u2014 current world (1-6)",
+    "levelsBeaten": "string[] \u2014 level IDs in 'W-L' hyphen format. Wrong format breaks world gate checks.",
+    "coopMode": "boolean \u2014 false (Josh's character not yet designed)",
     "rastaCorp": {
-      "sympathy": "number — increments on RC encounters. At >= 4, routes to DarkEpilogue instead of LHCEpilogue.",
+      "sympathy": "number \u2014 increments on RC encounters. At >= 4, routes to DarkEpilogue instead of LHCEpilogue.",
       "encounterCount": "number"
     },
-    "shop": "object — 12 item slots, not fully canonized yet",
-    "catsPetted": "number — increments but petting mechanic not yet implemented"
+    "shop": "object \u2014 12 item slots, not fully canonized yet",
+    "catsPetted": "number \u2014 increments but petting mechanic not yet implemented"
   },
-
   "current_state": {
     "what_is_done": [
-      "All 5 World 1 levels (1-1 through 1-5) — complete",
-      "Big Mochi boss fight (Level 1-5) — complete",
-      "WorldMap1 through WorldMap6 — scaffolded",
-      "World 2 levels 2-1 through 2-4 — exist in index.html with names",
-      "Puppet Theater boss intro overlay system — complete",
-      "FZeroScene (racing) — complete",
-      "CigSalesScene — scaffolded",
-      "Commercial break system — complete (max 2 per world)",
-      "EWR_STATE schema with save versioning — complete",
-      "WS_TEXTS system — complete",
-      "Cat dialogue pool — complete"
+      "Repository normalized to World-1-first active surface with explicit active folders and quarantine folders.",
+      "Canonical runtime remains index.html at repo root.",
+      "combat/ moved to legacy/quarantine/combat/ and still mounted by index.html as legacy runtime dependency.",
+      "Racing prototype HTML files quarantined under legacy/quarantine/racing/.",
+      "Runtime variants quarantined under legacy/quarantine/runtime-variants/.",
+      "Migration docs created: docs/MIGRATION_LOG.md, docs/ACTIVE_WORKING_SET.md, docs/NEW_REPO_STRUCTURE_MAP.md."
     ],
     "what_is_not_done": [
-      "RastaCorpBossScene — TIER 1, highest priority unfinished item. Spec in docs/BRIEFING_DEEPSEEK.md.",
-      "Cat petting mechanic — scaffolded (catsPetted increments), trigger not decided",
-      "Josh (co-op player) — character not designed, Kevin + Josh must decide",
-      "Shop item list — 12 slots scaffolded, exact items not canonized",
-      "World 2 detailed design docs — levels exist but narrative arc not documented",
-      "World 2 boss — not named",
-      "WorldMap anomaly overlays for WorldMap1-5 — partial (WorldMap6 done)"
+      "Combat dependency detachment from index.html (intentionally deferred).",
+      "First safe extraction from index.html into src/world1/ with parity checks.",
+      "Promotion decision for combat/racing/runtime variants (requires Kevin explicit sign-off)."
     ],
     "known_bugs_to_watch": [
-      "Level 1-2 through 1-4 less playtested than 1-1 — verify before building World 2",
-      "Boss health bar in 1-5 — verify setScrollFactor(0) applied",
-      "_wsTimer in Level 1-3 — verify fires every ~8s",
-      "Bus parallax depth in 1-4 — verify busParallaxG doesn't occlude Ed"
+      "Any path changes that break script include loading from index.html.",
+      "Accidental promotion of quarantined systems into active feature scope.",
+      "Doc drift between TRANSFER truth docs and actual folder layout."
     ]
   },
-
   "open_questions_requiring_human": [
-    "Is index (2).html newer or older than index.html?",
-    "Is developer version.html superseded by index.html?",
-    "Is combat/ folder integrated into index.html or purely experimental?",
-    "Have cehp_racing_*.html prototypes been absorbed into FZeroScene?",
-    "What is Josh's character design (co-op player)?",
-    "What are the exact 12 shop items, prices, and effects?",
-    "Is sympathy threshold of 4 correct for DarkEpilogue routing?",
-    "What is the World 2 boss?",
-    "Can players return to World 1 after clearing World 2?"
+    "When can combat be detached from runtime mounting and fully isolated?",
+    "When (if ever) should racing prototypes be promoted from quarantine?",
+    "Should runtime variants remain archived indefinitely or be removed after audit?",
+    "What is the exact first extraction slice from index.html that Kevin wants prioritized?"
   ],
-
   "drift_kill_switches": {
     "if_ed_is_excited_or_surprised": "Remove the expression. Ed continues.",
     "if_ed_says_more_than_8_words": "Cut the dialogue.",
@@ -186,11 +161,10 @@
     "if_webgl_used": "Force Phaser.CANVAS or remove the scene.",
     "if_new_file_created_outside_index_html": "Delete unless human explicitly authorized."
   },
-
   "first_action_for_new_repo": {
     "step": 1,
-    "action": "Copy index.html to new repo root. Push to main. Enable GitHub Pages. Wait 2 minutes. Open live URL. Play Title → WorldMap → Level 1-1 → Level 1-5 → Boss kill. Confirm all 5 levels run.",
-    "if_this_fails": "Nothing else matters. Debug index.html first.",
-    "then": "See TRANSFER/12_FIRST_10_DECISIONS_FOR_NEW_REPO.md for steps 2-10."
+    "action": "Confirm index.html runtime smoke path while preserving legacy mounted combat dependency; then execute first safe extraction slice from docs/WORLD1_IMPLEMENTATION_LANE.md.",
+    "if_this_fails": "Revert extraction slice and restore runtime parity before any deeper modularization.",
+    "then": "Follow docs/WORLD1_IMPLEMENTATION_LANE.md parity gates slice-by-slice."
   }
 }

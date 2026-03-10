@@ -1,7 +1,7 @@
 # COMBAT / RACING STATUS DECISION
 ## Cactus Ed's Happy Place — Scope Priority and Experimental System Status
 ### Authority: Claude Sonnet 4.6, Normalization Pass
-### Last updated: 2026-03-09
+### Last updated: 2026-03-10
 ### Status: AUTHORITATIVE — defines World 1 as primary scope; combat/ and racing as experimental/secondary
 
 ---
@@ -14,7 +14,7 @@
 
 **World 1 (five levels, Big Mochi boss, Super Mario World map) is the primary scope. It must ship clean and complete before any other system is promoted.**
 
-**`combat/` is experimental and secondary. It must not be treated as a production system or migrated as a first-class citizen.**
+**`combat/` is experimental and secondary. In the current migrated repo it is physically quarantined but still mounted as a legacy runtime dependency. It must not be treated as active feature scope.**
 
 ---
 
@@ -82,7 +82,7 @@ Until all three are true, the system stays secondary.
 
 When setting up the new repo:
 - Copy World 1 first. Validate it. Play through it.
-- Copy `combat/` only after World 1 is validated.
+- In the current repo state, `combat/` already exists at `legacy/quarantine/combat/` and remains mounted for runtime compatibility.
 - In new-repo docs and READMEs, label `combat/` as experimental unless Kevin has changed its status.
 - Do not list `combat/` in the same priority tier as World 1 in any spec, roadmap, or decision doc.
 
@@ -97,3 +97,9 @@ This document closes that ambiguity. **World 1 is the game. Everything else is f
 ---
 
 *If World 1 doesn't run, nothing else matters.*
+
+
+### Truth sync (2026-03-10)
+- `legacy/quarantine/combat/` is quarantined scope, mounted dependency.
+- `legacy/quarantine/racing/` contains prototype racing HTML files and stays quarantined.
+- `legacy/quarantine/runtime-variants/` contains `index (2).html` and `developer version.html` and stays quarantined.
