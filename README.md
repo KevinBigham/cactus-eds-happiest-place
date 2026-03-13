@@ -1,14 +1,33 @@
 # Cactus Ed's Happy Place
 
+> **Play Now:** [Cactus Ed's Happy Place](https://kevinbigham.github.io/Cactus-Eds-Happy-Place/)
+> **Latest live game file:** `index.html`
+
+## Fastest Way To Play
+
+1. Click the **Play Now** link above.
+2. To play locally from this folder, run:
+
+```bash
+python3 -m http.server 4175 --bind 127.0.0.1
+```
+
+Then open [http://127.0.0.1:4175/index.html](http://127.0.0.1:4175/index.html).
+
+## Current Build
+
+- Current active scenes: `Title`, `Demo`, `World2`, `World3`
+- Current focus: first-session trust, continuity, and boss-approach certification
+- The live runtime is the single-file `index.html`
+- Some deeper sections below describe older multi-world plans and historical project context; use `index.html` and the play link above as current truth
+
+---
+
 **A chain-smoking cactus walks into the Large Hadron Collider and becomes God.**
 
 Cactus Ed's Happy Place is a browser-based platformer that plays like Wonder Showzen directed a SNES Contra remake while on a bad trip in Kansas City's West Bottoms. You are Ed — an aloof, sunglasses-wearing cactus whose cigarette doubles as a weapon. Fight evil Mochi Ice Cream creatures. Pet sassy cats. Survive commercial interruptions from a sinister corporation. Question the nature of reality. Become God [TM].
 
 No sprites. No build system. No npm. Just one 24,000-line HTML file and pure, unfiltered chaos.
-
-> **Play Now:** [Cactus Ed's Happy Place](https://kevinbigham.github.io/Cactus-Eds-Happy-Place/)
-
----
 
 ## What Is This?
 
