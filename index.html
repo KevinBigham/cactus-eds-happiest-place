@@ -2245,6 +2245,52 @@ function getSceneZoneType(scene) {
   return '';
 }
 
+function createFirstSessionMetrics() {
+  return {
+    hotspotFails: {},
+    cleanPreteach: {},
+    interruptionDeferrals: 0,
+    curiosityPayoffs: {},
+    avoidableFirstHit: {},
+    confirmationSeen: {},
+    interactionRetries: {},
+    overlapPrevented: {},
+    cleanClearTime: {},
+    curiosityDetourPaid: {}
+  };
+}
+
+function ensureFirstSessionMetrics(scene) {
+  if (!scene) return null;
+  if (!scene._session) initFirstSessionState(scene, 'world1');
+  if (!scene._session.metrics) {
+    scene._session.metrics = createFirstSessionMetrics();
+  }
+  return scene._session.metrics;
+}
+
+function bumpFirstSessionMetric(scene, bucket, key, amount) {
+  var metrics = ensureFirstSessionMetrics(scene);
+  if (!metrics) return 0;
+  var step = amount == null ? 1 : amount;
+  if (bucket === 'interruptionDeferrals') {
+    metrics.interruptionDeferrals += step;
+    return metrics.interruptionDeferrals;
+  }
+  if (!metrics[bucket]) metrics[bucket] = {};
+  if (!key) return 0;
+  metrics[bucket][key] = (metrics[bucket][key] || 0) + step;
+  return metrics[bucket][key];
+}
+
+function setFirstSessionMetric(scene, bucket, key, value) {
+  var metrics = ensureFirstSessionMetrics(scene);
+  if (!metrics || !bucket || !key) return value;
+  if (!metrics[bucket]) metrics[bucket] = {};
+  metrics[bucket][key] = value;
+  return value;
+}
+
 function initFirstSessionState(scene, worldKey) {
   if (!scene) return;
   if (scene._telemetry && !scene._telemetry.events) scene._telemetry.events = [];
@@ -2257,7 +2303,8 @@ function initFirstSessionState(scene, worldKey) {
     lastHealth: scene.health,
     lastDamageMs: 0,
     lastReadableMs: 0,
-    lastBeatMs: 0
+    lastBeatMs: 0,
+    metrics: createFirstSessionMetrics()
   };
   scene._hintState = {};
 }
@@ -2306,6 +2353,7 @@ function dumpFirstSessionSummary(scene, label) {
     return scene._session.beatTimes[a] - scene._session.beatTimes[b];
   });
   var hintKeys = Object.keys(scene._hintState || {});
+  var metrics = ensureFirstSessionMetrics(scene);
   console.log('[FIRST SESSION SUMMARY][' + (scene._session.world || 'world') + '] ' + (label || 'SUMMARY'));
   for (var bsi = 0; bsi < beatKeys.length; bsi++) {
     console.log('  ' + beatKeys[bsi] + ': ' + Math.floor(scene._session.beatTimes[beatKeys[bsi]] / 100) / 10 + 's');
@@ -2314,8 +2362,301 @@ function dumpFirstSessionSummary(scene, label) {
     var hs = scene._hintState[hintKeys[hsi]];
     if (hs && hs.stage > 0) console.log('  hint.' + hintKeys[hsi] + ': stage ' + hs.stage);
   }
+  if (metrics.interruptionDeferrals > 0) {
+    console.log('  metric.interruptionDeferrals: ' + metrics.interruptionDeferrals);
+  }
+  if (Object.keys(metrics.hotspotFails || {}).length) {
+    console.log('  metric.hotspotFails: ' + JSON.stringify(metrics.hotspotFails));
+  }
+  if (Object.keys(metrics.cleanPreteach || {}).length) {
+    console.log('  metric.cleanPreteach: ' + JSON.stringify(metrics.cleanPreteach));
+  }
+  if (Object.keys(metrics.curiosityPayoffs || {}).length) {
+    console.log('  metric.curiosityPayoffs: ' + JSON.stringify(metrics.curiosityPayoffs));
+  }
+  if (Object.keys(metrics.avoidableFirstHit || {}).length) {
+    console.log('  metric.avoidableFirstHit: ' + JSON.stringify(metrics.avoidableFirstHit));
+  }
+  if (Object.keys(metrics.confirmationSeen || {}).length) {
+    console.log('  metric.confirmationSeen: ' + JSON.stringify(metrics.confirmationSeen));
+  }
+  if (Object.keys(metrics.interactionRetries || {}).length) {
+    console.log('  metric.interactionRetries: ' + JSON.stringify(metrics.interactionRetries));
+  }
+  if (Object.keys(metrics.overlapPrevented || {}).length) {
+    console.log('  metric.overlapPrevented: ' + JSON.stringify(metrics.overlapPrevented));
+  }
+  if (Object.keys(metrics.cleanClearTime || {}).length) {
+    console.log('  metric.cleanClearTime: ' + JSON.stringify(metrics.cleanClearTime));
+  }
+  if (Object.keys(metrics.curiosityDetourPaid || {}).length) {
+    console.log('  metric.curiosityDetourPaid: ' + JSON.stringify(metrics.curiosityDetourPaid));
+  }
 }
 window.dumpFirstSessionSummary = dumpFirstSessionSummary;
+
+function buildCertificationAidConfig() {
+  var segment = '';
+  if (typeof window !== 'undefined' && window.location && window.location.search) {
+    var query = window.location.search.replace(/^\?/, '').split('&');
+    for (var qi = 0; qi < query.length; qi++) {
+      var pair = query[qi].split('=');
+      if (decodeURIComponent(pair[0] || '') === 'certAid') {
+        segment = decodeURIComponent(pair[1] || '').toLowerCase();
+        break;
+      }
+    }
+  }
+  var sceneKey = segment === 'w2' ? 'World2' : segment === 'w3' ? 'World3' : '';
+  var enabled = !!sceneKey;
+  if (enabled) window.CACTUS_ED_DEBUG_FIRST_SESSION = true;
+  return { enabled: enabled, segment: segment, sceneKey: sceneKey, hidden: false };
+}
+window.CACTUS_ED_CERT_AID = buildCertificationAidConfig();
+
+function getCertificationAidConfig() {
+  return window.CACTUS_ED_CERT_AID || { enabled: false, segment: '', sceneKey: '', hidden: false };
+}
+
+function isCertificationAidScene(scene) {
+  var certAid = getCertificationAidConfig();
+  return !!(certAid.enabled && certAid.sceneKey && scene && scene.scene && scene.scene.key === certAid.sceneKey);
+}
+
+function resetCertificationAidPlayerState(scene, x, y, facing) {
+  if (!scene || !scene.ep || !scene.es) return;
+  scene.ep.x = x;
+  scene.ep.y = y;
+  scene.ep.vx = 0;
+  scene.ep.vy = 0;
+  scene.ep.grounded = true;
+  scene.ep.coyoteMs = 0;
+  scene.ep.jumpBufMs = 0;
+  scene.es.facing = facing == null ? 1 : facing;
+  scene.es.walkT = 0;
+  scene.es.punchTimer = 0;
+  scene.es.punchActive = false;
+  scene.es.kickTimer = 0;
+  scene.es.kickActive = false;
+  scene.es.hurtTimer = 0;
+  scene.es.djUsed = false;
+  scene.es.tjUsed = false;
+  scene.es.gliding = false;
+  scene.es.spinning = false;
+  scene.es.spinChargeT = 0;
+  scene.es.spinActiveT = 0;
+  scene.es.spinCooldownT = 0;
+  scene.es.coptering = false;
+  scene.es.copterTapCount = 0;
+  scene.es.copterLastTap = 0;
+  scene.es.copterBladeAngle = 0;
+  scene.es._slamming = false;
+  scene.es._airDashed = false;
+  scene.es._justCoyoteJumped = false;
+  scene.invincible = false;
+  scene.invincibleTimer = 0;
+  if (scene.maxHealth != null) scene.health = scene.maxHealth;
+  if (scene._session) {
+    scene._session.spawnX = x;
+    scene._session.lastReadableMs = 0;
+    scene._session.lastDamageMs = 0;
+    scene._session.lastHealth = scene.health;
+  }
+  if (scene._lessonReadoutTxt) scene._lessonReadoutTxt.setAlpha(0).setText('');
+  if (scene.flashTxt) scene.flashTxt.setAlpha(0);
+  if (TEXT_ZONES.clear) TEXT_ZONES.clear();
+}
+
+function applyCertificationAidCheckpoint(scene) {
+  var certAid = getCertificationAidConfig();
+  if (!certAid.enabled || !isCertificationAidScene(scene)) return false;
+  certAid.hidden = false;
+  if (certAid.segment === 'w2') {
+    resetCertificationAidPlayerState(scene, 350, 210, 1);
+    if (scene._w2RuleConfirm) scene._w2RuleConfirm = { trellis: false, testing: false, fakeBranch: false, podium: false };
+    scene._testingLaneNoticeSeen = false;
+    if (scene._fakeBranchNote) scene._fakeBranchNote = { seen: false, paid: false, exitPulseT: 0 };
+    if (scene._trellisCue) scene._trellisCue.pulseT = 0;
+    if (scene._gardenerPreview) {
+      scene._gardenerPreview.seen = false;
+      scene._gardenerPreview.active = false;
+      scene._gardenerPreview.damaged = false;
+      scene._gardenerPreview.completed = false;
+      scene._gardenerPreview.vineShown = false;
+      scene._gardenerPreview.vineHit = false;
+      scene._gardenerPreview.vineDone = false;
+      scene._gardenerPreview.vineTimer = 0;
+      scene._gardenerPreview.lastHitMs = -9999;
+      scene._gardenerPreview.failLogged = false;
+      scene._gardenerPreview.cleanLogged = false;
+      scene._gardenerPreview.safeConfirmShown = false;
+      scene._gardenerPreview.recoveryEaseUsed = false;
+      scene._gardenerPreview.firstAvoidableHitLogged = false;
+      scene._gardenerPreview.recoveryEaseCycle = -1;
+      scene._gardenerPreview.confirmPulseT = 0;
+    }
+  } else if (certAid.segment === 'w3') {
+    resetCertificationAidPlayerState(scene, 1922, H * 0.88 - 10, 1);
+    if (scene._waitingDoor) {
+      scene._waitingDoor.stillMs = scene._waitingDoor.unlockMs;
+      scene._waitingDoor.opened = true;
+      scene._waitingDoor.rewarded = true;
+      scene._waitingDoor.confirmShown = true;
+      scene._waitingDoor.blinkT = 0;
+    }
+    if (scene._scanLesson) {
+      scene._scanLesson.touched = false;
+      scene._scanLesson.completed = true;
+      scene._scanLesson.confirmationShown = true;
+      scene._scanLesson.slowT = 0;
+      scene._scanLesson.recoveryEaseUsed = false;
+      scene._scanLesson.firstTouchLogged = false;
+      scene._scanLesson.recoveryEaseCycle = -1;
+    }
+    if (scene._preAuthDrill) {
+      scene._preAuthDrill.active = false;
+      scene._preAuthDrill.seen = false;
+      scene._preAuthDrill.completed = false;
+      scene._preAuthDrill.rewardReleased = false;
+      scene._preAuthDrill.hitFxT = 0;
+      scene._preAuthDrill.lastLampCount = 0;
+      scene._preAuthDrill.interactionRetries = 0;
+      scene._preAuthDrill.attackRegistered = false;
+      scene._preAuthDrill.statusMs = 0;
+      scene._preAuthDrill.statusText = '';
+      scene._preAuthDrill.blockNoticeAt = -9999;
+      for (var pli = 0; pli < scene._preAuthDrill.lamps.length; pli++) {
+        scene._preAuthDrill.lamps[pli].hit = false;
+        scene._preAuthDrill.lamps[pli].lastHitMs = -9999;
+        scene._preAuthDrill.lamps[pli].hitFxT = 0;
+      }
+    }
+    scene._physicianForeshadowSeen = false;
+  }
+  scene._certAidOverlayState = null;
+  scene.cameras.main.centerOn(scene.ep.x, scene.ep.y - 30);
+  return true;
+}
+
+function getCertificationAidProgress(scene, zone) {
+  if (!isCertificationAidScene(scene)) return null;
+  var certAid = getCertificationAidConfig();
+  var zoneLabel = (zone && (zone.name || zone.type || zone.id)) || getSceneZoneType(scene) || 'UNKNOWN';
+  if (certAid.segment === 'w2') {
+    return {
+      worldLabel: 'WORLD 2',
+      segmentLabel: 'TRELLIS TO GARDENER',
+      zoneLabel: zoneLabel,
+      steps: [
+        { label: 'TRELLIS CONFIRM', done: !!(scene._w2RuleConfirm && scene._w2RuleConfirm.trellis) },
+        { label: 'TESTING CONFIRM', done: !!(scene._w2RuleConfirm && scene._w2RuleConfirm.testing) },
+        { label: 'FAKE BRANCH PAYOFF', done: !!(scene._fakeBranchNote && scene._fakeBranchNote.paid) },
+        { label: 'LAWN / GARDENER', done: !!((scene._gardenerPreview && scene._gardenerPreview.seen) ||
+          getSceneZoneType(scene) === 'lawn' ||
+          (scene._gardenerPreview && scene.ep && scene.ep.x >= scene._gardenerPreview.xStart - 20)) }
+      ]
+    };
+  }
+  if (certAid.segment === 'w3') {
+    return {
+      worldLabel: 'WORLD 3',
+      segmentLabel: 'PRE-AUTH TO PHYSICIAN',
+      zoneLabel: zoneLabel,
+      steps: [
+        { label: 'LAMP 1', done: !!(scene._preAuthDrill && scene._preAuthDrill.lamps[0] && scene._preAuthDrill.lamps[0].hit) },
+        { label: 'LAMP 2', done: !!(scene._preAuthDrill && scene._preAuthDrill.lamps[1] && scene._preAuthDrill.lamps[1].hit) },
+        { label: 'PRE-AUTH COMPLETE', done: !!(scene._preAuthDrill && scene._preAuthDrill.completed) },
+        { label: 'PHYSICIAN THRESHOLD', done: !!(scene.boss && scene.boss.active) || !!(scene._preAuthDrill && scene._preAuthDrill.completed && scene.ep && scene.ep.x > 2390) }
+      ]
+    };
+  }
+  return null;
+}
+
+function handleCertificationAidInput(scene) {
+  if (!isCertificationAidScene(scene) || !scene || !scene.keys) return false;
+  var certAid = getCertificationAidConfig();
+  if (scene.keys.h && Phaser.Input.Keyboard.JustDown(scene.keys.h)) certAid.hidden = !certAid.hidden;
+  if (scene.keys.r && Phaser.Input.Keyboard.JustDown(scene.keys.r)) {
+    certAid.hidden = false;
+    if (TEXT_ZONES.clear) TEXT_ZONES.clear();
+    scene.scene.restart();
+    return true;
+  }
+  return false;
+}
+
+function updateCertificationAidOverlay(scene, zone) {
+  if (!scene || !scene.add) return;
+  var certAid = getCertificationAidConfig();
+  var progress = getCertificationAidProgress(scene, zone);
+  if (!progress) {
+    if (scene._certAidPanelG) scene._certAidPanelG.setAlpha(0);
+    if (scene._certAidHeaderTxt) scene._certAidHeaderTxt.setAlpha(0);
+    if (scene._certAidZoneTxt) scene._certAidZoneTxt.setAlpha(0);
+    if (scene._certAidControlsTxt) scene._certAidControlsTxt.setAlpha(0);
+    if (scene._certAidStepTxts) {
+      for (var hi = 0; hi < scene._certAidStepTxts.length; hi++) scene._certAidStepTxts[hi].setAlpha(0);
+    }
+    return;
+  }
+  if (!scene._certAidPanelG) {
+    scene._certAidPanelG = scene.add.graphics().setScrollFactor(0).setDepth(94);
+    scene._certAidHeaderTxt = scene.add.text(12, 12, '', {
+      fontFamily: 'Courier New, monospace', fontSize: '7px',
+      color: '#ffd700', stroke: '#000000', strokeThickness: 2
+    }).setScrollFactor(0).setDepth(95);
+    scene._certAidZoneTxt = scene.add.text(12, 30, '', {
+      fontFamily: 'Courier New, monospace', fontSize: '6px',
+      color: '#d7e6ff', stroke: '#000000', strokeThickness: 2
+    }).setScrollFactor(0).setDepth(95);
+    scene._certAidControlsTxt = scene.add.text(12, 96, 'R RETRY  H HIDE', {
+      fontFamily: 'Courier New, monospace', fontSize: '6px',
+      color: '#aaaaaa', stroke: '#000000', strokeThickness: 2
+    }).setScrollFactor(0).setDepth(95);
+    scene._certAidStepTxts = [];
+    for (var si = 0; si < 4; si++) {
+      scene._certAidStepTxts.push(scene.add.text(12, 46 + si * 12, '', {
+        fontFamily: 'Courier New, monospace', fontSize: '6px',
+        color: '#999999', stroke: '#000000', strokeThickness: 2
+      }).setScrollFactor(0).setDepth(95));
+    }
+  }
+  scene._certAidOverlayState = {
+    world: progress.worldLabel,
+    segment: progress.segmentLabel,
+    zone: progress.zoneLabel,
+    steps: progress.steps,
+    hidden: !!certAid.hidden
+  };
+  if (certAid.hidden) {
+    scene._certAidPanelG.setAlpha(0);
+    scene._certAidHeaderTxt.setAlpha(0);
+    scene._certAidZoneTxt.setAlpha(0);
+    scene._certAidControlsTxt.setAlpha(0);
+    for (var hi2 = 0; hi2 < scene._certAidStepTxts.length; hi2++) scene._certAidStepTxts[hi2].setAlpha(0);
+    return;
+  }
+  var firstUnmet = -1;
+  for (var pi = 0; pi < progress.steps.length; pi++) {
+    if (!progress.steps[pi].done) { firstUnmet = pi; break; }
+  }
+  scene._certAidPanelG.clear();
+  scene._certAidPanelG.setAlpha(1);
+  scene._certAidPanelG.fillStyle(0x000000, 0.84);
+  scene._certAidPanelG.fillRoundedRect(6, 6, 186, 102, 4);
+  scene._certAidPanelG.lineStyle(1, 0x88ccff, 0.38);
+  scene._certAidPanelG.strokeRoundedRect(6, 6, 186, 102, 4);
+  scene._certAidHeaderTxt.setText(progress.worldLabel + '\nSEGMENT: ' + progress.segmentLabel).setAlpha(0.95);
+  scene._certAidZoneTxt.setText('ZONE: ' + progress.zoneLabel).setAlpha(0.92);
+  scene._certAidControlsTxt.setAlpha(0.8);
+  for (var ti = 0; ti < progress.steps.length; ti++) {
+    var step = progress.steps[ti];
+    var prefix = step.done ? '[x]' : firstUnmet === ti ? '> ' : '[ ]';
+    var color = step.done ? '#88ddaa' : firstUnmet === ti ? '#ffdd44' : '#8a8a8a';
+    scene._certAidStepTxts[ti].setText(prefix + ' ' + step.label).setColor(color).setAlpha(0.94);
+  }
+}
 
 function getHintAssistMult() {
   return ASSIST && ASSIST.active ? 0.75 : 1;
@@ -2326,13 +2667,16 @@ function isPrecisionPocket(scene) {
   var x = scene.ep.x;
   var world = scene._session.world;
   if (world === 'world1') {
-    return x < 170 || (x > 980 && x < 1335) || (x > 1490 && x < 1845) || (scene._counselorPreteach && scene._counselorPreteach.active);
+    return x < 170 || (x > 980 && x < 1335) || (x > 1490 && x < 1845) ||
+      (scene._counselorPreteach && !scene._counselorPreteach.completed &&
+       x > scene._counselorPreteach.xStart - 45 && x < scene._counselorPreteach.xEnd + 18);
   }
   if (world === 'world2') {
     return (x > 420 && x < 550) || (x > 875 && x < 1155) || (scene._gardenerPreview && scene._gardenerPreview.active);
   }
   if (world === 'world3') {
-    return (x > 890 && x < 1105) || (scene._preAuthDrill && scene._preAuthDrill.active);
+    return (scene._waitingDoor && !scene._waitingDoor.opened && x > 180 && x < 430) ||
+      (x > 890 && x < 1105) || (scene._preAuthDrill && scene._preAuthDrill.active);
   }
   return false;
 }
@@ -2351,6 +2695,7 @@ function showContextHint(scene, hintId, stage) {
   if (stage === 'solve') hintState.solved = true;
   recordFirstSessionBeat(scene, 'first_hint_stage');
   if (FIRST_SESSION_HINT_BEATS[hintId]) recordFirstSessionBeat(scene, FIRST_SESSION_HINT_BEATS[hintId]);
+  holdReadableWindow(scene, stage === 'solve' ? 2600 : 1800);
   TEXT_ZONES.show(scene, hintPack[stage], {
     color: stage === 'nudge' ? '#88ccff' : stage === 'clarify' ? '#ccaa44' : '#ffd700',
     duration: stage === 'solve' ? 4200 : 3200,
@@ -2385,12 +2730,23 @@ function canDelayWeirdness(scene, channel) {
   return false;
 }
 
+function holdReadableWindow(scene, ms) {
+  if (!scene || !scene._session) return;
+  var holdUntil = getSceneElapsedMs(scene) + (ms || 0);
+  scene._session.lastReadableMs = Math.max(scene._session.lastReadableMs || 0, holdUntil);
+}
+
 function scheduleReadableEvent(scene, channel, delayMs, fn, maxExtraMs) {
   if (!scene || !scene.time || typeof fn !== 'function') return;
   var waited = 0;
   var extraCap = maxExtraMs == null ? 5000 : maxExtraMs;
+  var deferralLogged = false;
   var poll = function() {
     if (canDelayWeirdness(scene, channel) && waited < extraCap) {
+      if (!deferralLogged) {
+        bumpFirstSessionMetric(scene, 'interruptionDeferrals', '', 1);
+        deferralLogged = true;
+      }
       waited += 350;
       scene.time.delayedCall(350, poll);
       return;
@@ -2398,6 +2754,74 @@ function scheduleReadableEvent(scene, channel, delayMs, fn, maxExtraMs) {
     fn();
   };
   scene.time.delayedCall(delayMs || 0, poll);
+}
+
+function scheduleReadableZoneEvent(scene, channel, delayMs, fn, maxExtraMs) {
+  if (!scene || typeof fn !== 'function') return;
+  var zoneType = getSceneZoneType(scene);
+  scheduleReadableEvent(scene, channel, delayMs, function() {
+    if (zoneType && getSceneZoneType(scene) !== zoneType) return;
+    fn();
+  }, maxExtraMs);
+}
+
+function showProtectedReadableText(scene, channel, delayMs, text, opts, holdMs, metricKey, zoneSafe, maxExtraMs) {
+  if (!scene || !text) return;
+  if (canDelayWeirdness(scene, channel)) {
+    bumpFirstSessionMetric(scene, 'overlapPrevented', metricKey || channel || 'text', 1);
+  }
+  var runner = zoneSafe ? scheduleReadableZoneEvent : scheduleReadableEvent;
+  runner(scene, channel, delayMs || 0, function() {
+    if (holdMs) holdReadableWindow(scene, holdMs);
+    TEXT_ZONES.show(scene, text, opts || {});
+  }, maxExtraMs == null ? 2200 : maxExtraMs);
+}
+
+function formatFirstSessionMetricBucket(bucket) {
+  if (!bucket) return '-';
+  var keys = Object.keys(bucket);
+  if (!keys.length) return '-';
+  keys.sort();
+  var out = [];
+  for (var bi = 0; bi < keys.length && bi < 3; bi++) {
+    out.push(keys[bi] + ':' + bucket[keys[bi]]);
+  }
+  if (keys.length > out.length) out.push('+' + (keys.length - out.length));
+  return out.join(' ');
+}
+
+function updateFirstSessionDebugOverlay(scene, zone) {
+  if (!scene || !scene.add) return;
+  if (!window.CACTUS_ED_DEBUG_FIRST_SESSION) {
+    if (scene._firstSessionDebugTxt) scene._firstSessionDebugTxt.setAlpha(0);
+    return;
+  }
+  if (!scene._firstSessionDebugTxt) {
+    scene._firstSessionDebugTxt = scene.add.text(W - 4, H - 4, '', {
+      fontFamily: 'Courier New, monospace', fontSize: '6px',
+      color: '#d7e6ff', stroke: '#000000', strokeThickness: 2,
+      align: 'right', backgroundColor: '#00000099', padding: { x: 4, y: 3 }
+    }).setOrigin(1, 1).setScrollFactor(0).setDepth(92);
+  }
+  var metrics = ensureFirstSessionMetrics(scene);
+  var elapsed = getSceneElapsedMs(scene);
+  var holdLeft = Math.max(0, Math.round((scene._session.lastReadableMs || 0) - elapsed));
+  var drill = 'none';
+  if (scene._counselorPreteach && scene._counselorPreteach.active) drill = 'counselor';
+  else if (scene._gardenerPreview && scene._gardenerPreview.active) drill = 'gardener';
+  else if (scene._preAuthDrill && scene._preAuthDrill.active) drill = 'preauth';
+  else if (scene._scanLesson && scene.ep && scene.ep.x > scene._scanLesson.x - 36 &&
+           scene.ep.x < scene._scanLesson.x + scene._scanLesson.w + 36 && getSceneZoneType(scene) === 'diagnostic') drill = 'scan';
+  else if (scene._waitingDoor && !scene._waitingDoor.opened && scene.ep &&
+           scene.ep.x > 180 && scene.ep.x < 430 && getSceneZoneType(scene) === 'waiting') drill = 'waiting';
+  var zoneLabel = (zone && (zone.name || zone.type || zone.id)) || getSceneZoneType(scene) || 'UNKNOWN';
+  scene._firstSessionDebugTxt.setText([
+    'FS ' + (scene._session.world || 'world') + ' ' + zoneLabel,
+    'hold ' + holdLeft + 'ms drill ' + drill,
+    'ok ' + formatFirstSessionMetricBucket(metrics.confirmationSeen) + ' hit ' + formatFirstSessionMetricBucket(metrics.avoidableFirstHit),
+    'retry ' + formatFirstSessionMetricBucket(metrics.interactionRetries) + ' defer ' + formatFirstSessionMetricBucket(metrics.overlapPrevented),
+    'clean ' + formatFirstSessionMetricBucket(metrics.cleanClearTime)
+  ].join('\n')).setAlpha(0.92);
 }
 
 function monitorBasicFirstSessionBeats(scene) {
@@ -2597,6 +3021,7 @@ function updateWorld2FirstSession(scene, zone, onGround, delta) {
 
 function updateWorld3FirstSession(scene, zone, onGround, delta) {
   if (!scene || !scene._session || !zone) return;
+  var ep = scene.ep;
   var hintMult = getHintAssistMult();
   var waiting = getHintState(scene, 'waiting');
   var scan = getHintState(scene, 'scan');
@@ -2619,7 +3044,7 @@ function updateWorld3FirstSession(scene, zone, onGround, delta) {
     recordFirstSessionBeat(scene, 'w3_preteach_success');
   }
   if (zone.type === 'waiting' && scene._waitingDoor && !scene._waitingDoor.opened) {
-    var stillWaiting = onGround && Math.abs(scene.ep.vx) < 6 && scene.ep.x > 110 && scene.ep.x < 320;
+    var stillWaiting = onGround && Math.abs(scene.ep.vx) < 6 && scene.ep.x > 180 && scene.ep.x < 430;
     waiting.stallMs = stillWaiting ? waiting.stallMs + delta : Math.max(0, waiting.stallMs - delta * 0.5);
     if (waiting.stage < 1 && waiting.stallMs >= 7000 * hintMult) showContextHint(scene, 'waiting', 'nudge');
     if (waiting.stage < 2 && waiting.stallMs >= 13000 * hintMult) showContextHint(scene, 'waiting', 'clarify');
@@ -3644,6 +4069,24 @@ function getMeleeContact(scene, targetX, targetY, xRadius, yRadius) {
   };
 }
 
+function getLampStrikeContact(scene, lamp) {
+  if (!scene || !lamp) return null;
+  var ep = scene.ep;
+  var es = scene.es;
+  if (!(es.punchActive || es.kickActive || es.spinning || es._airDashed)) return null;
+  var mode = es.spinning ? 'spin' : es.kickActive ? 'kick' : 'punch';
+  var frontRange = mode === 'kick' ? 30 : mode === 'punch' ? 24 : 18;
+  var frontX = ep.x + es.facing * frontRange;
+  var swingY = ep.y - (mode === 'kick' ? 6 : 14);
+  var frontHit = Math.abs(frontX - lamp.x) < (mode === 'kick' ? 30 : 25) &&
+    Math.abs(swingY - lamp.y) < (mode === 'kick' ? 32 : 34);
+  var bodyHit = Math.abs(ep.x - lamp.x) < 12 && Math.abs(ep.y - lamp.y) < 44;
+  var spinHit = es.spinning && Math.abs(ep.x - lamp.x) < 24 && Math.abs(ep.y - lamp.y) < 30;
+  var dashHit = es._airDashed && Math.abs(ep.x - lamp.x) < 28 && Math.abs(ep.y - lamp.y) < 28;
+  if (!(frontHit || bodyHit || spinHit || dashHit)) return null;
+  return { mode: mode, frontX: frontX, swingY: swingY };
+}
+
 function drawSharedMovementHud(scene, fuelY, weaponY) {
   if (scene.es && (scene.es.copterFuel < ED_ABILITIES.copterFuelMax || scene.es.coptering)) {
     var fuelPct = scene.es.copterFuel / ED_ABILITIES.copterFuelMax;
@@ -3728,7 +4171,8 @@ var TEXT_ZONES = {
           scene.tweens.add({
             targets: [txt, panel], alpha: 0, duration: 400,
             onComplete: function() {
-              txt.destroy(); panel.destroy();
+              if (txt && txt.scene) txt.destroy();
+              if (panel && panel.scene) panel.destroy();
               var idx = TEXT_ZONES.slots.indexOf(slot);
               if (idx > -1) TEXT_ZONES.slots.splice(idx, 1);
             }
@@ -3736,6 +4180,15 @@ var TEXT_ZONES = {
         });
       }
     });
+  },
+
+  clear: function() {
+    for (var ci = 0; ci < this.slots.length; ci++) {
+      var slot = this.slots[ci];
+      if (slot.panel && slot.panel.scene) slot.panel.destroy();
+      if (slot.text && slot.text.scene) slot.text.destroy();
+    }
+    this.slots = [];
   }
 };
 
@@ -4542,11 +4995,18 @@ DemoScene.prototype.create = function() {
     { x: 2380, y: 225, w: 8, h: 105 }
   ];
   this._bureauBelt = { x: 1000, y: 300, w: 45, push: 18 };
-  this._routingTerminal = { x: 2150, rewardX: 2334, rewardY: 186, rewardReleased: false };
+  this._routingTerminal = { x: 2150, rewardX: 2334, rewardY: 186, rewardReleased: false, formId: 'FORM 22-B' };
   this._counselorPreteach = {
     xStart: 1935, xEnd: 2120, seen: false, active: false, cardShown: false,
-    pamphletFired: false, sweepCycle: 1800, damaged: false, startHealth: 0, completed: false
+    pamphletFired: false, sweepCycle: 1800, damaged: false, startHealth: 0, completed: false,
+    startT: 0, failLogged: false, cleanLogged: false, relatednessShown: false,
+    warningCycleSeen: false, firstSafeConfirmShown: false, recoveryEaseUsed: false,
+    firstLiveHitLogged: false, recoveryEaseCycle: -1, confirmPulseT: 0
   };
+  this.add.text(2006, H * 0.80, 'FORM 22-B', {
+    fontFamily: 'Courier New, monospace', fontSize: '4px',
+    color: '#88bba0', stroke: '#000000', strokeThickness: 1
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.34);
 
   // Camera
   this.cameras.main.setBounds(0, 0, LW, H);
@@ -4776,9 +5236,9 @@ DemoScene.prototype.create = function() {
   // ── SEALED MYSTERIES (GOAT Partial Answer Rule: every answer opens a bigger question) ──
   // These are visual-only: the player sees them but cannot interact YET
   this.sealedMysteries = [
-    { x: 550, y: H * 0.88, type: 'door', label: 'DOOR: CLASSIFIED ANNEX — ROUTE ELSEWHERE', color: 0x446655 },
-    { x: 1350, y: H * 0.88, type: 'panel', label: 'PANEL: CROSS-DEPARTMENT ACCESS — REROUTED TO RETURN DESK', color: 0x446655 },
-    { x: 2150, y: H * 0.88, type: 'terminal', label: 'TERMINAL: RETURN DESK AUTHORIZATION HOLD', color: 0x446655 }
+    { x: 550, y: H * 0.88, type: 'door', label: 'DOOR: FORM 22-B ANNEX — ROUTE ELSEWHERE', color: 0x446655 },
+    { x: 1350, y: H * 0.88, type: 'panel', label: 'PANEL: FORM 22-B CROSS-DEPARTMENT ACCESS — REROUTED TO RETURN DESK', color: 0x446655 },
+    { x: 2150, y: H * 0.88, type: 'terminal', label: 'TERMINAL: FORM 22-B RETURN DESK AUTHORIZATION HOLD', color: 0x446655 }
   ];
 
   // ── POCKET PARK BEAUTY ELEMENTS (C-05 from Quest Sheet) ──
@@ -4850,9 +5310,9 @@ DemoScene.prototype.create = function() {
   afterG.fillStyle(0xf5f0dc, 0.12);
   afterG.fillRect(2370, H * 0.72, 12, 8);
   afterG.fillRect(2384, H * 0.71, 8, 7);
-  this.add.text(2377, H * 0.70, 'UNCLAIMED FILES', {
+  this.add.text(2377, H * 0.70, 'UNCLAIMED FILES\nFORM 22-B', {
     fontFamily: 'Courier New, monospace', fontSize: '4px',
-    color: '#778888', stroke: '#000000', strokeThickness: 1
+    color: '#778888', stroke: '#000000', strokeThickness: 1, align: 'center'
   }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.25);
 
   // ── ZONE B: CIVIC CLOCK TOWER (the lesson has a schedule) ──
@@ -4913,10 +5373,10 @@ DemoScene.prototype.create = function() {
   envG.fillRect(2410, H * 0.75, 4, 34);
   envG.fillStyle(0x111111, 0.7);
   envG.fillRoundedRect(2402, H * 0.73, 20, 10, 2);
-  this.add.text(2412, H * 0.732, 'ROUTE\nNOTICE', {
+  this.add.text(2412, H * 0.732, 'FORM 22-B\nRETURN', {
     fontFamily: 'Courier New, monospace', fontSize: '3px',
     color: '#88aa99', stroke: '#000000', strokeThickness: 1, align: 'center'
-  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.35);
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.42);
   // ── ORIENTATION CHAMBER VISUAL (first 80px — teach through space) ──
   var ocG = this.add.graphics().setDepth(1);
   // Chamber backdrop (slightly enclosed feel)
@@ -5334,6 +5794,7 @@ DemoScene.prototype.create = function() {
     { x: 1200, y: H * 0.72, job: 'napping', zone: 'B' },
     { x: 1550, y: H * 0.88 - 3, job: 'filing', zone: 'C' },
     { x: 1800, y: H * 0.88 - 3, job: 'sweeping', zone: 'C' },
+    { x: 1988, y: H * 0.88 - 3, job: 'filing', zone: 'D' },
     { x: 2300, y: H * 0.88 - 3, job: 'reading', zone: 'D' },
     { x: 2480, y: H * 0.88 - 3, job: 'briefcase', zone: 'D' }
   ];
@@ -5563,14 +6024,30 @@ DemoScene.prototype.create = function() {
   ];
 };
 
-DemoScene.prototype._flash = function(msg, dur) {
+function ensureSceneFlashText(scene) {
+  if (!scene || !scene.add) return null;
+  if (scene.flashTxt && scene.flashTxt.scene) return scene.flashTxt;
+  var flashColor = '#ffd700';
+  if (scene._titleTxt && scene._titleTxt.style && scene._titleTxt.style.color) {
+    flashColor = scene._titleTxt.style.color;
+  }
+  scene.flashTxt = scene.add.text(W / 2, 180, '', {
+    fontFamily: 'Bangers, Georgia, serif', fontSize: '24px',
+    color: flashColor, stroke: '#000000', strokeThickness: 5,
+    backgroundColor: '#00000099', padding: { x: 10, y: 4 }
+  }).setOrigin(0.5).setScrollFactor(0).setDepth(70).setAlpha(0);
+  return scene.flashTxt;
+}
 
-// ── SFX HELPER (safe play — no crash if audio not ready) ──
 DemoScene.prototype._playSfx = function(type) {
   if (this._sfx) this._sfx.play(type);
 };
-  this.flashTxt.setText(msg).setAlpha(1);
-  this.tweens.add({ targets: this.flashTxt, alpha: 0, duration: dur || 2000, delay: 800 });
+
+DemoScene.prototype._flash = function(msg, dur) {
+  var flashTxt = ensureSceneFlashText(this);
+  if (!flashTxt) return;
+  flashTxt.setText(msg).setAlpha(1);
+  this.tweens.add({ targets: flashTxt, alpha: 0, duration: dur || 2000, delay: 800 });
 };
 
 DemoScene.prototype._showWsText = function() {
@@ -7286,7 +7763,9 @@ DemoScene.prototype.update = function(time, delta) {
       }
       var selfStamp1 = this;
       this.time.delayedCall(800, function() {
-        TEXT_ZONES.show(selfStamp1, 'THE BUREAU ACKNOWLEDGES YOUR PROGRESS.', { color: '#88ccff', duration: 3000, fontSize: '10px' });
+        showProtectedReadableText(selfStamp1, 'pa', 0, 'THE BUREAU ACKNOWLEDGES YOUR PROGRESS.', {
+          color: '#88ccff', duration: 3000, fontSize: '10px'
+        }, 1800, 'w1_stamp_ack', true, 1600);
       });
     }
     if (zone.id === 'D' && !this.enrollmentCard.stamps[2].earned) {
@@ -9065,11 +9544,11 @@ DemoScene.prototype.update = function(time, delta) {
         'LEARNING OUTCOME: You found what the lesson preferred to imply.'
       ];
       var self9 = this;
-      this.time.delayedCall(4500, function() {
+      scheduleReadableEvent(this, 'pa', 4500, function() {
         TEXT_ZONES.show(self9, discoveryReceipts[Math.floor(Math.random() * discoveryReceipts.length)], {
           color: '#ccaa44', duration: 3500, fontSize: '10px'
         });
-      });
+      }, 2600);
     }
   }
 
@@ -9114,25 +9593,46 @@ DemoScene.prototype.update = function(time, delta) {
               }
               // Preview text
               var previewText = selfW2._world2PreviewLines.join('\n');
-              selfW2.add.text(W / 2, H * 0.35, previewText, {
+              var w2PreviewTxt = selfW2.add.text(W / 2, H * 0.35, previewText, {
                 fontFamily: 'Courier New, monospace', fontSize: '9px',
                 color: '#66cc88', stroke: '#000000', strokeThickness: 3,
                 align: 'center', lineSpacing: 4
               }).setOrigin(0.5).setScrollFactor(0).setDepth(86);
-              selfW2.add.text(W / 2, H * 0.80, 'PRESS Z TO RETURN TO CURRENT ENROLLMENT', {
+              var w2PromptTxt = selfW2.add.text(W / 2, H * 0.80, 'PRESS Z TO RETURN TO CURRENT ENROLLMENT', {
                 fontFamily: 'Courier New, monospace', fontSize: '9px',
                 color: '#ffd700', stroke: '#000000', strokeThickness: 3
               }).setOrigin(0.5).setScrollFactor(0).setDepth(86);
-              // Dismiss on Z
               var w2Key = selfW2.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-              var checkW2 = function() {
-                if (Phaser.Input.Keyboard.JustDown(w2Key)) {
-                  w2G.destroy();
-                } else {
-                  selfW2.time.delayedCall(100, checkW2);
-                }
+              var w2PreviewReady = false;
+              var w2PreviewClosed = false;
+              var closeW2Preview = function() {
+                if (w2PreviewClosed) return;
+                w2PreviewClosed = true;
+                selfW2.input.keyboard.off('keydown-Z', onW2PreviewKey);
+                if (w2G) w2G.destroy();
+                if (w2PreviewTxt) w2PreviewTxt.destroy();
+                if (w2PromptTxt) w2PromptTxt.destroy();
               };
-              selfW2.time.delayedCall(1000, checkW2);
+              var onW2PreviewKey = function() {
+                if (w2PreviewReady) closeW2Preview();
+              };
+              selfW2.input.keyboard.on('keydown-Z', onW2PreviewKey);
+              selfW2.time.delayedCall(1000, function() {
+                w2PreviewReady = true;
+                if (w2Key.isDown) {
+                  closeW2Preview();
+                }
+              });
+              selfW2.events.once('shutdown', function() {
+                if (!w2PreviewClosed) {
+                  selfW2.input.keyboard.off('keydown-Z', onW2PreviewKey);
+                }
+              });
+              selfW2.events.once('destroy', function() {
+                if (!w2PreviewClosed) {
+                  selfW2.input.keyboard.off('keydown-Z', onW2PreviewKey);
+                }
+              });
             });
           } else {
             TEXT_ZONES.show(this, sm.label, { color: '#888888', duration: 3000, fontSize: '9px' });
@@ -9172,6 +9672,7 @@ DemoScene.prototype.update = function(time, delta) {
   monitorBasicFirstSessionBeats(this);
   updateFirstSessionHealth(this);
   updateWorld1FirstSession(this, zone, onGround, delta);
+  updateFirstSessionDebugOverlay(this, zone);
 
   // ── WORLD 1 PROMISE-KEPT PAYOFFS ──
   if (this._bureauBelt) {
@@ -9206,11 +9707,10 @@ DemoScene.prototype.update = function(time, delta) {
     this._flash('REROUTED AUTHORIZATION: RELEASED.', 1800);
     this._playSfx('stamp');
     recordFirstSessionBeat(this, 'w1_callback_paid');
-    scheduleReadableEvent(this, 'pa', 700, function() {
-      TEXT_ZONES.show(this, 'RETURN DESK NOTICE: ANNEX MATERIALS WERE RELEASED TO THE MEMORIAL LEDGE.', {
-        color: '#88ddbb', duration: 4200, fontSize: '9px'
-      });
-    }.bind(this), 2500);
+    setFirstSessionMetric(this, 'curiosityPayoffs', 'w1_form_22b', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+    showProtectedReadableText(this, 'pa', 700, 'RETURN DESK NOTICE: FORM 22-B MATERIALS WERE RELEASED TO THE MEMORIAL LEDGE.', {
+      color: '#88ddbb', duration: 4200, fontSize: '9px'
+    }, 3200, 'w1_return_desk_notice', true, 2500);
   }
 
   if (this._counselorPreteach && this.boss && !this.boss.active && !this.boss.defeated) {
@@ -9219,20 +9719,43 @@ DemoScene.prototype.update = function(time, delta) {
       pre.seen = true;
       pre.startHealth = this.health;
       pre.damaged = false;
+      pre.startT = this._levelT;
+      pre.failLogged = false;
+      pre.cleanLogged = false;
+      pre.warningCycleSeen = false;
+      pre.firstSafeConfirmShown = false;
+      pre.recoveryEaseUsed = false;
+      pre.firstLiveHitLogged = false;
+      pre.recoveryEaseCycle = -1;
+      pre.confirmPulseT = 0;
       scheduleReadableEvent(this, 'boss_ceremony', 300, function() {
         if (!pre.cardShown) {
           pre.cardShown = true;
           this._showLessonCard('OBSERVATION CARD:', 'FLOOR HIGHLIGHTS PRECEDE\nAUTHORIZED IMPACTS.');
         }
       }.bind(this), 2600);
+      if (!pre.relatednessShown) {
+        pre.relatednessShown = true;
+        showProtectedReadableText(this, 'boss_ceremony', 1200, 'RECORDS NOTE: FORM 22-B COUNSELOR REVIEW FOLLOWS THE FLOOR MARKING.', {
+          color: '#aabbaa', duration: 3200, fontSize: '8px'
+        }, 2400, 'w1_counselor_note', true, 2200);
+      }
     }
-    pre.active = ep.x > pre.xStart && ep.x < pre.xEnd;
+    pre.active = ep.x > pre.xStart - 10 && ep.x < pre.xEnd + 12;
     if (pre.active) {
-      var sweepPhase = this._levelT % pre.sweepCycle;
+      var preElapsed = Math.max(0, this._levelT - (pre.startT || this._levelT));
+      var sweepPhase = preElapsed % pre.sweepCycle;
+      var sweepCycleIdx = Math.floor(preElapsed / pre.sweepCycle);
       var sweepT = sweepPhase / pre.sweepCycle;
       var sweepX = pre.xStart + sweepT * (pre.xEnd - pre.xStart);
-      var sweepWarn = sweepPhase < 900;
-      this.levelG.fillStyle(0xffd700, sweepWarn ? 0.10 + sweepPhase * 0.00008 : 0.18);
+      var easedCycle = pre.recoveryEaseCycle === sweepCycleIdx;
+      var sweepWarnLimit = easedCycle ? 1300 : 1120;
+      var damageStart = easedCycle ? 1360 : 1180;
+      var damageEnd = easedCycle ? 1510 : 1430;
+      var sweepWarn = sweepPhase < sweepWarnLimit;
+      var liveSweep = sweepCycleIdx >= 1;
+      if (!liveSweep) pre.warningCycleSeen = true;
+      this.levelG.fillStyle(0xffd700, sweepWarn ? 0.10 + sweepPhase * 0.00007 : liveSweep ? 0.20 : 0.12);
       this.levelG.fillRect(sweepX - 18, H * 0.84, 36, 8);
       this.levelG.lineStyle(1, 0xffd700, 0.3);
       this.levelG.lineBetween(sweepX - 18, H * 0.84, sweepX + 18, H * 0.84);
@@ -9247,9 +9770,27 @@ DemoScene.prototype.update = function(time, delta) {
           life: 3.8
         });
       }
-      if (sweepPhase > 980 && sweepPhase < 1250 && Math.abs(ep.x - sweepX) < 18 && ep.y > H * 0.82 &&
+      if (!pre.firstSafeConfirmShown && liveSweep && sweepCycleIdx === 1 && sweepPhase > pre.sweepCycle - 220 && !pre.damaged) {
+        pre.firstSafeConfirmShown = true;
+        pre.confirmPulseT = 620;
+        pre.recoveryEaseCycle = -1;
+        this._playSfx('stamp');
+        bumpFirstSessionMetric(this, 'confirmationSeen', 'counselor', 1);
+        showProtectedReadableText(this, 'confirm', 260, 'FORM 22-B REVIEW: MARKING OBSERVED.', {
+          color: '#88ddaa', duration: 2400, fontSize: '8px'
+        }, 2200, 'counselor_confirm', false, 1800);
+      }
+      if (liveSweep && sweepPhase > damageStart && sweepPhase < damageEnd && Math.abs(ep.x - sweepX) < (easedCycle ? 15 : 18) && ep.y > H * 0.82 &&
           es.hurtTimer <= 0 && !this.invincible) {
         pre.damaged = true;
+        if (!pre.firstLiveHitLogged && !pre.firstSafeConfirmShown) {
+          pre.firstLiveHitLogged = true;
+          bumpFirstSessionMetric(this, 'avoidableFirstHit', 'counselor', 1);
+          if (!pre.recoveryEaseUsed) {
+            pre.recoveryEaseUsed = true;
+            pre.recoveryEaseCycle = sweepCycleIdx + 1;
+          }
+        }
         es.hurtTimer = 0.45;
         if (!ASSIST.infiniteHealth) this.health--;
         ep.vy = -90;
@@ -9257,14 +9798,37 @@ DemoScene.prototype.update = function(time, delta) {
         if (this.health <= 0) this._triggerDeath();
       }
     } else if (pre.seen && !pre.completed && ep.x > pre.xEnd) {
-      pre.completed = !pre.damaged && this.health >= pre.startHealth;
+      var preExitElapsed = Math.max(0, this._levelT - (pre.startT || this._levelT));
+      pre.completed = !pre.damaged && this.health >= pre.startHealth && preExitElapsed >= pre.sweepCycle;
       if (pre.completed) {
         this.behavior.grace += 2;
         this.behavior.intuition += 2;
         this._flash('OBSERVATION CLEAR.', 1500);
+        if (!pre.firstSafeConfirmShown) {
+          pre.firstSafeConfirmShown = true;
+          pre.confirmPulseT = 620;
+          this._playSfx('stamp');
+          bumpFirstSessionMetric(this, 'confirmationSeen', 'counselor', 1);
+          showProtectedReadableText(this, 'confirm', 220, 'FORM 22-B REVIEW: MARKING OBSERVED.', {
+            color: '#88ddaa', duration: 2400, fontSize: '8px'
+          }, 2200, 'counselor_confirm', false, 1800);
+        }
+        if (!pre.cleanLogged) {
+          pre.cleanLogged = true;
+          setFirstSessionMetric(this, 'cleanPreteach', 'counselor', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+        }
       }
     }
-    if (es.hurtTimer > 0) pre.damaged = true;
+    if (pre.active && es.hurtTimer > 0) pre.damaged = true;
+    if (pre.seen && pre.damaged && !pre.failLogged) {
+      pre.failLogged = true;
+      bumpFirstSessionMetric(this, 'hotspotFails', 'counselor', 1);
+    }
+    if (pre.confirmPulseT > 0) {
+      pre.confirmPulseT = Math.max(0, pre.confirmPulseT - delta);
+      this.levelG.fillStyle(0x66cc88, 0.08 + pre.confirmPulseT * 0.00018);
+      this.levelG.fillRect(pre.xStart - 6, H * 0.83, pre.xEnd - pre.xStart + 12, 12);
+    }
   }
 
   // ── CIG BOX ITEM BLOCKS ──
@@ -11636,8 +12200,14 @@ World2Scene.prototype.create = function() {
   this.bossG = this.add.graphics().setDepth(5);
   this._gardenerPreview = {
     xStart: 2120, xEnd: 2345, seen: false, active: false, damaged: false,
-    completed: false, vineShown: false, vineHit: false, vineX: 2320
+    completed: false, vineShown: false, vineHit: false, vineX: 2320, lastHitMs: -9999,
+    failLogged: false, cleanLogged: false, safeConfirmShown: false, recoveryEaseUsed: false,
+    firstAvoidableHitLogged: false, recoveryEaseCycle: -1, confirmPulseT: 0
   };
+  this._testingLaneNoticeSeen = false;
+  this._fakeBranchNote = { seen: false, paid: false, exitPulseT: 0 };
+  this._trellisCue = { x: 520, y: 165, pulseT: 0 };
+  this._w2RuleConfirm = { trellis: false, testing: false, fakeBranch: false, podium: false };
 
   // ── HUD ──
   this.hudG = this.add.graphics().setScrollFactor(0).setDepth(60);
@@ -11655,6 +12225,8 @@ World2Scene.prototype.create = function() {
     z: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
     x: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
     c: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C),
+    r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
+    h: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
     esc: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
   };
 
@@ -11688,10 +12260,12 @@ World2Scene.prototype.create = function() {
   this._flash = DemoScene.prototype._flash.bind(this);
   this._sfx = ensureSharedSfx();
   this._playSfx = DemoScene.prototype._playSfx.bind(this);
-  this._flash('WORLD 2: SUNLUSH LEARNING PRESERVE', 3000);
-  this.time.delayedCall(1500, function() {
-    self._flash('"GROWTH IS NOT OPTIONAL."', 2500);
-  });
+  if (!isCertificationAidScene(this)) {
+    this._flash('WORLD 2: SUNLUSH LEARNING PRESERVE', 3000);
+    this.time.delayedCall(1500, function() {
+      self._flash('"GROWTH IS NOT OPTIONAL."', 2500);
+    });
+  }
 
   // ── WORLD 2 NPCs (educational staff — they're here to help. allegedly.) ──
   this.w2Npcs = [];
@@ -11772,6 +12346,45 @@ World2Scene.prototype.create = function() {
   this.add.text(513, H * 0.602, 'HONORS\nLATTICE', {
     fontFamily: 'Courier New, monospace', fontSize: '4px',
     color: '#ffdd88', stroke: '#000000', strokeThickness: 1, align: 'center'
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.42);
+  posterG.fillStyle(0xffdd44, 0.10);
+  posterG.fillCircle(520, 165, 10);
+  posterG.fillStyle(0xffdd44, 0.06);
+  posterG.fillCircle(465, 250, 6);
+  posterG.fillCircle(485, 220, 5);
+  posterG.fillCircle(510, 190, 4);
+  this.add.text(548, 166, 'TOP COPY', {
+    fontFamily: 'Courier New, monospace', fontSize: '4px',
+    color: '#ffdd88', stroke: '#000000', strokeThickness: 1
+  }).setOrigin(0, 0.5).setDepth(2).setAlpha(0.36);
+  posterG.fillStyle(0x000000, 0.80);
+  posterG.fillRoundedRect(862, H * 0.71, 72, 14, 2);
+  posterG.lineStyle(1, 0xffdd44, 0.35);
+  posterG.strokeRoundedRect(862, H * 0.71, 72, 14, 2);
+  this.add.text(898, H * 0.712, 'TEST FORM F-1\nASCEND IN ORDER', {
+    fontFamily: 'Courier New, monospace', fontSize: '4px',
+    color: '#ffdd88', stroke: '#000000', strokeThickness: 1, align: 'center'
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.46);
+  posterG.fillStyle(0xffdd44, 0.10);
+  posterG.fillTriangle(884, H * 0.82, 889, H * 0.80, 894, H * 0.82);
+  posterG.fillTriangle(934, H * 0.79, 939, H * 0.77, 944, H * 0.79);
+  posterG.fillTriangle(984, H * 0.75, 989, H * 0.73, 994, H * 0.75);
+  posterG.fillTriangle(1044, H * 0.71, 1049, H * 0.69, 1054, H * 0.71);
+  posterG.fillStyle(0x000000, 0.80);
+  posterG.fillRoundedRect(1308, H * 0.60, 58, 12, 2);
+  posterG.lineStyle(1, 0xcc8844, 0.35);
+  posterG.strokeRoundedRect(1308, H * 0.60, 58, 12, 2);
+  this.add.text(1337, H * 0.602, 'LEFT REVIEW\nFILES BACK', {
+    fontFamily: 'Courier New, monospace', fontSize: '4px',
+    color: '#ccaa77', stroke: '#000000', strokeThickness: 1, align: 'center'
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.42);
+  posterG.fillStyle(0x000000, 0.82);
+  posterG.fillRoundedRect(1992, H * 0.70, 84, 18, 2);
+  posterG.lineStyle(1, 0x66cc88, 0.35);
+  posterG.strokeRoundedRect(1992, H * 0.70, 84, 18, 2);
+  this.add.text(2034, H * 0.703, 'GREENHOUSE MAINT.\nPOSTED PODIUMS BEFORE CUTTING', {
+    fontFamily: 'Courier New, monospace', fontSize: '4px',
+    color: '#88ccaa', stroke: '#000000', strokeThickness: 1, align: 'center'
   }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.42);
 
   // ── POP QUIZ SYSTEM (timed challenges that interrupt gameplay) ──
@@ -11959,6 +12572,7 @@ World2Scene.prototype.create = function() {
   this.cameras.main.setBounds(0, 0, LW, H);
   this.cameras.main.startFollow({ x: 60, y: H / 2 }, false, 0.08, 0.08);
   this._camLookAhead = 0;
+  applyCertificationAidCheckpoint(this);
 };
 
 World2Scene.prototype.update = function(time, delta) {
@@ -11974,6 +12588,7 @@ World2Scene.prototype.update = function(time, delta) {
       zone = this._zones[zi]; break;
     }
   }
+  if (handleCertificationAidInput(this)) return;
 
   // ── MUZAK CROSSFADE ──
   if (this._muzak && this._muzak.currentZone !== zone.type) {
@@ -12063,6 +12678,25 @@ World2Scene.prototype.update = function(time, delta) {
   // Ground
   this.levelG.fillStyle(0x2a3a2a, 1);
   this.levelG.fillRect(0, H * 0.88, 2560, 60);
+  if (zone.type === 'garden' && this._trellisCue) {
+    if (this._trellisCue.pulseT > 0) this._trellisCue.pulseT = Math.max(0, this._trellisCue.pulseT - delta);
+    this.levelG.fillStyle(0xffdd44, 0.08 + Math.sin(this._levelT * 0.006) * 0.04 + this._trellisCue.pulseT * 0.00018);
+    this.levelG.fillCircle(this._trellisCue.x, this._trellisCue.y, 12 + this._trellisCue.pulseT * 0.006);
+    this.levelG.lineStyle(1, 0xffdd44, 0.35);
+    this.levelG.strokeCircle(this._trellisCue.x, this._trellisCue.y, 15 + this._trellisCue.pulseT * 0.008);
+  }
+  if (zone.type === 'maze' && this._fakeBranchNote && this._fakeBranchNote.exitPulseT > 0) {
+    this._fakeBranchNote.exitPulseT = Math.max(0, this._fakeBranchNote.exitPulseT - delta);
+    this.levelG.fillStyle(0x88ccaa, 0.12 + this._fakeBranchNote.exitPulseT * 0.00022);
+    this.levelG.fillTriangle(1398, 238, 1428, 224, 1428, 252);
+    this.levelG.lineStyle(1, 0x88ccaa, 0.5);
+    this.levelG.lineBetween(1408, 238, 1444, 208);
+  }
+  if (zone.type === 'lawn' && this._gardenerPreview && this._gardenerPreview.confirmPulseT > 0) {
+    this._gardenerPreview.confirmPulseT = Math.max(0, this._gardenerPreview.confirmPulseT - delta);
+    this.levelG.fillStyle(0x66cc88, 0.10 + this._gardenerPreview.confirmPulseT * 0.00016);
+    this.levelG.fillRect(2106, H * 0.83, 158, 12);
+  }
 
   // ── DRAW ENEMIES (Pencil Troopers + Scantron Sentinels) ──
   this.mochiG.clear();
@@ -12278,7 +12912,9 @@ World2Scene.prototype.update = function(time, delta) {
       this.behavior.curiosity += 2;
       this._playSfx('collect');
       var wLine = wnpc.lines[Math.floor(Math.random() * wnpc.lines.length)];
-      TEXT_ZONES.show(this, wnpc.name + ': ' + wLine, { color: '#88ffaa', duration: 4500, fontSize: '10px' });
+      showProtectedReadableText(this, 'pa', 0, wnpc.name + ': ' + wLine, {
+        color: '#88ffaa', duration: 4500, fontSize: '10px'
+      }, 2200, 'w2_npc', true, 1800);
       // Behavior-reactive NPC follow-up (the institution reads your file)
       var maxNB = 'compliance'; var maxNV = 0;
       var nbk = ['compliance','intuition','curiosity','grace','chaos','efficiency'];
@@ -12293,9 +12929,9 @@ World2Scene.prototype.update = function(time, delta) {
           intuition: '(They look confused. You weren\'t supposed to find them.)'
         };
         var selfNR = this;
-        this.time.delayedCall(2500, function() {
+        scheduleReadableZoneEvent(this, 'pa', 2500, function() {
           TEXT_ZONES.show(selfNR, npcReact[maxNB] || '', { color: '#666666', duration: 2500, fontSize: '8px' });
-        });
+        }, 2000);
       }
     }
   }
@@ -12425,7 +13061,7 @@ World2Scene.prototype.update = function(time, delta) {
     this._flash('ZONE GRADE: ' + this._reportCard[prevZ], 2000);
     // ── RECEIPT TERMINAL RITUAL (fires at zone transition — behavior-reactive) ──
     var selfReceipt = this;
-    this.time.delayedCall(2500, function() {
+    scheduleReadableZoneEvent(this, 'pa', 2500, function() {
       // Determine dominant behavior
       var maxB2 = 'compliance'; var maxV2 = 0;
       var bKeys2 = ['compliance','intuition','curiosity','grace','chaos','efficiency'];
@@ -12446,7 +13082,7 @@ World2Scene.prototype.update = function(time, delta) {
         color: '#cc8844', duration: 5000, fontSize: '9px'
       });
       selfReceipt._playSfx('stamp');
-    });
+    }, 2600);
   }
 
   // ── BEHAVIOR CONSEQUENCES (dominant current alters W2 gameplay) ──
@@ -12468,7 +13104,7 @@ World2Scene.prototype.update = function(time, delta) {
         intuition: 'ATTENTION: A STUDENT IS MAKING DECISIONS WITHOUT CONSULTATION.'
       };
       var selfBehaviorPA = this;
-      scheduleReadableEvent(this, 'pa', 8000, function() {
+      scheduleReadableZoneEvent(this, 'pa', 8000, function() {
         TEXT_ZONES.show(selfBehaviorPA, behaviorPA[maxBC] || '', { color: '#556644', duration: 4000, fontSize: '8px' });
       }, 3500);
     }
@@ -12954,34 +13590,105 @@ World2Scene.prototype.update = function(time, delta) {
   }
   updateFirstSessionHealth(this);
   updateWorld2FirstSession(this, zone, onGround, delta);
+  updateFirstSessionDebugOverlay(this, zone);
+  updateCertificationAidOverlay(this, zone);
+  if (this._w2RuleConfirm && !this._w2RuleConfirm.trellis && zone.type === 'garden' &&
+      ep.x > 498 && ep.x < 544 && ep.y < 210) {
+    this._w2RuleConfirm.trellis = true;
+    this._trellisCue.pulseT = 900;
+    this._playSfx('stamp');
+    bumpFirstSessionMetric(this, 'confirmationSeen', 'trellis', 1);
+    showProtectedReadableText(this, 'confirm', 120, 'HONORS LATTICE: TOP COPY RELEASED.', {
+      color: '#ffdd88', duration: 2200, fontSize: '8px'
+    }, 2200, 'w2_trellis', true, 1800);
+  }
+  if (this._w2RuleConfirm && !this._w2RuleConfirm.testing && zone.type === 'testing' &&
+      ep.x > 990 && ep.y < 215 && getSceneElapsedMs(this) - (this._session.lastDamageMs || 0) > 1200) {
+    this._w2RuleConfirm.testing = true;
+    this._playSfx('stamp');
+    bumpFirstSessionMetric(this, 'confirmationSeen', 'testing_lane', 1);
+    showProtectedReadableText(this, 'confirm', 100, 'TEST FORM F-1: ROUTE VERIFIED.', {
+      color: '#ffdd44', duration: 2200, fontSize: '8px'
+    }, 2000, 'w2_testing', true, 1800);
+  }
+  if (!this._testingLaneNoticeSeen && zone.type === 'testing' && ep.x > 845) {
+    this._testingLaneNoticeSeen = true;
+    showProtectedReadableText(this, 'pa', 100, 'PROCTOR NOTICE: THE POSTED ROUTE CLIMBS IN ORDER.', {
+      color: '#ffdd44', duration: 2800, fontSize: '8px'
+    }, 2200, 'w2_testing_notice', true, 1800);
+  }
+  if (this._fakeBranchNote && !this._fakeBranchNote.seen && zone.type === 'maze' &&
+      ep.x < 1368 && ep.y < 332 && ep.y > 210) {
+    this._fakeBranchNote.seen = true;
+    scheduleReadableZoneEvent(this, 'pa', 120, function() {
+      if (this._fakeBranchNote.paid) return;
+      this._fakeBranchNote.paid = true;
+      this.behavior.curiosity += 1;
+      this._fakeBranchNote.exitPulseT = 900;
+      if (this._w2RuleConfirm) this._w2RuleConfirm.fakeBranch = true;
+      this.floatingItems.push({ x: 1322, y: 226, type: 'aloe', vy: -58, bobT: 0, life: 20, floating: true });
+      bumpFirstSessionMetric(this, 'curiosityPayoffs', 'w2_fake_branch', 1);
+      setFirstSessionMetric(this, 'curiosityDetourPaid', 'w2_fake_branch', 1);
+      showProtectedReadableText(this, 'pa', 0, 'ARCHIVE NOTE: LEFT REVIEW FILES BACK INTO THE MAIN OFFICE. APPROVED EXIT REMAINS ABOVE.', {
+        color: '#ccaa77', duration: 3200, fontSize: '8px'
+      }, 2400, 'w2_fake_branch_note', true, 1400);
+    }.bind(this), 1400);
+  }
 
   if (this._gardenerPreview && zone.type === 'lawn' && !this.boss.active) {
     var gp = this._gardenerPreview;
     if (!gp.seen && ep.x > gp.xStart - 35) {
       gp.seen = true;
-      scheduleReadableEvent(this, 'boss_ceremony', 250, function() {
-        TEXT_ZONES.show(this, 'CEREMONY MAINTENANCE: OCCUPY THE POSTED PODIUM. VINE RESPONSE FOLLOWS.', {
-          color: '#88ffaa', duration: 3600, fontSize: '9px'
-        });
-      }.bind(this), 2200);
+      showProtectedReadableText(this, 'boss_ceremony', 250, 'GREENHOUSE MAINTENANCE: POSTED PODIUMS BEFORE CUTTING. VINE RESPONSE FOLLOWS.', {
+        color: '#88ffaa', duration: 3600, fontSize: '9px'
+      }, 2400, 'w2_gardener_notice', true, 2200);
     }
     gp.active = ep.x > gp.xStart && ep.x < gp.xEnd;
     if (gp.active) {
       var podiumLeft = 2110;
       var podiumW = 150;
       var podiumSecW = podiumW / 3;
-      var podiumPhase = this._levelT % 1800;
-      gp.safeIdx = Math.floor(this._levelT / 1800) % 3;
+      var podiumCycle = 2400;
+      var podiumCycleIdx = Math.floor(this._levelT / podiumCycle);
+      var easedPodiumCycle = gp.recoveryEaseCycle === podiumCycleIdx;
+      var podiumWarnMs = easedPodiumCycle ? 1300 : 1100;
+      var podiumPhase = this._levelT % podiumCycle;
+      gp.safeIdx = podiumCycleIdx % 3;
       for (var gpv = 0; gpv < 3; gpv++) {
         var pvx = podiumLeft + gpv * podiumSecW;
-        this.levelG.fillStyle(gpv === gp.safeIdx ? 0x66cc88 : 0xaa4444, podiumPhase < 700 ? 0.10 + podiumPhase * 0.0001 : 0.18);
+        this.levelG.fillStyle(gpv === gp.safeIdx ? 0x66cc88 : 0xaa4444, podiumPhase < podiumWarnMs ? 0.10 + podiumPhase * 0.00008 : 0.18);
         this.levelG.fillRect(pvx, H * 0.84, podiumSecW - 4, 10);
       }
-      if (podiumPhase > 760 && ep.x > podiumLeft && ep.x < podiumLeft + podiumW && ep.y > H * 0.82) {
-        var edPodium = Math.floor((ep.x - podiumLeft) / podiumSecW);
+      var edPodium = -1;
+      if (ep.x > podiumLeft && ep.x < podiumLeft + podiumW) {
+        edPodium = Math.max(0, Math.min(2, Math.floor((ep.x - podiumLeft) / podiumSecW)));
+      }
+      if (!gp.safeConfirmShown && edPodium === gp.safeIdx && ep.y > H * 0.82 &&
+          podiumPhase > podiumWarnMs + 180 && podiumPhase < podiumCycle - 240 && !gp.damaged) {
+        gp.safeConfirmShown = true;
+        gp.confirmPulseT = 620;
+        gp.recoveryEaseCycle = -1;
+        if (this._w2RuleConfirm) this._w2RuleConfirm.podium = true;
+        this._playSfx('stamp');
+        bumpFirstSessionMetric(this, 'confirmationSeen', 'gardener', 1);
+        showProtectedReadableText(this, 'confirm', 220, 'POSTED PODIUMS BEFORE CUTTING: POSITION APPROVED.', {
+          color: '#88ffaa', duration: 2400, fontSize: '8px'
+        }, 2200, 'w2_podium_confirm', false, 1800);
+      }
+      if (podiumPhase > podiumWarnMs && ep.x > podiumLeft && ep.x < podiumLeft + podiumW && ep.y > H * 0.82 &&
+          this._levelT - gp.lastHitMs > 1000) {
         if (edPodium !== gp.safeIdx && es.hurtTimer <= 0 && !this.invincible) {
           gp.damaged = true;
-          es.hurtTimer = 0.4;
+          gp.lastHitMs = this._levelT;
+          if (!gp.firstAvoidableHitLogged && !gp.safeConfirmShown) {
+            gp.firstAvoidableHitLogged = true;
+            bumpFirstSessionMetric(this, 'avoidableFirstHit', 'gardener', 1);
+            if (!gp.recoveryEaseUsed) {
+              gp.recoveryEaseUsed = true;
+              gp.recoveryEaseCycle = podiumCycleIdx + 1;
+            }
+          }
+          es.hurtTimer = 0.55;
           if (!ASSIST.infiniteHealth) this.health--;
           ep.vy = -90;
           this._playSfx('hurt');
@@ -13023,9 +13730,26 @@ World2Scene.prototype.update = function(time, delta) {
         this.behavior.grace += 2;
         this.behavior.intuition += 2;
         this._flash('PODIUM CLEARANCE APPROVED.', 1500);
+        if (!gp.safeConfirmShown) {
+          gp.safeConfirmShown = true;
+          gp.confirmPulseT = 620;
+          this._playSfx('stamp');
+          bumpFirstSessionMetric(this, 'confirmationSeen', 'gardener', 1);
+          showProtectedReadableText(this, 'confirm', 180, 'POSTED PODIUMS BEFORE CUTTING: POSITION APPROVED.', {
+            color: '#88ffaa', duration: 2400, fontSize: '8px'
+          }, 2200, 'w2_podium_confirm', false, 1800);
+        }
+        if (!gp.cleanLogged) {
+          gp.cleanLogged = true;
+          setFirstSessionMetric(this, 'cleanPreteach', 'gardener', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+        }
       }
     }
     if (es.hurtTimer > 0) gp.damaged = true;
+    if (gp.damaged && !gp.failLogged) {
+      gp.failLogged = true;
+      bumpFirstSessionMetric(this, 'hotspotFails', 'gardener', 1);
+    }
   }
 
   // ── JANITOR CARL WISDOM (appears periodically, drops zone-specific truth) ──
@@ -13075,11 +13799,17 @@ World2Scene.prototype.update = function(time, delta) {
 
     // Show wisdom line when near Ed
     if (!carl._lineShown && Math.abs(ep.x - carl.x) < 120) {
-      carl._lineShown = true;
-      var carlZoneLines = this._carlLines[zone.type] || this._carlLines.garden;
-      var carlLine = carlZoneLines[Math.floor(Math.random() * carlZoneLines.length)];
-      TEXT_ZONES.show(this, 'CARL: ' + carlLine, { color: '#aaccaa', duration: 5000, fontSize: '10px' });
-      this.behavior.intuition += 2;
+      if (isPrecisionPocket(this)) {
+        bumpFirstSessionMetric(this, 'overlapPrevented', 'w2_carl', 1);
+      } else {
+        carl._lineShown = true;
+        var carlZoneLines = this._carlLines[zone.type] || this._carlLines.garden;
+        var carlLine = carlZoneLines[Math.floor(Math.random() * carlZoneLines.length)];
+        showProtectedReadableText(this, 'pa', 0, 'CARL: ' + carlLine, {
+          color: '#aaccaa', duration: 5000, fontSize: '10px'
+        }, 2200, 'w2_carl', true, 5000);
+        this.behavior.intuition += 2;
+      }
     }
 
     if (carl._lifetime <= 0 || carl.x < -20 || carl.x > 2580) {
@@ -13346,11 +14076,26 @@ World3Scene.prototype.create = function() {
     ['aloe', 'health', 'ciggun', 'lighter', 'cigsword', 'health', 'carton']
   );
   this._teachingG = this.add.graphics().setDepth(3);
-  this._waitingDoor = { x: 540, y: H * 0.88 - 6, stillMs: 0, unlockMs: 2800, opened: false, rewarded: false };
-  this._scanLesson = { x: 900, w: 206, period: 2400, activeMs: 950, slowT: 0, touched: false, completed: false };
+  this._lessonReadoutTxt = this.add.text(W / 2, 22, '', {
+    fontFamily: 'Courier New, monospace', fontSize: '6px',
+    color: '#88ccff', stroke: '#000000', strokeThickness: 2,
+    align: 'center', backgroundColor: '#00000088', padding: { x: 6, y: 3 }
+  }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(62).setAlpha(0);
+  this._waitingDoor = {
+    x: 540, y: H * 0.88 - 6, stillMs: 0, unlockMs: 2800, opened: false, rewarded: false,
+    confirmShown: false, blinkT: 0
+  };
+  this._scanLesson = {
+    x: 900, w: 206, period: 2400, activeMs: 950, slowT: 0, touched: false, completed: false,
+    confirmationShown: false, recoveryEaseUsed: false, firstTouchLogged: false, recoveryEaseCycle: -1
+  };
   this._preAuthDrill = {
     xStart: 2230, xEnd: 2335, active: false, seen: false, completed: false, rewardReleased: false,
-    lamps: [{ x: 2248, y: 214, hit: false }, { x: 2314, y: 188, hit: false }]
+    hitFxT: 0, lastLampCount: 0, interactionRetries: 0, attackRegistered: false, statusMs: 0,
+    statusText: '', blockNoticeAt: -9999, lamps: [
+      { x: 2248, y: 214, hit: false, lastHitMs: -9999, hitFxT: 0 },
+      { x: 2314, y: 188, hit: false, lastHitMs: -9999, hitFxT: 0 }
+    ]
   };
   this._physicianForeshadowSeen = false;
 
@@ -13401,6 +14146,8 @@ World3Scene.prototype.create = function() {
     z: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
     x: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
     c: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C),
+    r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
+    h: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H),
     esc: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
   };
 
@@ -13408,8 +14155,10 @@ World3Scene.prototype.create = function() {
   this._flash = DemoScene.prototype._flash.bind(this);
   this._sfx = ensureSharedSfx();
   this._playSfx = DemoScene.prototype._playSfx.bind(this);
-  this._flash('WORLD 3: WELLSPRING MEDICAL PAVILION', 3000);
-  this.time.delayedCall(1500, function() { self._flash('"YOUR WELLNESS IS OUR PRIORITY."', 2500); });
+  if (!isCertificationAidScene(this)) {
+    this._flash('WORLD 3: WELLSPRING MEDICAL PAVILION', 3000);
+    this.time.delayedCall(1500, function() { self._flash('"YOUR WELLNESS IS OUR PRIORITY."', 2500); });
+  }
 
   // ── WORLD 3 NPCs (medical staff) ──
   this.w3Npcs = [];
@@ -13485,10 +14234,10 @@ World3Scene.prototype.create = function() {
     fontFamily: 'Courier New, monospace', fontSize: '4px',
     color: '#88ccff', stroke: '#000000', strokeThickness: 1, align: 'center'
   }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.4);
-  this.add.text(2280, H * 0.66, 'PHYSICIAN REVIEW\nAHEAD', {
+  this.add.text(2280, H * 0.66, 'PHYSICIAN REVIEW\nTWO SIGNATURES\nAHEAD', {
     fontFamily: 'Courier New, monospace', fontSize: '4px',
     color: '#aabbee', stroke: '#000000', strokeThickness: 1, align: 'center'
-  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.32);
+  }).setOrigin(0.5, 0).setDepth(2).setAlpha(0.36);
 
   // ── MEDICAL RECEIPT POOL ──
   this._w3Receipts = [
@@ -13520,6 +14269,7 @@ World3Scene.prototype.create = function() {
 
   this.cameras.main.setBounds(0, 0, LW, H);
   this.cameras.main.startFollow({ x: 60, y: H / 2 }, false, 0.08, 0.08);
+  applyCertificationAidCheckpoint(this);
 };
 
 World3Scene.prototype.update = function(time, delta) {
@@ -13533,6 +14283,7 @@ World3Scene.prototype.update = function(time, delta) {
   for (var zi3 = 0; zi3 < this._zones.length; zi3++) {
     if (ep.x >= this._zones[zi3].xStart && ep.x < this._zones[zi3].xEnd) { zone = this._zones[zi3]; break; }
   }
+  if (handleCertificationAidInput(this)) return;
 
   // Muzak crossfade
   if (this._muzak && this._muzak.currentZone !== zone.type) {
@@ -13569,12 +14320,24 @@ World3Scene.prototype.update = function(time, delta) {
   else if (!onGround && ep.vy < 0) frame = 2;
   else if (!onGround && ep.vy > 0) frame = 3;
   else if (moveX !== 0) frame = (Math.floor(es.walkT / 150) % 2 === 0) ? 1 : 4;
+  if (this._lessonReadoutTxt) this._lessonReadoutTxt.setAlpha(0).setText('');
+  if (this._waitingDoor && this._waitingDoor.blinkT > 0) this._waitingDoor.blinkT = Math.max(0, this._waitingDoor.blinkT - delta);
+  if (this._preAuthDrill && this._preAuthDrill.statusMs > 0) this._preAuthDrill.statusMs = Math.max(0, this._preAuthDrill.statusMs - delta);
 
   if (this._waitingDoor) {
     var wd = this._waitingDoor;
     if (zone.type === 'waiting' && !wd.opened) {
-      var waitingStill = onGround && Math.abs(ep.vx) < 6 && ep.x > 110 && ep.x < 320;
+      var waitingStill = onGround && Math.abs(ep.vx) < 6 && ep.x > 180 && ep.x < 430;
       wd.stillMs = waitingStill ? Math.min(wd.stillMs + delta, wd.unlockMs) : Math.max(0, wd.stillMs - delta * 0.5);
+      if (!wd.confirmShown && wd.stillMs >= 400) {
+        wd.confirmShown = true;
+        wd.blinkT = 600;
+        this._playSfx('stamp');
+        bumpFirstSessionMetric(this, 'confirmationSeen', 'waiting', 1);
+        showProtectedReadableText(this, 'confirm', 140, 'SIDE FILE REVIEW: STILLNESS ACCEPTED.', {
+          color: '#88ddaa', duration: 2200, fontSize: '8px'
+        }, 2200, 'w3_waiting_confirm', true, 1200);
+      }
       if (wd.stillMs >= wd.unlockMs) {
         wd.opened = true;
         wd.rewarded = true;
@@ -13585,6 +14348,11 @@ World3Scene.prototype.update = function(time, delta) {
         this.floatingItems.push({ x: wd.x, y: 215, type: 'health', vy: -70, bobT: 0, life: 18, floating: true });
         recordFirstSessionBeat(this, 'first_optional_route');
         recordFirstSessionBeat(this, 'first_curiosity_reward');
+        setFirstSessionMetric(this, 'cleanPreteach', 'waiting', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+        bumpFirstSessionMetric(this, 'curiosityPayoffs', 'w3_waiting_window', 1);
+        showProtectedReadableText(this, 'confirm', 120, 'SIDE FILE WINDOW: RELEASED.', {
+          color: '#88ddaa', duration: 2400, fontSize: '8px'
+        }, 2600, 'w3_waiting_release', true, 1400);
       }
     } else if (zone.type !== 'waiting' && !wd.opened) {
       wd.stillMs = Math.max(0, wd.stillMs - delta);
@@ -13652,7 +14420,7 @@ World3Scene.prototype.update = function(time, delta) {
   this.levelG.fillRect(0, H * 0.88, 2560, 60);
   this._teachingG.clear();
   if (zone.type === 'waiting' && this._waitingDoor) {
-    var waitPulse = 0.15 + Math.sin(this._levelT * 0.004) * 0.05;
+    var waitPulse = 0.15 + Math.sin(this._levelT * 0.004) * 0.05 + this._waitingDoor.blinkT * 0.00035;
     var waitFill = this._waitingDoor.opened ? 0x66ccaa : 0x445566;
     this._teachingG.fillStyle(waitFill, this._waitingDoor.opened ? 0.55 : 0.28);
     this._teachingG.fillRoundedRect(this._waitingDoor.x - 10, H * 0.73, 20, 34, 2);
@@ -13664,13 +14432,31 @@ World3Scene.prototype.update = function(time, delta) {
       this._teachingG.fillStyle(0x88ccff, 0.3);
       this._teachingG.fillRect(this._waitingDoor.x - 10, H * 0.70, 20 * (this._waitingDoor.stillMs / this._waitingDoor.unlockMs), 3);
     }
+    if (!this._waitingDoor.opened && this._lessonReadoutTxt &&
+        (this._waitingDoor.stillMs > 0 || (ep.x > 180 && ep.x < 430 && onGround))) {
+      this._lessonReadoutTxt.setText('SIDE FILE REVIEW ' + Math.floor((this._waitingDoor.stillMs / this._waitingDoor.unlockMs) * 100) + '%\nREMAIN STILL.')
+        .setColor('#88ccff').setAlpha(0.9);
+    }
   } else if (zone.type === 'diagnostic' && this._scanLesson) {
+    var scanCycleIdx = Math.floor(this._levelT / this._scanLesson.period);
+    if (this._scanLesson.recoveryEaseCycle !== -1 && scanCycleIdx > this._scanLesson.recoveryEaseCycle) {
+      this._scanLesson.recoveryEaseCycle = -1;
+    }
+    var scanActiveMs = this._scanLesson.activeMs - (this._scanLesson.recoveryEaseCycle === scanCycleIdx ? 180 : 0);
     var scanPhase = this._levelT % this._scanLesson.period;
-    var scanActive = scanPhase < this._scanLesson.activeMs;
+    var scanActive = scanPhase < scanActiveMs;
     this._teachingG.fillStyle(0x224455, 0.12);
     this._teachingG.fillRect(this._scanLesson.x - 4, H * 0.52, this._scanLesson.w + 8, 120);
-    this._teachingG.lineStyle(1, 0x44ddff, 0.22);
+    this._teachingG.lineStyle(1.5, 0x44ddff, 0.42);
     this._teachingG.strokeRect(this._scanLesson.x - 4, H * 0.52, this._scanLesson.w + 8, 120);
+    this._teachingG.fillStyle(0x0b1d28, 0.82);
+    this._teachingG.fillRoundedRect(this._scanLesson.x - 36, H * 0.60, 24, 22, 2);
+    this._teachingG.fillStyle(scanActive ? 0x44ddff : 0x66cc88, 0.7);
+    this._teachingG.fillCircle(this._scanLesson.x - 24, H * 0.615, 4);
+    this._teachingG.fillStyle(0xffffff, 0.18);
+    this._teachingG.fillRect(this._scanLesson.x - 31, H * 0.64, 14, 2);
+    this._teachingG.fillStyle(scanActive ? 0x44ddff : 0x66cc88, 0.45);
+    this._teachingG.fillRect(this._scanLesson.x - 31, H * 0.64, 14 * (scanActive ? Math.min(1, scanPhase / scanActiveMs) : 1), 2);
     if (scanActive) {
       var bandY = H * 0.54 + Math.sin(scanPhase * 0.01) * 24;
       this._teachingG.fillStyle(0x44ddff, 0.22);
@@ -13678,6 +14464,14 @@ World3Scene.prototype.update = function(time, delta) {
       if (ep.x > this._scanLesson.x - 10 && ep.x < this._scanLesson.x + this._scanLesson.w + 10 && ep.y > H * 0.48 && ep.y < H * 0.84) {
         ep.vx *= 0.92;
         this._scanLesson.touched = true;
+        if (!this._scanLesson.firstTouchLogged && !this._scanLesson.completed) {
+          this._scanLesson.firstTouchLogged = true;
+          bumpFirstSessionMetric(this, 'avoidableFirstHit', 'scan', 1);
+          if (!this._scanLesson.recoveryEaseUsed) {
+            this._scanLesson.recoveryEaseUsed = true;
+            this._scanLesson.recoveryEaseCycle = scanCycleIdx + 1;
+          }
+        }
         if (this._scanLesson.slowT <= 0) {
           this._scanLesson.slowT = 900;
           this._flash('SCAN IN PROGRESS. WAIT FOR CLEARANCE.', 900);
@@ -13689,7 +14483,21 @@ World3Scene.prototype.update = function(time, delta) {
         this._scanLesson.completed = true;
         this.behavior.grace += 2;
         this._flash('SCAN WINDOW CLEARED.', 1500);
+        setFirstSessionMetric(this, 'cleanPreteach', 'scan', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+        setFirstSessionMetric(this, 'cleanClearTime', 'scan', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+        if (!this._scanLesson.confirmationShown) {
+          this._scanLesson.confirmationShown = true;
+          this._playSfx('stamp');
+          bumpFirstSessionMetric(this, 'confirmationSeen', 'scan', 1);
+          showProtectedReadableText(this, 'confirm', 140, 'SCAN WINDOW ACCEPTED.', {
+            color: '#88ddaa', duration: 2200, fontSize: '8px'
+          }, 2000, 'w3_scan_confirm', true, 1800);
+        }
       }
+    }
+    if (this._lessonReadoutTxt && ep.x > this._scanLesson.x - 110 && ep.x < this._scanLesson.x + this._scanLesson.w + 36) {
+      this._lessonReadoutTxt.setText(scanActive ? 'SCAN: ACTIVE\nWAIT FOR CLEAR.' : 'SCAN: CLEAR\nMOVE THROUGH.')
+        .setColor(scanActive ? '#44ddff' : '#88ddaa').setAlpha(0.9);
     }
   }
 
@@ -13832,8 +14640,14 @@ World3Scene.prototype.update = function(time, delta) {
     this.w3NpcG.fillStyle(0xffcc99, 0.8); this.w3NpcG.fillCircle(np3.x, np3.y-18+nBob3, 5);
     this.w3NpcG.fillStyle(0xff4444, 0.6); this.w3NpcG.fillRect(np3.x-1, np3.y-11+nBob3, 2, 5); this.w3NpcG.fillRect(np3.x-3, np3.y-9+nBob3, 6, 2);
     if (!np3.talked && Math.abs(ep.x-np3.x) < 35 && Math.abs(ep.y-np3.y) < 25) {
+      if (isPrecisionPocket(this)) {
+        bumpFirstSessionMetric(this, 'overlapPrevented', 'w3_npc', 1);
+        continue;
+      }
       np3.talked = true; this.behavior.curiosity += 2; this._playSfx('collect');
-      TEXT_ZONES.show(this, np3.name+': '+np3.lines[Math.floor(Math.random()*np3.lines.length)], { color:'#88ccff', duration:4500, fontSize:'10px' });
+      showProtectedReadableText(this, 'pa', 0, np3.name + ': ' + np3.lines[Math.floor(Math.random() * np3.lines.length)], {
+        color: '#88ccff', duration: 4500, fontSize: '10px'
+      }, 2200, 'w3_npc', true, 5000);
       // Behavior-reactive NPC follow-up
       var maxN3 = 'compliance'; var maxNV3 = 0;
       var nk3 = ['compliance','intuition','curiosity','grace','chaos','efficiency'];
@@ -13848,9 +14662,12 @@ World3Scene.prototype.update = function(time, delta) {
           intuition: '(They look past you. You found a door they didn\'t build.)'
         };
         var selfNR3 = this;
-        this.time.delayedCall(2500, function() {
-          TEXT_ZONES.show(selfNR3, npcR3[maxN3] || '', { color: '#555566', duration: 2500, fontSize: '8px' });
-        });
+        scheduleReadableZoneEvent(this, 'pa', 2500, function() {
+          if (!(npcR3[maxN3] || '')) return;
+          showProtectedReadableText(selfNR3, 'pa', 0, npcR3[maxN3] || '', {
+            color: '#555566', duration: 2500, fontSize: '8px'
+          }, 1800, 'w3_npc_followup', true, 4500);
+        }, 2000);
       }
     }
   }
@@ -13884,23 +14701,30 @@ World3Scene.prototype.update = function(time, delta) {
     if (Math.abs(ep.x-rec.x) < 120 && onGround && Math.abs(ep.vx) < 6) rec._holdMs += delta;
     else rec._holdMs = 0;
     if (!rec._lineShown && rec._holdMs > 900) {
-      rec._lineShown = true;
-      var recLines = this._receptionistLines[zone.type] || this._receptionistLines.waiting;
-      TEXT_ZONES.show(this, 'RECEPTIONIST: '+recLines[Math.floor(Math.random()*recLines.length)], { color:'#aabbcc', duration:5000, fontSize:'10px' });
-      this.behavior.intuition += 2;
+      if (isPrecisionPocket(this)) {
+        rec._holdMs = 900;
+        bumpFirstSessionMetric(this, 'overlapPrevented', 'w3_receptionist', 1);
+      } else {
+        rec._lineShown = true;
+        var recLines = this._receptionistLines[zone.type] || this._receptionistLines.waiting;
+        showProtectedReadableText(this, 'pa', 0, 'RECEPTIONIST: ' + recLines[Math.floor(Math.random() * recLines.length)], {
+          color: '#aabbcc', duration: 5000, fontSize: '10px'
+        }, 2200, 'w3_receptionist', true, 5000);
+        this.behavior.intuition += 2;
+      }
     }
     if (rec._lifetime <= 0 || rec.x < -20 || rec.x > 2580) rec.active = false;
   }
   updateFirstSessionHealth(this);
   updateWorld3FirstSession(this, zone, onGround, delta);
+  updateFirstSessionDebugOverlay(this, zone);
+  updateCertificationAidOverlay(this, zone);
 
   if (zone.type === 'recovery' && !this._physicianForeshadowSeen && ep.x > 2230) {
     this._physicianForeshadowSeen = true;
-    scheduleReadableEvent(this, 'boss_ceremony', 300, function() {
-      TEXT_ZONES.show(this, 'CHART NOTICE: FINAL REVIEW REQUIRES PRE-AUTHORIZATION.', {
-        color: '#aabbee', duration: 3600, fontSize: '9px'
-      });
-    }.bind(this), 2200);
+    showProtectedReadableText(this, 'boss_ceremony', 300, 'CHART NOTICE: FINAL REVIEW REQUIRES PRE-AUTHORIZATION.', {
+      color: '#aabbee', duration: 3600, fontSize: '9px'
+    }, 2400, 'w3_chart_notice', true, 2200);
   }
 
   if (zone.type === 'recovery' && this._preAuthDrill && !this.boss.active) {
@@ -13909,30 +14733,47 @@ World3Scene.prototype.update = function(time, delta) {
     if (!pad.seen && ep.x > pad.xStart - 35) {
       pad.seen = true;
       this._physicianForeshadowSeen = true;
-      scheduleReadableEvent(this, 'boss_ceremony', 250, function() {
-        TEXT_ZONES.show(this, 'PRE-AUTHORIZATION: STRIKE BOTH SIGNATURE LAMPS BEFORE ADVANCING.', {
-          color: '#88ccff', duration: 3600, fontSize: '9px'
-        });
-      }.bind(this), 2200);
+      showProtectedReadableText(this, 'boss_ceremony', 250, 'PRE-AUTHORIZATION: STRIKE BOTH SIGNATURE LAMPS BEFORE ADVANCING.', {
+        color: '#88ccff', duration: 3600, fontSize: '9px'
+      }, 2400, 'w3_preauth_notice', true, 2200);
     }
     if (pad.active || (!pad.completed && ep.x > pad.xStart - 20 && ep.x < pad.xEnd + 50)) {
       this._teachingG.fillStyle(0x334455, 0.10);
       this._teachingG.fillRoundedRect(pad.xStart - 12, H * 0.50, pad.xEnd - pad.xStart + 28, 96, 3);
+      var attackNow = !!(es.punchActive || es.kickActive || es.spinning || es._airDashed);
+      var lampHitThisSwing = false;
       for (var pli = 0; pli < pad.lamps.length; pli++) {
         var lamp = pad.lamps[pli];
+        if (lamp.hitFxT > 0) lamp.hitFxT = Math.max(0, lamp.hitFxT - delta);
         if (!lamp.hit) {
-          this._teachingG.fillStyle(0xffdd44, 0.25 + Math.sin(this._levelT * 0.008 + pli) * 0.08);
-          this._teachingG.fillCircle(lamp.x, lamp.y, 8);
+          this._teachingG.fillStyle(0xffdd44, 0.25 + Math.sin(this._levelT * 0.008 + pli) * 0.08 + lamp.hitFxT * 0.0003);
+          this._teachingG.fillCircle(lamp.x, lamp.y, 8 + lamp.hitFxT * 0.008);
           this._teachingG.lineStyle(1, 0xffffff, 0.4);
           this._teachingG.strokeCircle(lamp.x, lamp.y, 10);
-          if (getMeleeContact(this, lamp.x, lamp.y, 14, 14)) {
+          if (getLampStrikeContact(this, lamp) && this._levelT - lamp.lastHitMs > 220) {
             lamp.hit = true;
+            lamp.lastHitMs = this._levelT;
+            lamp.hitFxT = 520;
+            pad.hitFxT = 520;
             this._playSfx('stamp');
+            lampHitThisSwing = true;
+            pad.statusMs = 1200;
+            pad.statusText = 'SIGNATURE ' + (((pad.lamps[0].hit ? 1 : 0) + (pad.lamps[1].hit ? 1 : 0))) + ' / 2 FILED.';
+            bumpFirstSessionMetric(this, 'confirmationSeen', 'preauth', 1);
           }
         } else {
-          this._teachingG.fillStyle(0x66cc88, 0.22);
-          this._teachingG.fillCircle(lamp.x, lamp.y, 7);
+          this._teachingG.fillStyle(0x66cc88, 0.22 + lamp.hitFxT * 0.00022);
+          this._teachingG.fillCircle(lamp.x, lamp.y, 7 + lamp.hitFxT * 0.006);
         }
+      }
+      if (attackNow && !pad.attackRegistered) {
+        pad.attackRegistered = true;
+        if (!lampHitThisSwing && ep.x > pad.xStart - 30 && ep.x < pad.xEnd + 30) {
+          pad.interactionRetries += 1;
+          bumpFirstSessionMetric(this, 'interactionRetries', 'preauth', 1);
+        }
+      } else if (!attackNow) {
+        pad.attackRegistered = false;
       }
       if (!pad.rewardReleased && pad.lamps[0].hit && pad.lamps[1].hit) {
         pad.rewardReleased = true;
@@ -13941,6 +14782,24 @@ World3Scene.prototype.update = function(time, delta) {
         this.behavior.curiosity += 2;
         this.floatingItems.push({ x: 2360, y: 160, type: 'health', vy: -68, bobT: 0, life: 22, floating: true });
         this._flash('PRE-AUTHORIZATION CLEARED.', 1500);
+        setFirstSessionMetric(this, 'cleanPreteach', 'preauth', Math.floor(getSceneElapsedMs(this) / 100) / 10);
+      }
+      if (this._lessonReadoutTxt) {
+        var lampHits = (pad.lamps[0].hit ? 1 : 0) + (pad.lamps[1].hit ? 1 : 0);
+        var padReadout = pad.statusMs > 0 ? pad.statusText : 'SIGNATURE HOLD ' + lampHits + ' / 2\nCLEAR BOTH LAMPS.';
+        this._lessonReadoutTxt.setText(padReadout)
+          .setColor(pad.statusMs > 0 ? '#88ddaa' : '#88ccff').setAlpha(0.9);
+        pad.lastLampCount = lampHits;
+      }
+    }
+    if (!pad.completed && ep.x > 2380) {
+      ep.x = 2380;
+      if (ep.vx > 0) ep.vx = 0;
+      if (this._levelT - pad.blockNoticeAt > 1800) {
+        pad.blockNoticeAt = this._levelT;
+        showProtectedReadableText(this, 'confirm', 120, 'PRE-AUTHORIZATION: STRIKE BOTH SIGNATURE LAMPS BEFORE ADVANCING.', {
+          color: '#88ccff', duration: 3200, fontSize: '8px'
+        }, 2200, 'w3_preauth_gate', true, 1400);
       }
     }
   }
@@ -13949,9 +14808,17 @@ World3Scene.prototype.update = function(time, delta) {
   if (!this._lastZone3) this._lastZone3 = zone.type;
   if (zone.type !== this._lastZone3) {
     var prevZone3 = this._lastZone3;
+    var receiptZone3 = zone.type;
     this._lastZone3 = zone.type;
     var selfR3 = this;
-    this.time.delayedCall(1500, function() {
+    scheduleReadableEvent(this, 'pa', 1500, function() {
+      if (selfR3._lastZone3 !== receiptZone3) return;
+      if (receiptZone3 === 'diagnostic' && selfR3._scanLesson && selfR3.ep &&
+          selfR3.ep.x > selfR3._scanLesson.x - 140 &&
+          selfR3.ep.x < selfR3._scanLesson.x + selfR3._scanLesson.w + 36) {
+        bumpFirstSessionMetric(selfR3, 'overlapPrevented', 'w3_zone_receipt', 1);
+        return;
+      }
       var maxB3 = 'compliance'; var maxV3 = 0;
       var bk3 = ['compliance','intuition','curiosity','grace','chaos','efficiency'];
       for (var b3 = 0; b3 < bk3.length; b3++) {
@@ -13966,11 +14833,11 @@ World3Scene.prototype.update = function(time, delta) {
         efficiency: 'EXPEDITED DISCHARGE:',
         intuition: 'OFF-LABEL OBSERVATION:'
       };
-      TEXT_ZONES.show(selfR3, (rPre3[maxB3] || 'PATIENT FILE:') + ' ' + r3, {
+      showProtectedReadableText(selfR3, 'pa', 0, (rPre3[maxB3] || 'PATIENT FILE:') + ' ' + r3, {
         color: '#88aabb', duration: 5000, fontSize: '9px'
-      });
+      }, 2200, 'w3_zone_receipt', true, 1600);
       selfR3._playSfx('stamp');
-    });
+    }, 2600);
   }
 
   // ── W3 BEHAVIOR CONSEQUENCES (dominant current alters gameplay) ──
@@ -13991,14 +14858,17 @@ World3Scene.prototype.update = function(time, delta) {
         intuition: 'PATIENT MAKING DECISIONS WITHOUT PRE-AUTHORIZATION.'
       };
       var selfBC3 = this;
-      this.time.delayedCall(8000, function() {
-        TEXT_ZONES.show(selfBC3, bPA3[maxBC3] || '', { color: '#445566', duration: 4000, fontSize: '8px' });
-      });
+      scheduleReadableZoneEvent(this, 'pa', 8000, function() {
+        if (!(bPA3[maxBC3] || '')) return;
+        showProtectedReadableText(selfBC3, 'pa', 0, bPA3[maxBC3] || '', {
+          color: '#445566', duration: 4000, fontSize: '8px'
+        }, 1800, 'w3_behavior_pa', true, 1600);
+      }, 3500);
     }
   }
 
   // ── BOSS ACTIVATION ──
-  if (ep.x > 2390 && !this.boss.active && this.boss.hp > 0) {
+  if (ep.x > 2390 && this._preAuthDrill && this._preAuthDrill.completed && !this.boss.active && this.boss.hp > 0) {
     this.boss.active = true;
     var selfW3Boss = this;
     scheduleReadableEvent(this, 'boss_ceremony', 0, function() {
@@ -14716,6 +15586,11 @@ TitleScene.prototype.preload = function() {};
 
 TitleScene.prototype.create = function() {
   var self = this;
+  var certAid = getCertificationAidConfig();
+  if (certAid.enabled && certAid.sceneKey) {
+    this.scene.start(certAid.sceneKey);
+    return;
+  }
   // Load sprites into texture manager for title Ed
   var keys = Object.keys(SPRITE_IMAGES);
   for (var i = 0; i < keys.length; i++) {
