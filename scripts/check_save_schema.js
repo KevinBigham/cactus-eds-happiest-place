@@ -7,7 +7,13 @@ var vm = require('vm');
 var assert = require('assert');
 
 var htmlPath = path.join(__dirname, '..', 'index.html');
-var src = fs.readFileSync(htmlPath, 'utf8');
+var src;
+try {
+  src = fs.readFileSync(htmlPath, 'utf8');
+} catch (e) {
+  console.error('Could not read index.html:', e.message);
+  process.exit(1);
+}
 var start = src.indexOf('// ── SAVE SYSTEM');
 var end = src.indexOf('var ED_MOVE =');
 

@@ -5,7 +5,13 @@ var fs = require('fs');
 var path = require('path');
 
 var htmlPath = path.join(__dirname, '..', 'index.html');
-var src = fs.readFileSync(htmlPath, 'utf8');
+var src;
+try {
+  src = fs.readFileSync(htmlPath, 'utf8');
+} catch (e) {
+  console.error('Could not read index.html:', e.message);
+  process.exit(1);
+}
 
 var checks = [
   { re: /function RastaCorpBossScene\(\)\{ Phaser\.Scene\.call\(this,\{key:'RastaCorpBossScene'\}\); \}/, msg: 'scene constructor missing' },

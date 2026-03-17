@@ -1,8 +1,17 @@
 #!/usr/bin/env node
-const fs = require('fs');
+'use strict';
 
-const path = 'src/world1/constants/runtime_surface.js';
-const src = fs.readFileSync(path, 'utf8');
+var fs = require('fs');
+var path = require('path');
+
+var filePath = path.join(__dirname, '..', 'src', 'world1', 'constants', 'runtime_surface.js');
+var src;
+try {
+  src = fs.readFileSync(filePath, 'utf8');
+} catch (e) {
+  console.error('Could not read file:', filePath, e.message);
+  process.exit(1);
+}
 
 function mustContain(token) {
   if (!src.includes(token)) {
