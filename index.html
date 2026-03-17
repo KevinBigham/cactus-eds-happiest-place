@@ -6060,6 +6060,44 @@ DemoScene.prototype._showWsText = function() {
 
 // ── LESSON CARD SYSTEM ──────────────────────────────────────
 DemoScene.prototype._showLessonCard = function(title, body) {
+  var self = this;
+  // Compact institutional lesson card — top of screen, out of gameplay
+  var lcY = 56; // below HUD, above gameplay
+  var lcH = 52;
+  this._lessonCardG = this.add.graphics().setScrollFactor(0).setDepth(85);
+  this._lessonCardG.fillStyle(0x0a0014, 0.88);
+  this._lessonCardG.fillRect(20, lcY, W - 40, lcH);
+  this._lessonCardG.lineStyle(1, 0xffd700, 0.5);
+  this._lessonCardG.lineBetween(30, lcY, W - 30, lcY);
+  this._lessonCardG.lineBetween(30, lcY + lcH, W - 30, lcY + lcH);
+  // Lesson seal icon (small)
+  this._lessonCardG.fillStyle(0xffd700, 0.3);
+  this._lessonCardG.fillCircle(38, lcY + lcH / 2, 8);
+  this._lessonCardG.fillStyle(0xffd700, 0.6);
+  this._lessonCardG.fillCircle(38, lcY + lcH / 2, 4);
+
+  var titleTxt = this.add.text(55, lcY + 6, title, {
+    fontFamily: 'Courier New, monospace', fontSize: '9px',
+    color: '#ffd700', stroke: '#000000', strokeThickness: 3,
+    fontStyle: 'bold'
+  }).setScrollFactor(0).setDepth(86);
+  var bodyTxt = this.add.text(55, lcY + 22, body, {
+    fontFamily: 'Courier New, monospace', fontSize: '8px',
+    color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+    wordWrap: { width: W - 110 }
+  }).setScrollFactor(0).setDepth(86);
+
+  // Auto-dismiss after 2.5s
+  this.time.delayedCall(2500, function() {
+    self.tweens.add({
+      targets: [self._lessonCardG, titleTxt, bodyTxt], alpha: 0, duration: 500,
+      onComplete: function() {
+        if (self._lessonCardG) self._lessonCardG.destroy();
+        titleTxt.destroy(); bodyTxt.destroy();
+      }
+    });
+  });
+};
 
 // ── UNIFIED DEATH HANDLER (all deaths route through here) ──
 DemoScene.prototype._triggerDeath = function(customMsg) {
@@ -6204,44 +6242,6 @@ DemoScene.prototype._triggerDeath = function(customMsg) {
       }
     };
     pollDeath();
-  });
-};
-  var self = this;
-  // Compact institutional lesson card — top of screen, out of gameplay
-  var lcY = 56; // below HUD, above gameplay
-  var lcH = 52;
-  this._lessonCardG = this.add.graphics().setScrollFactor(0).setDepth(85);
-  this._lessonCardG.fillStyle(0x0a0014, 0.88);
-  this._lessonCardG.fillRect(20, lcY, W - 40, lcH);
-  this._lessonCardG.lineStyle(1, 0xffd700, 0.5);
-  this._lessonCardG.lineBetween(30, lcY, W - 30, lcY);
-  this._lessonCardG.lineBetween(30, lcY + lcH, W - 30, lcY + lcH);
-  // Lesson seal icon (small)
-  this._lessonCardG.fillStyle(0xffd700, 0.3);
-  this._lessonCardG.fillCircle(38, lcY + lcH / 2, 8);
-  this._lessonCardG.fillStyle(0xffd700, 0.6);
-  this._lessonCardG.fillCircle(38, lcY + lcH / 2, 4);
-
-  var titleTxt = this.add.text(55, lcY + 6, title, {
-    fontFamily: 'Courier New, monospace', fontSize: '9px',
-    color: '#ffd700', stroke: '#000000', strokeThickness: 3,
-    fontStyle: 'bold'
-  }).setScrollFactor(0).setDepth(86);
-  var bodyTxt = this.add.text(55, lcY + 22, body, {
-    fontFamily: 'Courier New, monospace', fontSize: '8px',
-    color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-    wordWrap: { width: W - 110 }
-  }).setScrollFactor(0).setDepth(86);
-
-  // Auto-dismiss after 2.5s
-  this.time.delayedCall(2500, function() {
-    self.tweens.add({
-      targets: [self._lessonCardG, titleTxt, bodyTxt], alpha: 0, duration: 500,
-      onComplete: function() {
-        if (self._lessonCardG) self._lessonCardG.destroy();
-        titleTxt.destroy(); bodyTxt.destroy();
-      }
-    });
   });
 };
 
@@ -9125,7 +9125,6 @@ DemoScene.prototype.update = function(time, delta) {
           this._stompChain = (this._stompChain || 0) + 1;
           if (this._stompChain === 3) {
             this._flash('COMPLIANCE STREAK NOTED', 1500);
-            this._stompChain = 0;
             this.behavior.chaos += 2;
           } else if (this._stompChain === 5) {
             var stompQuotes = [
