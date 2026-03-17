@@ -129,14 +129,14 @@ var SAVE = {
   save: function(data) {
     try {
       var payload = JSON.stringify({
-        world: data.world || 1,
-        health: data.health || 4,
-        aloe: data.aloe || 200,
+        world: data.world != null ? data.world : 1,
+        health: data.health != null ? data.health : 4,
+        aloe: data.aloe != null ? data.aloe : 200,
         behavior: data.behavior || {},
-        deaths: data.deaths || 0,
-        runs: data.runs || 1,
-        bestTime: data.bestTime || null,
-        totalKills: data.totalKills || 0,
+        deaths: data.deaths != null ? data.deaths : 0,
+        runs: data.runs != null ? data.runs : 1,
+        bestTime: data.bestTime != null ? data.bestTime : null,
+        totalKills: data.totalKills != null ? data.totalKills : 0,
         assistMode: data.assistMode || {},
         timestamp: Date.now()
       });
@@ -5856,7 +5856,14 @@ DemoScene.prototype.create = function() {
     x: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
     c: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C),
     down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
-    esc: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
+    esc: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC),
+    one: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE),
+    two: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO),
+    three: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE),
+    five: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE),
+    six: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX),
+    seven: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN),
+    eight: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT)
   };
   this._paused = false;
   this._pauseG = null;
@@ -7587,44 +7594,37 @@ DemoScene.prototype.update = function(time, delta) {
   }
   if (this._paused) {
     // Accessibility toggles during pause (1=shake, 2=flash, 3=particles)
-    var oneKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-    var twoKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
-    var threeKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
-    if (Phaser.Input.Keyboard.JustDown(oneKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.one)) {
       this._accessibility.reduceShake = !this._accessibility.reduceShake;
       this._clearPauseTexts(); // force rebuild on next ESC toggle
       // Quick rebuild by toggling pause twice
       this._paused = false;
       if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
-    if (Phaser.Input.Keyboard.JustDown(twoKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.two)) {
       this._accessibility.reduceFlash = !this._accessibility.reduceFlash;
       this._paused = false;
       if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
-    if (Phaser.Input.Keyboard.JustDown(threeKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.three)) {
       this._accessibility.reduceParticles = !this._accessibility.reduceParticles;
       this._paused = false;
       if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
     // ── ASSIST MODE TOGGLES (5=gravity, 6=threat, 7=flight, 8=sedative) ──
-    var fiveKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
-    var sixKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX);
-    var sevenKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEVEN);
-    var eightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT);
-    if (Phaser.Input.Keyboard.JustDown(fiveKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.five)) {
       ASSIST.biggerCoyote = !ASSIST.biggerCoyote; ASSIST.count();
       this._paused = false; if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
-    if (Phaser.Input.Keyboard.JustDown(sixKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.six)) {
       ASSIST.slowerBosses = !ASSIST.slowerBosses; ASSIST.count();
       this._paused = false; if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
-    if (Phaser.Input.Keyboard.JustDown(sevenKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.seven)) {
       ASSIST.easyCopter = !ASSIST.easyCopter; ASSIST.count();
       this._paused = false; if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
-    if (Phaser.Input.Keyboard.JustDown(eightKey)) {
+    if (Phaser.Input.Keyboard.JustDown(keys.eight)) {
       ASSIST.infiniteHealth = !ASSIST.infiniteHealth; ASSIST.count();
       this._paused = false; if (this._pauseG) this._pauseG.clear().setAlpha(0);
     }
@@ -10612,8 +10612,7 @@ DemoScene.prototype.update = function(time, delta) {
           ep.vx = -es.facing * 100; ep.vy = -60;
           es.punchActive = false; es.kickActive = false;
           this._playSfx('stamp');
-          return; // shield blocks damage
-        }
+        } else {
         boss.hp--;
         boss.hurtTimer = 0.5;
         boss.x += (boss.x > ep.x ? 1 : -1) * 12;
@@ -10809,6 +10808,7 @@ DemoScene.prototype.update = function(time, delta) {
           });
         }
 
+        } // end else (not shielded)
         es.punchActive = false;
         es.kickActive = false;
       }
@@ -13970,8 +13970,7 @@ World3Scene.prototype.create = function() {
     [1550, 270, 26], [1610, 305, 30], [1670, 230, 32], [1810, 250, 35],
     // Upper pharmacy (detention-style hard room)
     [1420, 160, 28], [1760, 150, 25], [1790, 185, 25],
-    // Denial fork (split path — safe-but-long vs fast-but-denied)
-    [1490, 340, 30], [1520, 305, 26],
+    // Denial fork uses main route platforms at [1490,340] and [1520,305]
 
     // Zone L — Recovery Garden: wide + authored (hedge walls, door sightline)
     // Main route (gentle, fake-natural)
